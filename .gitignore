@@ -48,3 +48,4 @@ Assets/Plugins/Editor/JetBrains.meta
 .vs/MeshModifiers/v15/Server/sqlite3/storage.ide
 .vs/MeshModifiers/v15/Server/sqlite3/storage.ide-shm
 *.ide-wal
+*.lock
