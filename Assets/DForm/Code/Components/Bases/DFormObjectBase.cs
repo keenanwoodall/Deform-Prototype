@@ -2,7 +2,7 @@
 
 namespace DForm
 {
-	public class DFormObject : MonoBehaviour
+	public abstract class DFormObjectBase : MonoBehaviour
 	{
 		private MeshFilter target;
 		private Chunk[] chunks;
