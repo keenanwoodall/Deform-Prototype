@@ -7,7 +7,7 @@ namespace DForm
 		private MeshFilter target;
 		private Chunk[] chunks;
 
-		private void Awake ()
+		private void Start ()
 		{
 			target = GetComponent<MeshFilter> ();
 			ChangeTarget (target);
@@ -16,6 +16,7 @@ namespace DForm
 		private void Update ()
 		{
 			ChunkUtil.ApplyChunks (chunks, target.mesh);
+			ChunkUtil.ResetChunks (chunks);
 		}
 
 		public void ChangeTarget (MeshFilter meshFilter, Mesh mesh = null)

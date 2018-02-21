@@ -16,6 +16,8 @@ namespace DForm
 					vertexIndex++;
 				}
 			}
+
+			mesh.vertices = vertices;
 		}
 
 		public static Chunk[] CreateChunks (Mesh mesh, int count)
@@ -67,7 +69,7 @@ namespace DForm
 			return chunks;
 		}
 
-		public static Chunk[] ResetChunksPositions (Chunk[] chunks)
+		public static Chunk[] ResetChunks (Chunk[] chunks)
 		{
 			for (int i = 0; i < chunks.Length; i++)
 				chunks[i].ResetPositions ();
