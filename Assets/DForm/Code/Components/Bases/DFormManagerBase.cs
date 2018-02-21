@@ -7,15 +7,17 @@ namespace DForm
 		public bool recalculateNormals, recalculateTangents;
 		public bool discardChangesOnDestroy = true;
 
+		[SerializeField, HideInInspector]
 		protected MeshFilter target;
+		[SerializeField, HideInInspector]
 		protected Chunk[] chunks;
-
+		[SerializeField, HideInInspector]
 		private Mesh originalMesh;
 
 		private void OnDestroy ()
 		{
-			if (discardChangesOnDestroy && originalMesh != null && target != null)
-				target.sharedMesh = target.mesh = originalMesh;
+			if (discardChangesOnDestroy)
+				DiscardChanges ();
 		}
 
 		public void ChangeTarget (MeshFilter meshFilter)
@@ -48,6 +50,12 @@ namespace DForm
 		protected void ResetChunks ()
 		{
 			ChunkUtil.ResetChunks (chunks);
+		}
+
+		public void DiscardChanges ()
+		{
+			if (originalMesh != null && target != null)
+				target.sharedMesh = MeshUtil.Copy (originalMesh);
 		}
 	}
 }

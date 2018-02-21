@@ -6,18 +6,25 @@ namespace DForm
 	[ExecuteInEditMode]
 	public class DFormManager : DFormManagerBase
 	{
+		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
+		[SerializeField, HideInInspector]
 		private DFormerComponent[] deformers;
 
 		private void Awake ()
 		{
 			meshFilter = GetComponent<MeshFilter> ();
 			ChangeTarget (meshFilter);
+			UpdateDeformerReferences ();
 		}
 
 		private void Update ()
 		{
-			UpdateDeformerReferences ();
+#if UNITY_EDITOR
+			// Update references in the editor
+			if (!Application.isPlaying)
+				UpdateDeformerReferences ();
+#endif
 			DeformChunks ();
 			ApplyChunksToTarget ();
 			ResetChunks ();
