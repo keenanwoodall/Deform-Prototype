@@ -29,6 +29,39 @@ namespace DForm
 			return vertexData;
 		}
 
+		public static Vector3[] GetBasePositions (VertexData[] vertexData)
+		{
+			var vertexCount = vertexData.Length;
+			var basePositions = new Vector3[vertexCount];
+
+			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+				basePositions[vertexIndex] = vertexData[vertexIndex].basePosition;
+
+			return basePositions;
+		}
+
+		public static Vector3[] GetPositions (VertexData[] vertexData)
+		{
+			var vertexCount = vertexData.Length;
+			var positions = new Vector3[vertexCount];
+
+			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+				positions[vertexIndex] = vertexData[vertexIndex].position;
+
+			return positions;
+		}
+
+		public static Vector3[] GetNormals (VertexData[] vertexData)
+		{
+			var vertexCount = vertexData.Length;
+			var normals = new Vector3[vertexCount];
+
+			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+				normals[vertexIndex] = vertexData[vertexIndex].normal;
+
+			return normals;
+		}
+
 		public static VertexData[] ResetVertexData (VertexData[] vertexData)
 		{
 			for (var vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
