@@ -13,6 +13,11 @@ namespace DForm
 			ChangeTarget (target);
 		}
 
+		private void Update ()
+		{
+			ChunkUtil.ApplyChunks (chunks, target.mesh);
+		}
+
 		public void ChangeTarget (MeshFilter meshFilter, Mesh mesh = null)
 		{
 			target = meshFilter;

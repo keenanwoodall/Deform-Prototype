@@ -6,18 +6,18 @@ namespace DForm
 	public struct Chunk
 	{
 		public VertexData[] vertexData;
-		public readonly int Count;
+		public readonly int Size;
 
 		public Chunk (VertexData[] vertexData)
 		{
 			this.vertexData = vertexData;
-			this.Count = vertexData.Length;
+			this.Size = vertexData.Length;
 		}
 
 		public Chunk (Vector3[] positions, Vector3[] normals)
 		{
-			Count = positions.Length;
-			vertexData = new VertexData[Count];
+			Size = positions.Length;
+			vertexData = new VertexData[Size];
 
 			for (var i = 0; i < positions.Length; i++)
 			{
@@ -29,8 +29,8 @@ namespace DForm
 
 		public Chunk (Vector3[] basePositions, Vector3[] positions, Vector3[] normals)
 		{
-			Count = positions.Length;
-			vertexData = new VertexData[Count];
+			Size = positions.Length;
+			vertexData = new VertexData[Size];
 
 			for (var i = 0; i < positions.Length; i++)
 			{

@@ -4,6 +4,20 @@ namespace DForm
 {
 	public static class ChunkUtil
 	{
+		public static void ApplyChunks (Chunk[] chunks, Mesh mesh)
+		{
+			var vertices = mesh.vertices;
+			var vertexIndex = 0;
+			for (var currentChunk = 0; currentChunk < chunks.Length; currentChunk++)
+			{
+				for (var currentChunkVertex = 0; currentChunkVertex < chunks[currentChunk].Size; currentChunkVertex++)
+				{
+					vertices[vertexIndex] = chunks[currentChunk].vertexData[currentChunkVertex].position;
+					vertexIndex++;
+				}
+			}
+		}
+
 		public static Chunk[] CreateChunks (Mesh mesh, int count)
 		{
 			// Cache the mesh data.
@@ -66,7 +80,7 @@ namespace DForm
 			var chunkIndex = 1;
 			foreach (var chunk in chunks)
 			{
-				printString += "Chunk Index " + chunkIndex + ", Size " + chunk.Count + "\n";
+				printString += "Chunk Index " + chunkIndex + ", Size " + chunk.Size + "\n";
 				var dataIndex = 1;
 				foreach (var data in chunk.vertexData)
 				{
