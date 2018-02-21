@@ -22,9 +22,10 @@ namespace DForm
 
 			var vertices = mesh.vertices;
 			var normals = mesh.normals;
+			var tangents = mesh.tangents;
 
 			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				vertexData[vertexIndex] = new VertexData (vertices[vertexIndex], normals[vertexIndex]);
+				vertexData[vertexIndex] = new VertexData (vertices[vertexIndex], normals[vertexIndex], tangents[vertexIndex]);
 
 			return vertexData;
 		}
@@ -60,6 +61,17 @@ namespace DForm
 				normals[vertexIndex] = vertexData[vertexIndex].normal;
 
 			return normals;
+		}
+
+		public static Vector3[] GetTangents (VertexData[] vertexData)
+		{
+			var vertexCount = vertexData.Length;
+			var tangents = new Vector3[vertexCount];
+
+			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+				tangents[vertexIndex] = vertexData[vertexIndex].tangent;
+
+			return tangents;
 		}
 
 		public static VertexData[] ResetVertexData (VertexData[] vertexData)

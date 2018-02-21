@@ -124,6 +124,21 @@ namespace DForm
 			return normals;
 		}
 
+		public static Vector3[] GetTangents (Chunk[] chunks)
+		{
+			var tangents = new Vector3[GetChunksSize (chunks)];
+			var vertexIndex = 0;
+			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+			{
+				for (var chunkVertexIndex = 0; chunkVertexIndex < chunks[chunkIndex].Size; chunkIndex++)
+				{
+					tangents[vertexIndex] = chunks[chunkIndex].vertexData[chunkVertexIndex].tangent;
+					vertexIndex++;
+				}
+			}
+			return tangents;
+		}
+
 		public static int GetChunksSize (Chunk[] chunks)
 		{
 			var vertexCount = 0;
