@@ -16,6 +16,13 @@ namespace DForm
 			this.normal = normal;
 		}
 
+		public VertexData (Vector3 position, Vector3 normal)
+		{
+			this.basePosition = position;
+			this.position = position;
+			this.normal = normal;
+		}
+
 		public void ResetPosition ()
 		{
 			position = basePosition;

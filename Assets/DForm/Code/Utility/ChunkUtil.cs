@@ -20,6 +20,11 @@ namespace DForm
 			mesh.vertices = vertices;
 		}
 
+		public static Chunk CreateChunk (Mesh mesh)
+		{
+			return new Chunk (mesh.vertices, mesh.normals);
+		}
+
 		public static Chunk[] CreateChunks (Mesh mesh, int count)
 		{
 			// Cache the mesh data.

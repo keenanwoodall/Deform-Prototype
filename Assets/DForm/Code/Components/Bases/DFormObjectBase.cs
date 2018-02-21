@@ -4,20 +4,8 @@ namespace DForm
 {
 	public abstract class DFormObjectBase : MonoBehaviour
 	{
-		private MeshFilter target;
-		private Chunk[] chunks;
-
-		private void Start ()
-		{
-			target = GetComponent<MeshFilter> ();
-			ChangeTarget (target);
-		}
-
-		private void Update ()
-		{
-			ChunkUtil.ApplyChunks (chunks, target.mesh);
-			ChunkUtil.ResetChunks (chunks);
-		}
+		protected MeshFilter target;
+		protected Chunk[] chunks;
 
 		public void ChangeTarget (MeshFilter meshFilter, Mesh mesh = null)
 		{
