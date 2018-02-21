@@ -2,9 +2,10 @@
 
 namespace DForm
 {
+	[System.Serializable]
 	public struct Chunk
 	{
-		public readonly VertexData[] vertexData;
+		public VertexData[] vertexData;
 		public readonly int Count;
 
 		public Chunk (VertexData[] vertexData)
@@ -38,6 +39,12 @@ namespace DForm
 				var normal = normals[i];
 				vertexData[i] = new VertexData (basePosition, position, normal);
 			}
+		}
+
+		public void ResetPositions ()
+		{
+			for (int i = 0; i < vertexData.Length; i++)
+				vertexData[i].ResetPosition ();
 		}
 	}
 }
