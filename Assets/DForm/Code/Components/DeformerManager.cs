@@ -7,8 +7,8 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerManager : DeformerManagerBase
 	{
-		public enum RefreshMode { Update, Pause, Stop }
-		public RefreshMode refreshMode = RefreshMode.Update;
+		public enum UpdateMode { Update, Pause, Stop }
+		public UpdateMode updateMode = UpdateMode.Update;
 
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
@@ -27,16 +27,16 @@ namespace Deform
 
 		private void Update ()
 		{
-			switch (refreshMode)
+			switch (updateMode)
 			{
-				case RefreshMode.Update:
+				case UpdateMode.Update:
 					DeformChunks ();
 					ApplyChunksToTarget ();
 					ResetChunks ();
 					return;
-				case RefreshMode.Pause:
+				case UpdateMode.Pause:
 					return;
-				case RefreshMode.Stop:
+				case UpdateMode.Stop:
 					ResetChunks ();
 					ApplyChunksToTarget ();
 					return;

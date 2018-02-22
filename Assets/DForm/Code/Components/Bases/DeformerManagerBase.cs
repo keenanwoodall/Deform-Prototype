@@ -14,6 +14,17 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
 
+		public float time
+		{	get
+			{
+#if UNITY_EDITOR
+				return Time.realtimeSinceStartup;
+#else
+				return Time.time;
+#endif
+			}
+		}
+
 		private void OnDestroy ()
 		{
 			if (discardChangesOnDestroy)
