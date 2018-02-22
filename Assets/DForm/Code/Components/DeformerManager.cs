@@ -25,6 +25,11 @@ namespace Deform
 
 		private void Update ()
 		{
+			UpdateMesh ();
+		}
+
+		public void UpdateMesh ()
+		{
 			switch (updateMode)
 			{
 				case UpdateMode.Update:
