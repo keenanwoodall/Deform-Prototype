@@ -9,8 +9,8 @@ namespace Deform.Deformers
 		public float speed;
 		public bool useWorldPosition;
 
-		public Axis along;
-		public Axis by;
+		public Axis along = Axis.X;
+		public Axis by = Axis.Y;
 
 		public Sin sin = new Sin ();
 

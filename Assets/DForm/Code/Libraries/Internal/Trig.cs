@@ -25,8 +25,8 @@ namespace Deform.Math.Trig
 	public abstract class TrigObject
 	{
 		public float
-			amplitude = 0.1f,
-			frequency = 0.5f;
+			amplitude = 0.25f,
+			frequency = 10f;
 
 		private float
 			phase,

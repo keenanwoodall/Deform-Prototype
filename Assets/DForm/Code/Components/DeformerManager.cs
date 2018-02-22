@@ -12,11 +12,15 @@ namespace Deform
 
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
-		[SerializeField, HideInInspector]
-		private List<DeformerComponent> deformers;
+		[SerializeField]
+		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
 		private void Awake ()
 		{
+			// Return if already initialized.
+			if (meshFilter != null && originalMesh != null)
+				return;
+
 			meshFilter = GetComponent<MeshFilter> ();
 			ChangeTarget (meshFilter);
 		}
@@ -59,12 +63,18 @@ namespace Deform
 
 		public void AddDeformer (DeformerComponent deformer)
 		{
-			deformers.Add (deformer);
+			if (deformers == null)
+				deformers = new List<DeformerComponent> ();
+			if (!deformers.Contains (deformer))
+				deformers.Add (deformer);
 		}
 
 		public void RemoveDeformer (DeformerComponent deformer)
 		{
-			deformers.Remove (deformer);
+			if (deformers == null)
+				return;
+			if (deformers.Contains (deformer))
+				deformers.Remove (deformer);
 		}
 	}
 }

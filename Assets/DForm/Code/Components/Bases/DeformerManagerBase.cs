@@ -12,7 +12,7 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected Chunk[] chunks;
 		[SerializeField, HideInInspector]
-		private Mesh originalMesh;
+		protected Mesh originalMesh;
 
 		private void OnDestroy ()
 		{
