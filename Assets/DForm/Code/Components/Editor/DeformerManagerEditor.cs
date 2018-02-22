@@ -8,6 +8,7 @@ namespace Deform
 	{
 		private const string SMALL_INDENT = @"    ";
 		private const string LARGE_INDENT = @"      ";
+		private const bool SHOW_DEFORMERS = false;
 
 		public override void OnInspectorGUI ()
 		{
@@ -21,14 +22,16 @@ namespace Deform
 				manager.RecreateChunks ();
 			}
 
-			foreach (var deformer in manager.GetDeformers ())
+			if (SHOW_DEFORMERS)
 			{
-				var indent = deformer.update ? LARGE_INDENT : SMALL_INDENT;
-				var style = deformer.update ? EditorStyles.whiteMiniLabel : EditorStyles.miniBoldLabel;
-				var label = new GUIContent (indent + deformer.GetType ().Name);
-				EditorGUILayout.LabelField (label, style);
+				foreach (var deformer in manager.GetDeformers ())
+				{
+					var indent = deformer.update ? LARGE_INDENT : SMALL_INDENT;
+					var style = deformer.update ? EditorStyles.whiteMiniLabel : EditorStyles.miniBoldLabel;
+					var label = new GUIContent (indent + deformer.GetType ().Name);
+					EditorGUILayout.LabelField (label, style);
+				}
 			}
-
 
 			if (!Application.isPlaying)
 				manager.UpdateMesh ();
