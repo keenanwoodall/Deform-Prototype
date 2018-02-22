@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace DForm
 {
@@ -6,18 +7,36 @@ namespace DForm
 	{
 		public static void ApplyChunks (Chunk[] chunks, Mesh mesh)
 		{
-			var vertices = new Vector3[mesh.vertexCount];
+			FitVerticeCacheToVertexCount (mesh.vertexCount);
+
 			var vertexIndex = 0;
 			for (var currentChunk = 0; currentChunk < chunks.Length; currentChunk++)
 			{
 				for (var currentChunkVertex = 0; currentChunkVertex < chunks[currentChunk].Size; currentChunkVertex++)
 				{
-					vertices[vertexIndex] = chunks[currentChunk].vertexData[currentChunkVertex].position;
+					VerticeCache[vertexIndex] = chunks[currentChunk].vertexData[currentChunkVertex].position;
 					vertexIndex++;
 				}
 			}
 
-			mesh.vertices = vertices;
+			mesh.SetVertices (VerticeCache);
+		}
+
+		// Use VerticeCache instead of creating an array to store vertices as that generates garbage.
+		private static List<Vector3> VerticeCache = new List<Vector3> ();
+		private static void FitVerticeCacheToVertexCount (int vertexCount)
+		{
+			var cacheCount = VerticeCache.Count;
+
+			if (cacheCount < vertexCount)
+			{
+				var difference = vertexCount - cacheCount;
+				while (difference > 0)
+				{
+					VerticeCache.Add (Vector3.zero);
+					difference--;
+				}
+			}
 		}
 
 		public static Chunk CreateChunk (Mesh mesh)

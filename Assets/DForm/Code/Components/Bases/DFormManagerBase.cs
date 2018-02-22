@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace DForm
 {
@@ -36,15 +37,13 @@ namespace DForm
 		protected void ApplyChunksToTarget ()
 		{
 			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
-			target.sharedMesh.RecalculateBounds ();
+
 			if (recalculateNormals)
 				target.sharedMesh.RecalculateNormals ();
-			else
-				target.sharedMesh.normals = originalMesh.normals;
 			if (recalculateTangents)
 				target.sharedMesh.RecalculateTangents ();
-			else
-				target.sharedMesh.tangents = originalMesh.tangents;
+
+			target.sharedMesh.RecalculateBounds ();
 		}
 
 		protected void ResetChunks ()
@@ -52,8 +51,10 @@ namespace DForm
 			ChunkUtil.ResetChunks (chunks);
 		}
 
+		[ContextMenu ("Discard Changes")]
 		public void DiscardChanges ()
 		{
+			recalculateNormals = recalculateTangents = false;
 			if (originalMesh != null && target != null)
 				target.sharedMesh = MeshUtil.Copy (originalMesh);
 		}
