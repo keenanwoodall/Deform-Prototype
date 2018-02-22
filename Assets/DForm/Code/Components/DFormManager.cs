@@ -6,6 +6,9 @@ namespace DForm
 	[ExecuteInEditMode]
 	public class DFormManager : DFormManagerBase
 	{
+		public enum RefreshMode { Update, Pause, Stop }
+		public RefreshMode refreshMode = RefreshMode.Update;
+
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
 		[SerializeField, HideInInspector]
@@ -20,6 +23,18 @@ namespace DForm
 
 		private void Update ()
 		{
+			switch (refreshMode)
+			{
+				case RefreshMode.Update:
+					break;
+				case RefreshMode.Pause:
+					return;
+				case RefreshMode.Stop:
+					ResetChunks ();
+					ApplyChunksToTarget ();
+					return;
+			}
+
 #if UNITY_EDITOR
 			// Update references in the editor
 			if (!Application.isPlaying)

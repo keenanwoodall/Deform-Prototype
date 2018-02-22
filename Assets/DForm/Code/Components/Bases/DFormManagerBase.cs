@@ -5,7 +5,7 @@ namespace DForm
 {
 	public abstract class DFormManagerBase : MonoBehaviour
 	{
-		public bool recalculateNormals, recalculateTangents;
+		public bool recalculateNormals = true;
 		public bool discardChangesOnDestroy = true;
 
 		[SerializeField, HideInInspector]
@@ -40,8 +40,6 @@ namespace DForm
 
 			if (recalculateNormals)
 				target.sharedMesh.RecalculateNormals ();
-			if (recalculateTangents)
-				target.sharedMesh.RecalculateTangents ();
 
 			target.sharedMesh.RecalculateBounds ();
 		}
@@ -54,7 +52,7 @@ namespace DForm
 		[ContextMenu ("Discard Changes")]
 		public void DiscardChanges ()
 		{
-			recalculateNormals = recalculateTangents = false;
+			recalculateNormals = false;
 			if (originalMesh != null && target != null)
 				target.sharedMesh = MeshUtil.Copy (originalMesh);
 		}
