@@ -6,6 +6,7 @@ namespace Deform
 	[ExecuteInEditMode]
 	public abstract class DeformerComponent : MonoBehaviour
 	{
+		public bool update = true;
 		protected DeformerManager manager { get; private set; }
 
 		private void Awake ()

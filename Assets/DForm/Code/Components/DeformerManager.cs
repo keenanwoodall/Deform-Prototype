@@ -10,7 +10,7 @@ namespace Deform
 		public enum UpdateMode { Update, Pause, Stop }
 		public UpdateMode updateMode = UpdateMode.Update;
 
-		[SerializeField]
+		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
 		private void Awake ()
@@ -55,9 +55,10 @@ namespace Deform
 				deformers[deformerIndex].PreModify ();
 			
 			// Modify chunks
-			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-				for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
-					chunks[chunkIndex].vertexData = deformers[deformerIndex].Modify (chunks[chunkIndex].vertexData);
+			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
+				if (deformers[deformerIndex].update)
+					for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+						chunks[chunkIndex].vertexData = deformers[deformerIndex].Modify (chunks[chunkIndex].vertexData);
 
 			// Call Post Modify
 			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
@@ -78,6 +79,11 @@ namespace Deform
 				return;
 			if (deformers.Contains (deformer))
 				deformers.Remove (deformer);
+		}
+
+		public List<DeformerComponent> GetDeformers ()
+		{
+			return deformers;
 		}
 	}
 }
