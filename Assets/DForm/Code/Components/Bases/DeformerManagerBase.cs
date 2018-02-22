@@ -4,6 +4,7 @@ namespace Deform
 {
 	public abstract class DeformerManagerBase : MonoBehaviour
 	{
+		public int chunkCount = 2;
 		public bool recalculateNormals = true;
 		public bool discardChangesOnDestroy = true;
 
@@ -13,17 +14,6 @@ namespace Deform
 		protected Chunk[] chunks;
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
-
-		public float time
-		{	get
-			{
-#if UNITY_EDITOR
-				return Time.realtimeSinceStartup;
-#else
-				return Time.time;
-#endif
-			}
-		}
 
 		private void OnDestroy ()
 		{
@@ -41,7 +31,11 @@ namespace Deform
 			target.sharedMesh = MeshUtil.Copy (target.sharedMesh);
 
 			// Create chunk data.
-			chunks = ChunkUtil.CreateChunks (target.sharedMesh, 1);
+		}
+
+		public void CreateChunks (int count)
+		{
+			chunks = ChunkUtil.CreateChunks (target.sharedMesh, count);
 		}
 
 		protected void ApplyChunksToTarget ()
