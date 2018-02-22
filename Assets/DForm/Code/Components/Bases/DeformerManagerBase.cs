@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Deform
 {
 	public abstract class DeformerManagerBase : MonoBehaviour
 	{
-		public int chunkCount = 2;
+		public int chunkCount = 1;
 		public bool recalculateNormals = true;
+		public bool recalculateBounds = true;
 		public bool discardChangesOnDestroy = true;
 
 		[SerializeField, HideInInspector]
@@ -14,6 +16,9 @@ namespace Deform
 		protected Chunk[] chunks;
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
+
+		private bool usingOriginalNormals;
+		private List<Vector3> originalNormals = new List<Vector3> ();
 
 		private void OnDestroy ()
 		{
@@ -27,6 +32,8 @@ namespace Deform
 			target = meshFilter;
 			// Store the original mesh.
 			originalMesh = target.sharedMesh;
+			// Cache the original normals.
+			target.sharedMesh.GetNormals (originalNormals);
 			// Change the mesh to one we can modify.
 			target.sharedMesh = MeshUtil.Copy (target.sharedMesh);
 
@@ -46,8 +53,11 @@ namespace Deform
 
 			if (recalculateNormals)
 				target.sharedMesh.RecalculateNormals ();
+			else
+				target.sharedMesh.SetNormals (originalNormals);
 
-			target.sharedMesh.RecalculateBounds ();
+			if (recalculateBounds)
+				target.sharedMesh.RecalculateBounds ();
 		}
 
 		protected void ResetChunks ()
@@ -58,7 +68,6 @@ namespace Deform
 		[ContextMenu ("Discard Changes")]
 		public void DiscardChanges ()
 		{
-			recalculateNormals = false;
 			if (originalMesh != null && target != null)
 			{
 				DestroyImmediate (target.sharedMesh);

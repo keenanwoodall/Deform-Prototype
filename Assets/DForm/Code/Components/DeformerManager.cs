@@ -19,14 +19,12 @@ namespace Deform
 
 		private void Awake ()
 		{
-			// Return if already initialized.
-			if (target != null && originalMesh != null)
-				return;
-
-			target = GetComponent<MeshFilter> ();
-			ChangeTarget (target);
-
 			SyncedTime = 0f;
+			target = GetComponent<MeshFilter> ();
+
+			DiscardChanges ();
+			ChangeTarget (target);
+			UpdateMesh ();
 		}
 
 		private void Update ()
@@ -39,6 +37,8 @@ namespace Deform
 			switch (updateMode)
 			{
 				case UpdateMode.Update:
+					// If there's only one chunk, update all chunks and immediatley apply
+					// changes to the mesh.
 					if (chunkCount == 1)
 					{
 						IncrementSyncedTime ();
@@ -46,8 +46,10 @@ namespace Deform
 						ApplyChunksToTarget ();
 						ResetChunks ();
 					}
+					// Otherwise deform the current chunk.
 					else
 					{
+						// If the current chunk is the last chunk, apply the changes to the chunks.
 						if (deformChunkIndex > chunks.Length - 1)
 						{
 							IncrementSyncedTime ();
