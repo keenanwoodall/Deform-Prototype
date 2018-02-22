@@ -2,14 +2,14 @@
 
 namespace DForm
 {
-	[RequireComponent (typeof (DFormManager))]
+	[RequireComponent (typeof (DFormerManager))]
 	public abstract class DFormerComponent : MonoBehaviour
 	{
-		protected DFormManager manager { get; private set; }
+		protected DFormerManager manager { get; private set; }
 
 		private void Awake ()
 		{
-			manager = GetComponent<DFormManager> ();
+			manager = GetComponent<DFormerManager> ();
 			manager.UpdateDeformerReferences ();
 		}
 

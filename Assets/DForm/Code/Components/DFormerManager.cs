@@ -4,15 +4,14 @@ namespace DForm
 {
 	[RequireComponent (typeof (MeshFilter))]
 	[ExecuteInEditMode]
-	public class DFormManager : DFormManagerBase
+	public class DFormerManager : DFormerManagerBase
 	{
 		public enum RefreshMode { Update, Pause, Stop }
 		public RefreshMode refreshMode = RefreshMode.Update;
 
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
-		//[SerializeField, HideInInspector]
-		[SerializeField]
+		[SerializeField, HideInInspector]
 		private DFormerComponent[] deformers;
 
 		private void Awake ()

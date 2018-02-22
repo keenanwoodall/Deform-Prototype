@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DForm
 {
-	public abstract class DFormManagerBase : MonoBehaviour
+	public abstract class DFormerManagerBase : MonoBehaviour
 	{
 		public bool recalculateNormals = true;
 		public bool discardChangesOnDestroy = true;
