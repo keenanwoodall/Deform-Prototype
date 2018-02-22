@@ -6,7 +6,7 @@ namespace DForm
 	{
 		public static void ApplyChunks (Chunk[] chunks, Mesh mesh)
 		{
-			var vertices = mesh.vertices;
+			var vertices = new Vector3[mesh.vertexCount];
 			var vertexIndex = 0;
 			for (var currentChunk = 0; currentChunk < chunks.Length; currentChunk++)
 			{

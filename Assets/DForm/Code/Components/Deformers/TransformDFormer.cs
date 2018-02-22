@@ -4,9 +4,9 @@ namespace DForm.DFormers
 {
 	public class TransformDFormer : DFormerComponent
 	{
-		public Vector3 position;
-		public Vector3 rotation;
-		public Vector3 scale;
+		public Vector3 position = Vector3.zero;
+		public Vector3 rotation = Vector3.zero;
+		public Vector3 scale = Vector3.one;
 
 		private Matrix4x4 transformSpace;
 
