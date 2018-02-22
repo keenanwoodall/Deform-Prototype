@@ -43,14 +43,14 @@ namespace Deform
 					}
 					else
 					{
-						DeformChunk (deformChunkIndex);
-						deformChunkIndex++;
-						if (deformChunkIndex >= chunks.Length)
+						if (deformChunkIndex > chunks.Length - 1)
 						{
 							ApplyChunksToTarget ();
 							ResetChunks ();
 							deformChunkIndex = 0;
 						}
+						DeformChunk (deformChunkIndex);
+						deformChunkIndex++;
 					}
 					return;
 				case UpdateMode.Pause:
