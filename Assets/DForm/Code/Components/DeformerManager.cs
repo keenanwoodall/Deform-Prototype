@@ -13,6 +13,8 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
+		private int deformChunkIndex;
+
 		private void Awake ()
 		{
 			// Return if already initialized.
@@ -33,9 +35,23 @@ namespace Deform
 			switch (updateMode)
 			{
 				case UpdateMode.Update:
-					DeformChunks ();
-					ApplyChunksToTarget ();
-					ResetChunks ();
+					if (chunkCount == 1)
+					{
+						DeformChunks ();
+						ApplyChunksToTarget ();
+						ResetChunks ();
+					}
+					else
+					{
+						DeformChunk (deformChunkIndex);
+						deformChunkIndex++;
+						if (deformChunkIndex >= chunks.Length)
+						{
+							ApplyChunksToTarget ();
+							ResetChunks ();
+							deformChunkIndex = 0;
+						}
+					}
 					return;
 				case UpdateMode.Pause:
 					return;
@@ -63,6 +79,18 @@ namespace Deform
 			// Call Post Modify
 			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
 				deformers[deformerIndex].PostModify ();
+		}
+
+		private void DeformChunk (int index)
+		{
+			var deformerCount = deformers.Count;
+
+			if (chunkCount != chunks.Length)
+				RecreateChunks ();
+
+			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
+				if (deformers[deformerIndex].update)
+					chunks[index].vertexData = deformers[deformerIndex].Modify (chunks[index].vertexData);
 		}
 
 		public void AddDeformer (DeformerComponent deformer)

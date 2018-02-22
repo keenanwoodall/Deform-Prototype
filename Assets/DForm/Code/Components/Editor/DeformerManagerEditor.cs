@@ -15,6 +15,12 @@ namespace Deform
 
 			base.OnInspectorGUI ();
 
+			if (GUI.changed)
+			{
+				// If the gui has changed, the chunk count may have been modified.
+				manager.RecreateChunks ();
+			}
+
 			foreach (var deformer in manager.GetDeformers ())
 			{
 				var indent = deformer.update ? LARGE_INDENT : SMALL_INDENT;
@@ -23,9 +29,10 @@ namespace Deform
 				EditorGUILayout.LabelField (label, style);
 			}
 
+
 			if (!Application.isPlaying)
 				manager.UpdateMesh ();
-				
+
 			Repaint ();
 		}
 	}

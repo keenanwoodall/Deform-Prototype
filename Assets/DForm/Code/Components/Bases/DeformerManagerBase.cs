@@ -31,11 +31,13 @@ namespace Deform
 			target.sharedMesh = MeshUtil.Copy (target.sharedMesh);
 
 			// Create chunk data.
+			RecreateChunks ();
 		}
 
-		public void CreateChunks (int count)
+		public void RecreateChunks ()
 		{
-			chunks = ChunkUtil.CreateChunks (target.sharedMesh, count);
+			chunkCount = Mathf.Clamp (chunkCount, 1, target.sharedMesh.vertexCount);
+			chunks = ChunkUtil.CreateChunks (originalMesh, chunkCount);
 		}
 
 		protected void ApplyChunksToTarget ()
@@ -58,7 +60,10 @@ namespace Deform
 		{
 			recalculateNormals = false;
 			if (originalMesh != null && target != null)
+			{
+				DestroyImmediate (target.sharedMesh);
 				target.sharedMesh = MeshUtil.Copy (originalMesh);
+			}
 		}
 	}
 }
