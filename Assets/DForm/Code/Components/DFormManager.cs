@@ -11,7 +11,8 @@ namespace DForm
 
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
-		[SerializeField, HideInInspector]
+		//[SerializeField, HideInInspector]
+		[SerializeField]
 		private DFormerComponent[] deformers;
 
 		private void Awake ()
@@ -26,7 +27,10 @@ namespace DForm
 			switch (refreshMode)
 			{
 				case RefreshMode.Update:
-					break;
+					DeformChunks ();
+					ApplyChunksToTarget ();
+					ResetChunks ();
+					return;
 				case RefreshMode.Pause:
 					return;
 				case RefreshMode.Stop:
@@ -34,18 +38,9 @@ namespace DForm
 					ApplyChunksToTarget ();
 					return;
 			}
-
-#if UNITY_EDITOR
-			// Update references in the editor
-			if (!Application.isPlaying)
-				UpdateDeformerReferences ();
-#endif
-			DeformChunks ();
-			ApplyChunksToTarget ();
-			ResetChunks ();
 		}
 
-		private void UpdateDeformerReferences ()
+		public void UpdateDeformerReferences ()
 		{
 			deformers = GetComponents<DFormerComponent> ();
 		}
