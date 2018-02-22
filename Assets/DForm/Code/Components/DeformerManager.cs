@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Deform
 {
@@ -12,13 +13,12 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
 		[SerializeField, HideInInspector]
-		private DeformerComponent[] deformers;
+		private List<DeformerComponent> deformers;
 
 		private void Awake ()
 		{
 			meshFilter = GetComponent<MeshFilter> ();
 			ChangeTarget (meshFilter);
-			UpdateDeformerReferences ();
 		}
 
 		private void Update ()
@@ -39,25 +39,32 @@ namespace Deform
 			}
 		}
 
-		public void UpdateDeformerReferences ()
-		{
-			deformers = GetComponents<DeformerComponent> ();
-		}
-
 		private void DeformChunks ()
 		{
+			var deformerCount = deformers.Count;
+
 			// Call Pre Modify
-			for (var deformerIndex = 0; deformerIndex < deformers.Length; deformerIndex++)
+			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
 				deformers[deformerIndex].PreModify ();
 			
 			// Modify chunks
 			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-				for (var deformerIndex = 0; deformerIndex < deformers.Length; deformerIndex++)
+				for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
 					chunks[chunkIndex].vertexData = deformers[deformerIndex].Modify (chunks[chunkIndex].vertexData);
 
 			// Call Post Modify
-			for (var deformerIndex = 0; deformerIndex < deformers.Length; deformerIndex++)
+			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
 				deformers[deformerIndex].PostModify ();
+		}
+
+		public void AddDeformer (DeformerComponent deformer)
+		{
+			deformers.Add (deformer);
+		}
+
+		public void RemoveDeformer (DeformerComponent deformer)
+		{
+			deformers.Remove (deformer);
 		}
 	}
 }

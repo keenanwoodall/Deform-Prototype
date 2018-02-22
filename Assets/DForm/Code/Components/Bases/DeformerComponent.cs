@@ -3,6 +3,7 @@
 namespace Deform
 {
 	[RequireComponent (typeof (DeformerManager))]
+	[ExecuteInEditMode]
 	public abstract class DeformerComponent : MonoBehaviour
 	{
 		protected DeformerManager manager { get; private set; }
@@ -10,12 +11,12 @@ namespace Deform
 		private void Awake ()
 		{
 			manager = GetComponent<DeformerManager> ();
-			manager.UpdateDeformerReferences ();
+			manager.AddDeformer (this);
 		}
 
 		private void OnDestroy ()
 		{
-			manager.UpdateDeformerReferences ();
+			manager.RemoveDeformer (this);
 		}
 
 		public virtual void PreModify () { }
