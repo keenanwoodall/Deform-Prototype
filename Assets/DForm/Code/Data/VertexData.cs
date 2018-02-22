@@ -10,9 +10,9 @@ namespace DForm
 		public Vector3 basePosition { get { return _basePosition; } }
 		public Vector3 position;
 		public Vector3 normal;
-		public Vector3 tangent;
+		public Vector4 tangent;
 
-		public VertexData (Vector3 basePosition, Vector3 position, Vector3 normal, Vector3 tangent)
+		public VertexData (Vector3 basePosition, Vector3 position, Vector3 normal, Vector4 tangent)
 		{
 			_basePosition = basePosition;
 			this.position = position;
@@ -20,7 +20,7 @@ namespace DForm
 			this.tangent = tangent;
 		}
 
-		public VertexData (Vector3 position, Vector3 normal, Vector3 tangent)
+		public VertexData (Vector3 position, Vector3 normal, Vector4 tangent)
 		{
 			_basePosition = position;
 			this.position = position;
