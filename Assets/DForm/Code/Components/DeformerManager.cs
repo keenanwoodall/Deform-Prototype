@@ -15,6 +15,8 @@ namespace Deform
 
 		private int deformChunkIndex;
 
+		public float SyncedTime { get; private set; }
+
 		private void Awake ()
 		{
 			// Return if already initialized.
@@ -23,6 +25,8 @@ namespace Deform
 
 			target = GetComponent<MeshFilter> ();
 			ChangeTarget (target);
+
+			SyncedTime = 0f;
 		}
 
 		private void Update ()
@@ -37,6 +41,7 @@ namespace Deform
 				case UpdateMode.Update:
 					if (chunkCount == 1)
 					{
+						IncrementSyncedTime ();
 						DeformChunks ();
 						ApplyChunksToTarget ();
 						ResetChunks ();
@@ -45,6 +50,7 @@ namespace Deform
 					{
 						if (deformChunkIndex > chunks.Length - 1)
 						{
+							IncrementSyncedTime ();
 							ApplyChunksToTarget ();
 							ResetChunks ();
 							deformChunkIndex = 0;
@@ -60,6 +66,11 @@ namespace Deform
 					ApplyChunksToTarget ();
 					return;
 			}
+		}
+
+		private void IncrementSyncedTime ()
+		{
+			SyncedTime += Time.deltaTime * chunkCount;
 		}
 
 		private void DeformChunks ()

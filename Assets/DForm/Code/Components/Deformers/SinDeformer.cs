@@ -46,7 +46,7 @@ namespace Deform.Deformers
 
 		private Vector3 Sin3D (Vector3 sample)
 		{
-			var animatedOffset = offset + speed * Time.time;
+			var animatedOffset = offset + speed * manager.SyncedTime;
 			var byValue = 0f;
 			switch (by)
 			{
