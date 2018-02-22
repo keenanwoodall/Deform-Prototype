@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace DForm
+namespace Deform
 {
 	[RequireComponent (typeof (MeshFilter))]
 	[ExecuteInEditMode]
-	public class DFormerManager : DFormerManagerBase
+	public class DeformerManager : DeformerManagerBase
 	{
 		public enum RefreshMode { Update, Pause, Stop }
 		public RefreshMode refreshMode = RefreshMode.Update;
@@ -12,7 +12,7 @@ namespace DForm
 		[SerializeField, HideInInspector]
 		private MeshFilter meshFilter;
 		[SerializeField, HideInInspector]
-		private DFormerComponent[] deformers;
+		private DeformerComponent[] deformers;
 
 		private void Awake ()
 		{
@@ -41,7 +41,7 @@ namespace DForm
 
 		public void UpdateDeformerReferences ()
 		{
-			deformers = GetComponents<DFormerComponent> ();
+			deformers = GetComponents<DeformerComponent> ();
 		}
 
 		private void DeformChunks ()

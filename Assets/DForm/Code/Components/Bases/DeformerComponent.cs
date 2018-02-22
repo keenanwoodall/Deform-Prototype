@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 
-namespace DForm
+namespace Deform
 {
-	[RequireComponent (typeof (DFormerManager))]
-	public abstract class DFormerComponent : MonoBehaviour
+	[RequireComponent (typeof (DeformerManager))]
+	public abstract class DeformerComponent : MonoBehaviour
 	{
-		protected DFormerManager manager { get; private set; }
+		protected DeformerManager manager { get; private set; }
 
 		private void Awake ()
 		{
-			manager = GetComponent<DFormerManager> ();
+			manager = GetComponent<DeformerManager> ();
 			manager.UpdateDeformerReferences ();
 		}
 

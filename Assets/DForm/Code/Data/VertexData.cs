@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DForm
+namespace Deform
 {
 	[System.Serializable]
 	public struct VertexData

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace DForm
+namespace Deform
 {
-	public abstract class DFormerManagerBase : MonoBehaviour
+	public abstract class DeformerManagerBase : MonoBehaviour
 	{
 		public bool recalculateNormals = true;
 		public bool discardChangesOnDestroy = true;

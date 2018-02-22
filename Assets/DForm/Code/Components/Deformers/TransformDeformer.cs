@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace DForm.DFormers
+namespace Deform.Deformers
 {
-	public class TransformDFormer : DFormerComponent
+	public class TransformDeformer : DeformerComponent
 	{
 		public Vector3 position = Vector3.zero;
 		public Vector3 rotation = Vector3.zero;

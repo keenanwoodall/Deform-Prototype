@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace DForm
+namespace Deform
 {
 	public static class ChunkUtil
 	{
