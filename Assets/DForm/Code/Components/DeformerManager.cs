@@ -10,19 +10,17 @@ namespace Deform
 		public enum UpdateMode { Update, Pause, Stop }
 		public UpdateMode updateMode = UpdateMode.Update;
 
-		[SerializeField, HideInInspector]
-		private MeshFilter meshFilter;
 		[SerializeField]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
 		private void Awake ()
 		{
 			// Return if already initialized.
-			if (meshFilter != null && originalMesh != null)
+			if (target != null && originalMesh != null)
 				return;
 
-			meshFilter = GetComponent<MeshFilter> ();
-			ChangeTarget (meshFilter);
+			target = GetComponent<MeshFilter> ();
+			ChangeTarget (target);
 		}
 
 		private void Update ()
