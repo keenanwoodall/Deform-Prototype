@@ -15,9 +15,12 @@ namespace Deform.Deformers
 		public Sin sin = new Sin ();
 
 		private Vector3 axisOffset;
+		private float speedOffset;
 
 		public override void PreModify ()
 		{
+			speedOffset += manager.SyncedDeltaTime * speed;
+
 			switch (along)
 			{
 				case Axis.X:
@@ -46,7 +49,7 @@ namespace Deform.Deformers
 
 		private Vector3 Sin3D (Vector3 sample)
 		{
-			var animatedOffset = offset + speed * manager.SyncedTime;
+			var animatedOffset = offset + speedOffset;
 			var byValue = 0f;
 			switch (by)
 			{

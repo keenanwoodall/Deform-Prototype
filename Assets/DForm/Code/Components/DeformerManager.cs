@@ -16,6 +16,7 @@ namespace Deform
 		private int deformChunkIndex;
 
 		public float SyncedTime { get; private set; }
+		public float SyncedDeltaTime { get; private set; }
 
 		private void Awake ()
 		{
@@ -41,7 +42,7 @@ namespace Deform
 					// changes to the mesh.
 					if (chunkCount == 1)
 					{
-						IncrementSyncedTime ();
+						UpdateSyncedTime ();
 						DeformChunks ();
 						ApplyChunksToTarget ();
 						ResetChunks ();
@@ -50,14 +51,14 @@ namespace Deform
 					else
 					{
 						// If the current chunk is the last chunk, apply the changes to the chunks.
-						if (deformChunkIndex > chunks.Length - 1)
+						if (deformChunkIndex >= chunks.Length)
 						{
-							IncrementSyncedTime ();
+							UpdateSyncedTime ();
 							ApplyChunksToTarget ();
 							ResetChunks ();
 							deformChunkIndex = 0;
 						}
-						DeformChunk (deformChunkIndex);
+						DeformChunk (deformChunkIndex, deformChunkIndex == 0);
 						deformChunkIndex++;
 					}
 					return;
@@ -70,40 +71,53 @@ namespace Deform
 			}
 		}
 
-		private void IncrementSyncedTime ()
+		private void UpdateSyncedTime ()
 		{
-			SyncedTime += Time.deltaTime * chunkCount;
+			SyncedDeltaTime = Time.smoothDeltaTime * chunkCount;
+			SyncedTime += SyncedDeltaTime;
+		}
+
+		private void NotifyPreModify ()
+		{
+			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+				if (deformers[deformerIndex].update)
+					deformers[deformerIndex].PreModify ();
+		}
+		private void NotifyPostModify ()
+		{
+			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+				if (deformers[deformerIndex].update)
+					deformers[deformerIndex].PostModify ();
 		}
 
 		private void DeformChunks ()
 		{
-			var deformerCount = deformers.Count;
+			NotifyPreModify ();
 
-			// Call Pre Modify
-			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
-				deformers[deformerIndex].PreModify ();
-			
 			// Modify chunks
-			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
+			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
 					for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 						chunks[chunkIndex].vertexData = deformers[deformerIndex].Modify (chunks[chunkIndex].vertexData);
 
-			// Call Post Modify
-			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
-				deformers[deformerIndex].PostModify ();
+			NotifyPostModify ();
 		}
 
-		private void DeformChunk (int index)
+		private void DeformChunk (int index, bool notifyPrePostModify = false)
 		{
-			var deformerCount = deformers.Count;
-
 			if (chunkCount != chunks.Length)
 				RecreateChunks ();
 
-			for (var deformerIndex = 0; deformerIndex < deformerCount; deformerIndex++)
+			if (notifyPrePostModify)
+				NotifyPreModify ();
+
+			// Modify chunk
+			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
 					chunks[index].vertexData = deformers[deformerIndex].Modify (chunks[index].vertexData);
+
+			if (notifyPrePostModify)
+				NotifyPostModify ();
 		}
 
 		public void AddDeformer (DeformerComponent deformer)
