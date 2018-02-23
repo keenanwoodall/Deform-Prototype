@@ -6,9 +6,9 @@ namespace Deform
 	public abstract class DeformerManagerBase : MonoBehaviour
 	{
 		public int chunkCount = 1;
-		public NormalsCalculation normalsCalculation = NormalsCalculation.Smooth;
-		public bool recalculateBounds = true;
 		public bool discardChangesOnDestroy = true;
+		public bool recalculateBounds = true;
+		public NormalsCalculation normalsCalculation = NormalsCalculation.Smooth;
 
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
