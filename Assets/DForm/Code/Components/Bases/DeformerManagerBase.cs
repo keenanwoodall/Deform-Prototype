@@ -83,7 +83,9 @@ namespace Deform
 				case NormalsCalculation.Smooth:
 					target.sharedMesh.RecalculateNormals (60f);
 					break;
-				case NormalsCalculation.None:
+				case NormalsCalculation.Maintain:
+					break;
+				case NormalsCalculation.Original:
 					target.sharedMesh.SetNormals (originalNormals);
 					break;
 			}
@@ -130,7 +132,7 @@ namespace Deform
 					return;
 				case UpdateMode.Stop:
 					ResetChunks ();
-					ApplyChunksToTarget (NormalsCalculation.None, recalculateBounds);
+					ApplyChunksToTarget (NormalsCalculation.Original, recalculateBounds);
 					return;
 			}
 		}
