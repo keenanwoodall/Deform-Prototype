@@ -50,7 +50,7 @@ namespace Deform
 
 		protected override void DeformChunk (int index, bool notifyPrePostModify = false)
 		{
-			if (chunkCount != chunks.Length)
+			if (ChunkCount != chunks.Length)
 				RecreateChunks ();
 
 			if (notifyPrePostModify)

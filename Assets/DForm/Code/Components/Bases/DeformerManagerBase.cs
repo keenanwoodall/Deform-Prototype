@@ -10,14 +10,13 @@ namespace Deform
 		public UpdateMode updateMode = UpdateMode.Update;
 		public NormalsCalculation normalsCalculation = NormalsCalculation.Smooth;
 		public bool recalculateBounds = true;
-		public int chunkCount = 1;
 		public bool discardChangesOnDestroy = true;
 
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
 		[SerializeField, HideInInspector]
 		protected Chunk[] chunks;
-		[SerializeField]
+		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
 
 		private bool usingOriginalNormals;
@@ -25,6 +24,11 @@ namespace Deform
 
 		protected int deformChunkIndex;
 
+		[SerializeField, HideInInspector]
+		private int maxVerticesPerFrame = 500;
+		public int MaxVerticesPerFrame { get { return maxVerticesPerFrame; } set { maxVerticesPerFrame = Mathf.Clamp (value, 50, VertexCount); } }
+		public int ChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerFrame); } }
+		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
 
@@ -32,7 +36,12 @@ namespace Deform
 		{
 			DiscardChanges ();
 			ChangeTarget (GetComponent<MeshFilter> ());
-			UpdateMesh ();
+#if UNITY_EDITOR
+			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
+				UpdateMeshInstant ();
+#else
+				UpdateMeshInstant ();
+#endif
 		}
 		private void OnDestroy ()
 		{
@@ -61,14 +70,13 @@ namespace Deform
 
 		private void UpdateSyncedTime ()
 		{
-			SyncedDeltaTime = Time.smoothDeltaTime * chunkCount;
+			SyncedDeltaTime = Time.smoothDeltaTime * ChunkCount;
 			SyncedTime += SyncedDeltaTime;
 		}
 
 		public void RecreateChunks ()
 		{
-			chunkCount = Mathf.Clamp (chunkCount, 1, target.sharedMesh.vertexCount);
-			chunks = ChunkUtil.CreateChunks (originalMesh, chunkCount);
+			chunks = ChunkUtil.CreateChunks (originalMesh, ChunkCount);
 		}
 
 		protected void ApplyChunksToTarget (NormalsCalculation normalsCalculation, bool recalculateBounds)
@@ -99,6 +107,14 @@ namespace Deform
 			ChunkUtil.ResetChunks (chunks);
 		}
 
+		public void UpdateMeshInstant ()
+		{
+			DeformChunks ();
+			ApplyChunksToTarget (normalsCalculation, recalculateBounds);
+			ResetChunks ();
+			deformChunkIndex = 0;
+		}
+
 		public void UpdateMesh ()
 		{
 			switch (updateMode)
@@ -106,12 +122,10 @@ namespace Deform
 				case UpdateMode.Update:
 					// If there's only one chunk, update all chunks and immediatly apply
 					// changes to the mesh.
-					if (chunkCount == 1)
+					if (ChunkCount == 1)
 					{
 						UpdateSyncedTime ();
-						DeformChunks ();
-						ApplyChunksToTarget (normalsCalculation, recalculateBounds);
-						ResetChunks ();
+						UpdateMeshInstant ();
 					}
 					// Otherwise deform the current chunk.
 					else

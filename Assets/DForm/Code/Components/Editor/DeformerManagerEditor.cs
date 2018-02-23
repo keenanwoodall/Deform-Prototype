@@ -8,7 +8,7 @@ namespace Deform
 	{
 		private const string SMALL_INDENT = @"    ";
 		private const string LARGE_INDENT = @"      ";
-		private const bool SHOW_DEFORMERS = false;
+		private const bool SHOW_DEBUG_INFO = true;
 
 
 		public override void OnInspectorGUI ()
@@ -17,21 +17,19 @@ namespace Deform
 
 			base.OnInspectorGUI ();
 
-			if (GUI.changed)
+			EditorGUI.BeginChangeCheck ();
+			var maxVerticesPerFrame = EditorGUILayout.IntSlider (new GUIContent ("Max Vertices Per Frame"), manager.MaxVerticesPerFrame, 50, manager.VertexCount);
+			if (EditorGUI.EndChangeCheck ())
 			{
-				// If the gui has changed, the chunk count may have been modified.
+				Undo.RecordObject (manager, "Changed Max Vertices Per Frame");
+				manager.MaxVerticesPerFrame = maxVerticesPerFrame;
 				manager.RecreateChunks ();
 			}
 
-			if (SHOW_DEFORMERS)
+			if (SHOW_DEBUG_INFO)
 			{
-				foreach (var deformer in manager.GetDeformers ())
-				{
-					var indent = deformer.update ? LARGE_INDENT : SMALL_INDENT;
-					var style = deformer.update ? EditorStyles.whiteMiniLabel : EditorStyles.miniBoldLabel;
-					var label = new GUIContent (indent + deformer.GetType ().Name);
-					EditorGUILayout.LabelField (label, style);
-				}
+				EditorGUILayout.LabelField (string.Format ("Vertex Count: {0}", manager.VertexCount));
+				EditorGUILayout.LabelField (string.Format ("Chunk Count: {0}", manager.ChunkCount));
 			}
 
 			if (!Application.isPlaying)
