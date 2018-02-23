@@ -23,10 +23,22 @@ namespace Deform
 			SyncedTime = 0f;
 			target = GetComponent<MeshFilter> ();
 
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.update -= UpdateMesh;
+			UnityEditor.EditorApplication.update += UpdateMesh;
+#endif
+
 			DiscardChanges ();
 			ChangeTarget (target);
 			UpdateMesh ();
 		}
+
+#if UNITY_EDITOR
+		private void OnDestroy ()
+		{
+			UnityEditor.EditorApplication.update -= UpdateMesh;
+		}
+#endif
 
 		private void Update ()
 		{
