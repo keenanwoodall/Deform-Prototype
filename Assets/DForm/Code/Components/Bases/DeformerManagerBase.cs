@@ -6,7 +6,7 @@ namespace Deform
 	public abstract class DeformerManagerBase : MonoBehaviour
 	{
 		public int chunkCount = 1;
-		public bool recalculateNormals = true;
+		public NormalsCalculation normalsCalculation = NormalsCalculation.Smooth;
 		public bool recalculateBounds = true;
 		public bool discardChangesOnDestroy = true;
 
@@ -47,14 +47,22 @@ namespace Deform
 			chunks = ChunkUtil.CreateChunks (originalMesh, chunkCount);
 		}
 
-		protected void ApplyChunksToTarget ()
+		protected void ApplyChunksToTarget (NormalsCalculation normalsCalculation, bool recalculateBounds)
 		{
 			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
 
-			if (recalculateNormals)
-				target.sharedMesh.RecalculateNormals ();
-			else
-				target.sharedMesh.SetNormals (originalNormals);
+			switch (normalsCalculation)
+			{
+				case NormalsCalculation.Unity:
+					target.sharedMesh.RecalculateNormals ();
+					break;
+				case NormalsCalculation.Smooth:
+					target.sharedMesh.RecalculateNormals (60f);
+					break;
+				case NormalsCalculation.None:
+					target.sharedMesh.SetNormals (originalNormals);
+					break;
+			}
 
 			if (recalculateBounds)
 				target.sharedMesh.RecalculateBounds ();
@@ -65,7 +73,6 @@ namespace Deform
 			ChunkUtil.ResetChunks (chunks);
 		}
 
-		[ContextMenu ("Discard Changes")]
 		public void DiscardChanges ()
 		{
 			if (originalMesh != null && target != null)

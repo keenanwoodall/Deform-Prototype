@@ -44,7 +44,7 @@ namespace Deform
 					{
 						UpdateSyncedTime ();
 						DeformChunks ();
-						ApplyChunksToTarget ();
+						ApplyChunksToTarget (normalsCalculation, recalculateBounds);
 						ResetChunks ();
 					}
 					// Otherwise deform the current chunk.
@@ -54,7 +54,7 @@ namespace Deform
 						if (deformChunkIndex >= chunks.Length)
 						{
 							UpdateSyncedTime ();
-							ApplyChunksToTarget ();
+							ApplyChunksToTarget (normalsCalculation, recalculateBounds);
 							ResetChunks ();
 							deformChunkIndex = 0;
 						}
@@ -66,7 +66,7 @@ namespace Deform
 					return;
 				case UpdateMode.Stop:
 					ResetChunks ();
-					ApplyChunksToTarget ();
+					ApplyChunksToTarget (NormalsCalculation.None, recalculateBounds);
 					return;
 			}
 		}
