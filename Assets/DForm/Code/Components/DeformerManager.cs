@@ -7,93 +7,26 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerManager : DeformerManagerBase
 	{
-		public enum UpdateMode { Update, Pause, Stop }
-		public UpdateMode updateMode = UpdateMode.Update;
-
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
-
-		private int deformChunkIndex;
-
-		public float SyncedTime { get; private set; }
-		public float SyncedDeltaTime { get; private set; }
-
-		private void Awake ()
-		{
-			SyncedTime = 0f;
-			target = GetComponent<MeshFilter> ();
-
-#if UNITY_EDITOR
-			UnityEditor.EditorApplication.update -= UpdateMesh;
-			UnityEditor.EditorApplication.update += UpdateMesh;
-#endif
-
-			DiscardChanges ();
-			ChangeTarget (target);
-			UpdateMesh ();
-		}
-
-#if UNITY_EDITOR
-		private void OnDestroy ()
-		{
-			UnityEditor.EditorApplication.update -= UpdateMesh;
-		}
-#endif
 
 		private void Update ()
 		{
 			UpdateMesh ();
 		}
 
-		public void UpdateMesh ()
+		private void OnDestroy ()
 		{
-			switch (updateMode)
-			{
-				case UpdateMode.Update:
-					// If there's only one chunk, update all chunks and immediatley apply
-					// changes to the mesh.
-					if (chunkCount == 1)
-					{
-						UpdateSyncedTime ();
-						DeformChunks ();
-						ApplyChunksToTarget (normalsCalculation, recalculateBounds);
-						ResetChunks ();
-					}
-					// Otherwise deform the current chunk.
-					else
-					{
-						// If the current chunk is the last chunk, apply the changes to the chunks.
-						if (deformChunkIndex >= chunks.Length)
-						{
-							UpdateSyncedTime ();
-							ApplyChunksToTarget (normalsCalculation, recalculateBounds);
-							ResetChunks ();
-							deformChunkIndex = 0;
-						}
-						DeformChunk (deformChunkIndex, deformChunkIndex == 0);
-						deformChunkIndex++;
-					}
-					return;
-				case UpdateMode.Pause:
-					return;
-				case UpdateMode.Stop:
-					ResetChunks ();
-					ApplyChunksToTarget (NormalsCalculation.None, recalculateBounds);
-					return;
-			}
-		}
-
-		private void UpdateSyncedTime ()
-		{
-			SyncedDeltaTime = Time.smoothDeltaTime * chunkCount;
-			SyncedTime += SyncedDeltaTime;
+			deformers.Clear ();
 		}
 
 		private void NotifyPreModify ()
 		{
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+			{
 				if (deformers[deformerIndex].update)
 					deformers[deformerIndex].PreModify ();
+			}
 		}
 		private void NotifyPostModify ()
 		{
@@ -102,7 +35,7 @@ namespace Deform
 					deformers[deformerIndex].PostModify ();
 		}
 
-		private void DeformChunks ()
+		protected override void DeformChunks ()
 		{
 			NotifyPreModify ();
 
@@ -115,7 +48,7 @@ namespace Deform
 			NotifyPostModify ();
 		}
 
-		private void DeformChunk (int index, bool notifyPrePostModify = false)
+		protected override void DeformChunk (int index, bool notifyPrePostModify = false)
 		{
 			if (chunkCount != chunks.Length)
 				RecreateChunks ();

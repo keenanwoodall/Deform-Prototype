@@ -7,17 +7,26 @@ namespace Deform
 	public abstract class DeformerComponent : MonoBehaviour
 	{
 		public bool update = true;
-		protected DeformerManager manager { get; private set; }
+
+		private DeformerManager manager;
+		protected DeformerManager Manager
+		{
+			get
+			{
+				if (manager == null)
+					manager = GetComponent<DeformerManager> ();
+				return manager;
+			}
+		}
 
 		private void Awake ()
 		{
-			manager = GetComponent<DeformerManager> ();
-			manager.AddDeformer (this);
+			Manager.AddDeformer (this);
 		}
 
 		private void OnDestroy ()
 		{
-			manager.RemoveDeformer (this);
+			Manager.RemoveDeformer (this);
 		}
 
 		public virtual void PreModify () { }

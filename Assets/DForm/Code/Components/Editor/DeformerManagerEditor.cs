@@ -10,6 +10,7 @@ namespace Deform
 		private const string LARGE_INDENT = @"      ";
 		private const bool SHOW_DEFORMERS = false;
 
+
 		public override void OnInspectorGUI ()
 		{
 			var manager = target as DeformerManager;
@@ -32,6 +33,8 @@ namespace Deform
 					EditorGUILayout.LabelField (label, style);
 				}
 			}
+
+			manager.UpdateMesh ();
 
 			Repaint ();
 		}

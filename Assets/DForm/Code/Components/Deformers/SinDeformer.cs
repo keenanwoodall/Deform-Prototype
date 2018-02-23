@@ -19,7 +19,7 @@ namespace Deform.Deformers
 
 		public override void PreModify ()
 		{
-			speedOffset += manager.SyncedDeltaTime * speed;
+			speedOffset += Manager.SyncedDeltaTime * speed;
 
 			switch (along)
 			{
