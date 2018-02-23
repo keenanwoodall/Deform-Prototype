@@ -34,7 +34,8 @@ namespace Deform
 				}
 			}
 
-			manager.UpdateMesh ();
+			if (!Application.isPlaying)
+				manager.UpdateMesh ();
 
 			Repaint ();
 		}
