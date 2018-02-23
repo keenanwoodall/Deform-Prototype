@@ -12,7 +12,12 @@ namespace Deform
 
 		private void Update ()
 		{
+#if UNITY_EDITOR
+			if (Application.isPlaying)
+				UpdateMesh ();
+#else
 			UpdateMesh ();
+#endif
 		}
 
 		private void OnDestroy ()

@@ -70,8 +70,8 @@ namespace Deform
 
 		private void UpdateSyncedTime ()
 		{
-			SyncedDeltaTime = Time.smoothDeltaTime * ChunkCount;
-			SyncedTime += SyncedDeltaTime;
+			SyncedDeltaTime = (Time.time - SyncedTime) * ChunkCount;
+			SyncedTime = Time.time;
 		}
 
 		public void RecreateChunks ()
