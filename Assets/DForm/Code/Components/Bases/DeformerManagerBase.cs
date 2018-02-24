@@ -75,7 +75,7 @@ namespace Deform
 
 		private void UpdateSyncedTime ()
 		{
-			SyncedDeltaTime = (Time.time - SyncedTime) * ChunkCount;
+			SyncedDeltaTime = Time.time - SyncedTime;
 			SyncedTime = Time.time;
 		}
 
