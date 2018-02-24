@@ -37,17 +37,6 @@ namespace Deform
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
 
-		private void Awake ()
-		{
-			DiscardChanges ();
-			ChangeTarget (GetComponent<MeshFilter> ());
-#if UNITY_EDITOR
-			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
-				UpdateMeshInstant ();
-#else
-				UpdateMeshInstant ();
-#endif
-		}
 		private void OnDestroy ()
 		{
 			if (discardChangesOnDestroy)

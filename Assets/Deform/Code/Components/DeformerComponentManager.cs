@@ -10,6 +10,18 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
+		private void Awake ()
+		{
+			DiscardChanges ();
+			ChangeTarget (GetComponent<MeshFilter> ());
+#if UNITY_EDITOR
+			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
+				UpdateMeshInstant ();
+#else
+				UpdateMeshInstant ();
+#endif
+		}
+
 		private void Update ()
 		{
 #if UNITY_EDITOR
