@@ -2,19 +2,19 @@
 
 namespace Deform
 {
-	[RequireComponent (typeof (DeformerManager))]
+	[RequireComponent (typeof (DeformerComponentManager))]
 	[ExecuteInEditMode]
 	public abstract class DeformerComponent : MonoBehaviour
 	{
 		public bool update = true;
 
-		private DeformerManager manager;
-		protected DeformerManager Manager
+		private DeformerComponentManager manager;
+		protected DeformerComponentManager Manager
 		{
 			get
 			{
 				if (manager == null)
-					manager = GetComponent<DeformerManager> ();
+					manager = GetComponent<DeformerComponentManager> ();
 				return manager;
 			}
 		}

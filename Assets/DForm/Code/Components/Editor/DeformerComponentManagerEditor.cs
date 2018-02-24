@@ -3,8 +3,8 @@ using UnityEditor;
 
 namespace Deform
 {
-	[CustomEditor (typeof (DeformerManager))]
-	public class DeformerManagerEditor : Editor
+	[CustomEditor (typeof (DeformerComponentManager))]
+	public class DeformerComponentManagerEditor : Editor
 	{
 		private const string SMALL_INDENT = @"    ";
 		private const string LARGE_INDENT = @"      ";
@@ -13,7 +13,7 @@ namespace Deform
 
 		public override void OnInspectorGUI ()
 		{
-			var manager = target as DeformerManager;
+			var manager = target as DeformerComponentManager;
 
 			base.OnInspectorGUI ();
 

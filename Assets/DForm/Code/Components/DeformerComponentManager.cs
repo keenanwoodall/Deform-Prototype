@@ -5,7 +5,7 @@ namespace Deform
 {
 	[RequireComponent (typeof (MeshFilter))]
 	[ExecuteInEditMode]
-	public class DeformerManager : DeformerBase
+	public class DeformerComponentManager : DeformerBase
 	{
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
