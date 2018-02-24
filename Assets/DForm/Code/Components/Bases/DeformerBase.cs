@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Deform
 {
 	[ExecuteInEditMode]
-	public abstract class DeformerManagerBase : MonoBehaviour
+	public abstract class DeformerBase : MonoBehaviour
 	{
 		public enum UpdateMode { Update, Pause, Stop }
 		public UpdateMode updateMode = UpdateMode.Update;
