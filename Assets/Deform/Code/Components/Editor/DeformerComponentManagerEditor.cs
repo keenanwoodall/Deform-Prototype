@@ -27,6 +27,10 @@ namespace Deform
 				manager.RecreateChunks ();
 			}
 
+			if (manager.updateMode == DeformerBase.UpdateMode.Pause)
+				if (GUILayout.Button ("Update"))
+					manager.UpdateMeshInstant ();
+
 			if (SHOW_DEBUG_INFO)
 			{
 				EditorGUILayout.Separator ();

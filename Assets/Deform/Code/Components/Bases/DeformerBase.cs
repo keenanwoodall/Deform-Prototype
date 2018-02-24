@@ -89,6 +89,9 @@ namespace Deform
 
 		public void UpdateMeshInstant ()
 		{
+			// Reset chunks if deformation isn't finished or just starting
+			if (deformChunkIndex != 0 && deformChunkIndex != ChunkCount - 1)
+				ResetChunks ();
 			DeformChunks ();
 			ApplyChunksToTarget (normalsCalculation, recalculateBounds);
 			ResetChunks ();
@@ -103,7 +106,7 @@ namespace Deform
 			switch (updateMode)
 			{
 				case UpdateMode.Update:
-					// If there's only one chunk, update all chunks and immediatly apply
+					// If there's only one chunk, update all chunks and immediately apply
 					// changes to the mesh.
 					if (ChunkCount == 1 || !multiFrameCalculation)
 					{
