@@ -8,7 +8,7 @@ namespace Deform
 	{
 		public enum UpdateMode { Update, Pause, Stop }
 		public UpdateMode updateMode = UpdateMode.Update;
-		public NormalsCalculation normalsCalculation = NormalsCalculation.Smooth;
+		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
 		public bool recalculateBounds = true;
 		public bool multiFrameCalculation = true;
 		public bool discardChangesOnDestroy = true;
