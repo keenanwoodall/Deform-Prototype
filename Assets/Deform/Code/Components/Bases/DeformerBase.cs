@@ -30,7 +30,7 @@ namespace Deform
 		public int MaxVerticesPerFrame
 		{
 			get { return maxVerticesPerFrame; }
-			set { maxVerticesPerFrame = Mathf.Clamp (value, 50, VertexCount); }
+			set { maxVerticesPerFrame = Mathf.Clamp (value, 100, VertexCount); }
 		}
 		public int ChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerFrame); } }
 		public int VertexCount { get { return originalMesh.vertexCount; } }
