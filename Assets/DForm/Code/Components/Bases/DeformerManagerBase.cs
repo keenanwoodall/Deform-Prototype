@@ -10,6 +10,7 @@ namespace Deform
 		public UpdateMode updateMode = UpdateMode.Update;
 		public NormalsCalculation normalsCalculation = NormalsCalculation.Smooth;
 		public bool recalculateBounds = true;
+		public bool multiFrameCalculation = true;
 		public bool discardChangesOnDestroy = true;
 
 		[SerializeField, HideInInspector]
@@ -26,7 +27,11 @@ namespace Deform
 
 		[SerializeField, HideInInspector]
 		private int maxVerticesPerFrame = 500;
-		public int MaxVerticesPerFrame { get { return maxVerticesPerFrame; } set { maxVerticesPerFrame = Mathf.Clamp (value, 50, VertexCount); } }
+		public int MaxVerticesPerFrame
+		{
+			get { return maxVerticesPerFrame; }
+			set { maxVerticesPerFrame = Mathf.Clamp (value, 50, VertexCount); }
+		}
 		public int ChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerFrame); } }
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
@@ -122,7 +127,7 @@ namespace Deform
 				case UpdateMode.Update:
 					// If there's only one chunk, update all chunks and immediatly apply
 					// changes to the mesh.
-					if (ChunkCount == 1)
+					if (ChunkCount == 1 || !multiFrameCalculation)
 					{
 						UpdateSyncedTime ();
 						UpdateMeshInstant ();
