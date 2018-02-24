@@ -19,7 +19,7 @@ namespace Deform
 
 			EditorGUI.BeginChangeCheck ();
 			var label = new GUIContent ("Max Vertices Per Frame");
-			var maxVerticesPerFrame = EditorGUILayout.IntSlider (label, manager.MaxVerticesPerFrame, 50, manager.VertexCount);
+			var maxVerticesPerFrame = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerFrame);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Changed Max Vertices Per Frame");
@@ -29,13 +29,18 @@ namespace Deform
 
 			if (SHOW_DEBUG_INFO)
 			{
+				EditorGUILayout.Separator ();
+
 				EditorGUILayout.LabelField (string.Format ("Vertex Count: {0}", manager.VertexCount));
 				EditorGUILayout.LabelField (string.Format ("Chunk Count: {0}", manager.ChunkCount));
 
 				var deformers = manager.GetDeformers ();
 				foreach (var deformer in deformers)
 				{
-					EditorGUILayout.LabelField (deformer.GetType ().Name);
+					var indent = deformer.update ? LARGE_INDENT : SMALL_INDENT;
+					EditorGUI.BeginDisabledGroup (!deformer.update);
+					EditorGUILayout.LabelField (indent + deformer.GetType ().Name);
+					EditorGUI.EndDisabledGroup ();
 				}
 			}
 
