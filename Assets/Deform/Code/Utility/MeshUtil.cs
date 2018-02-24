@@ -15,6 +15,7 @@ namespace Deform
 			copy.uv2 = mesh.uv2;
 			copy.uv3 = mesh.uv3;
 			copy.uv4 = mesh.uv4;
+			copy.colors = mesh.colors;
 
 			return copy;
 		}
