@@ -54,10 +54,12 @@ namespace Deform
 				DiscardChanges ();
 		}
 
-		public void ChangeTarget (MeshFilter meshFilter)
+		public void ChangeTarget (MeshFilter meshFilter, Mesh newMesh = null)
 		{
 			// Assign the target.
 			target = meshFilter;
+			if (newMesh != null)
+				target.sharedMesh = newMesh;
 			// If it's not null, the object was probably duplicated
 			if (originalMesh == null)
 				// Store the original mesh.
@@ -71,45 +73,6 @@ namespace Deform
 
 			// Create chunk data.
 			RecreateChunks ();
-		}
-
-		private void UpdateSyncedTime ()
-		{
-			SyncedDeltaTime = Time.time - SyncedTime;
-			SyncedTime = Time.time;
-		}
-
-		public void RecreateChunks ()
-		{
-			chunks = ChunkUtil.CreateChunks (originalMesh, ChunkCount);
-		}
-
-		protected void ApplyChunksToTarget (NormalsCalculation normalsCalculation, bool recalculateBounds)
-		{
-			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
-
-			switch (normalsCalculation)
-			{
-				case NormalsCalculation.Unity:
-					target.sharedMesh.RecalculateNormals ();
-					break;
-				case NormalsCalculation.Smooth:
-					target.sharedMesh.RecalculateNormals (60f);
-					break;
-				case NormalsCalculation.Maintain:
-					break;
-				case NormalsCalculation.Original:
-					target.sharedMesh.SetNormals (originalNormals);
-					break;
-			}
-
-			if (recalculateBounds)
-				target.sharedMesh.RecalculateBounds ();
-		}
-
-		protected void ResetChunks ()
-		{
-			ChunkUtil.ResetChunks (chunks);
 		}
 
 		public void UpdateMeshInstant ()
@@ -156,8 +119,47 @@ namespace Deform
 			}
 		}
 
+		private void UpdateSyncedTime ()
+		{
+			SyncedDeltaTime = Time.time - SyncedTime;
+			SyncedTime = Time.time;
+		}
+
+		public void RecreateChunks ()
+		{
+			chunks = ChunkUtil.CreateChunks (originalMesh, ChunkCount);
+		}
+
+		protected void ApplyChunksToTarget (NormalsCalculation normalsCalculation, bool recalculateBounds)
+		{
+			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
+
+			switch (normalsCalculation)
+			{
+				case NormalsCalculation.Unity:
+					target.sharedMesh.RecalculateNormals ();
+					break;
+				case NormalsCalculation.Smooth:
+					target.sharedMesh.RecalculateNormals (60f);
+					break;
+				case NormalsCalculation.Maintain:
+					break;
+				case NormalsCalculation.Original:
+					target.sharedMesh.SetNormals (originalNormals);
+					break;
+			}
+
+			if (recalculateBounds)
+				target.sharedMesh.RecalculateBounds ();
+		}
+
 		protected abstract void DeformChunk (int index, bool notifyPrePostModify = false);
 		protected abstract void DeformChunks ();
+
+		protected void ResetChunks ()
+		{
+			ChunkUtil.ResetChunks (chunks);
+		}
 
 		public void DiscardChanges ()
 		{
