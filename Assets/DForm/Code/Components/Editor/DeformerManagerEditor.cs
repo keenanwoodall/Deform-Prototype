@@ -18,7 +18,8 @@ namespace Deform
 			base.OnInspectorGUI ();
 
 			EditorGUI.BeginChangeCheck ();
-			var maxVerticesPerFrame = EditorGUILayout.IntSlider (new GUIContent ("Max Vertices Per Frame"), manager.MaxVerticesPerFrame, 50, manager.VertexCount);
+			var label = new GUIContent ("Max Vertices Per Frame");
+			var maxVerticesPerFrame = EditorGUILayout.IntSlider (label, manager.MaxVerticesPerFrame, 50, manager.VertexCount);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Changed Max Vertices Per Frame");
