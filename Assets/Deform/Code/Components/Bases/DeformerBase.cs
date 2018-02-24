@@ -9,6 +9,7 @@ namespace Deform
 		public enum UpdateMode { Update, Pause, Stop }
 		public UpdateMode updateMode = UpdateMode.Update;
 		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
+		public bool updateOffscreen;
 		public bool recalculateBounds = true;
 		public bool multiFrameCalculation = true;
 		public bool discardChangesOnDestroy = true;
@@ -36,6 +37,17 @@ namespace Deform
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
+		public bool Visible { get; private set; }
+
+		private void OnBecameInvisible ()
+		{
+			Visible = false;
+		}
+
+		private void OnBecameVisible ()
+		{
+			Visible = true;
+		}
 
 		private void OnDestroy ()
 		{
@@ -74,6 +86,9 @@ namespace Deform
 
 		public void UpdateMesh ()
 		{
+			if (!updateOffscreen && !Visible)
+				return;
+
 			switch (updateMode)
 			{
 				case UpdateMode.Update:

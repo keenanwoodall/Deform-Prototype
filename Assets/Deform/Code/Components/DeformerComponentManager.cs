@@ -31,7 +31,6 @@ namespace Deform
 			UpdateMesh ();
 #endif
 		}
-
 		private void OnDestroy ()
 		{
 			deformers.Clear ();
