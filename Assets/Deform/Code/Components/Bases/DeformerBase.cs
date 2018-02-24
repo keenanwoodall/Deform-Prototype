@@ -55,12 +55,11 @@ namespace Deform
 				DiscardChanges ();
 		}
 
-		public void ChangeTarget (MeshFilter meshFilter, Mesh newMesh = null)
+		public void ChangeTarget (MeshFilter meshFilter)
 		{
 			// Assign the target.
 			target = meshFilter;
-			if (newMesh != null)
-				target.sharedMesh = newMesh;
+
 			// If it's not null, the object was probably duplicated
 			if (originalMesh == null)
 				// Store the original mesh.
@@ -68,6 +67,18 @@ namespace Deform
 			// Change the mesh to one we can modify.
 			target.sharedMesh = MeshUtil.Copy (originalMesh);
 			// Cache the original normals.
+			target.sharedMesh.GetNormals (originalNormals);
+
+			deformChunkIndex = 0;
+
+			// Create chunk data.
+			RecreateChunks ();
+		}
+
+		public void ChangeMesh (Mesh mesh)
+		{
+			originalMesh = MeshUtil.Copy (mesh);
+			target.sharedMesh = MeshUtil.Copy (mesh);
 			target.sharedMesh.GetNormals (originalNormals);
 
 			deformChunkIndex = 0;
