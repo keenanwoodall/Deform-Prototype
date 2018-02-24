@@ -6,13 +6,11 @@ namespace Deform
 	[ExecuteInEditMode]
 	public abstract class DeformerBase : MonoBehaviour
 	{
-		public enum UpdateMode { Update, Pause, Stop }
 		public UpdateMode updateMode = UpdateMode.Update;
 		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
 		public bool recalculateBounds = true;
 		public bool multiFrameCalculation = true;
 		public bool discardChangesOnDestroy = true;
-		public bool updateOffscreen;
 
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
@@ -37,17 +35,6 @@ namespace Deform
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
-		public bool Visible { get; private set; }
-
-		private void OnBecameInvisible ()
-		{
-			Visible = false;
-		}
-
-		private void OnBecameVisible ()
-		{
-			Visible = true;
-		}
 
 		private void OnDestroy ()
 		{
@@ -87,11 +74,14 @@ namespace Deform
 			RecreateChunks ();
 		}
 
-		public void UpdateMeshInstant ()
+		public void UpdateMeshInstant (bool updateSyncedTime = false)
 		{
 			// Reset chunks if deformation isn't finished or just starting
 			if (deformChunkIndex != 0 && deformChunkIndex != ChunkCount - 1)
 				ResetChunks ();
+
+			if (updateSyncedTime)
+				UpdateSyncedTime ();
 			DeformChunks ();
 			ApplyChunksToTarget (normalsCalculation, recalculateBounds);
 			ResetChunks ();
@@ -100,19 +90,13 @@ namespace Deform
 
 		public void UpdateMesh ()
 		{
-			if (!updateOffscreen && !Visible)
-				return;
-
 			switch (updateMode)
 			{
 				case UpdateMode.Update:
 					// If there's only one chunk, update all chunks and immediately apply
 					// changes to the mesh.
 					if (ChunkCount == 1 || !multiFrameCalculation)
-					{
-						UpdateSyncedTime ();
-						UpdateMeshInstant ();
-					}
+						UpdateMeshInstant (true);
 					// Otherwise deform the current chunk.
 					else
 					{
