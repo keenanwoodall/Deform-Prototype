@@ -86,6 +86,19 @@ namespace Deform
 				deformers.Remove (deformer);
 		}
 
+		public void RefreshDeformerOrder ()
+		{
+			var oldDeformers = new List<DeformerComponent> ();
+			oldDeformers.AddRange (deformers);
+			deformers.Clear ();
+
+			var currentDeformers = GetComponents<DeformerComponent> ();
+
+			for (int i = 0; i < currentDeformers.Length; i++)
+				if (oldDeformers.Contains (currentDeformers[i]))
+					deformers.Add (currentDeformers[i]);
+		}
+
 		public List<DeformerComponent> GetDeformers ()
 		{
 			return deformers;

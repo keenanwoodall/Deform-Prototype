@@ -31,7 +31,15 @@ namespace Deform
 			{
 				EditorGUILayout.LabelField (string.Format ("Vertex Count: {0}", manager.VertexCount));
 				EditorGUILayout.LabelField (string.Format ("Chunk Count: {0}", manager.ChunkCount));
+
+				var deformers = manager.GetDeformers ();
+				foreach (var deformer in deformers)
+				{
+					EditorGUILayout.LabelField (deformer.GetType ().Name);
+				}
 			}
+
+			manager.RefreshDeformerOrder ();
 
 			if (!Application.isPlaying)
 				manager.UpdateMesh ();

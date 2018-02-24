@@ -23,9 +23,12 @@ namespace Deform
 			var vertices = mesh.vertices;
 			var normals = mesh.normals;
 			var tangents = mesh.tangents;
+			var colors = mesh.colors;
+			if (colors == null || colors.Length == 0)
+				colors = new Color[vertexCount];
 
 			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				vertexData[vertexIndex] = new VertexData (vertices[vertexIndex], normals[vertexIndex], tangents[vertexIndex]);
+				vertexData[vertexIndex] = new VertexData (vertices[vertexIndex], normals[vertexIndex], tangents[vertexIndex], colors[vertexIndex]);
 
 			return vertexData;
 		}
@@ -72,6 +75,17 @@ namespace Deform
 				tangents[vertexIndex] = vertexData[vertexIndex].tangent;
 
 			return tangents;
+		}
+
+		public static Color[] GetColors (VertexData[] vertexData)
+		{
+			var vertexCount = vertexData.Length;
+			var colors = new Color[vertexCount];
+
+			for (var vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+				colors[vertexIndex] = vertexData[vertexIndex].color;
+
+			return colors;
 		}
 
 		public static VertexData[] ResetVertexData (VertexData[] vertexData)
