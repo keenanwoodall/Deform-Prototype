@@ -38,7 +38,7 @@ namespace Deform
 		{
 			EditorGUI.BeginChangeCheck ();
 			var threaded = manager.multithreaded;
-			threaded = EditorGUILayout.Toggle ("Multi-Threaded" + ((Application.isPlaying) ? "" : " (in play-mode)"), threaded);
+			threaded = EditorGUILayout.Toggle ("Multi-Threaded" + ((Application.isPlaying) ? "" : " (In Play-Mode)"), threaded);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Multi-Threaded");
@@ -75,7 +75,7 @@ namespace Deform
 		private void DrawMaxVerticesPerChunkGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			var label = new GUIContent ("Max Vertices Per Chunk");
+			var label = new GUIContent ("Max Vertices Per Chunk" + ((manager.multithreaded ? " (In Edit-Mode)" : "")));
 			var maxVerticesPerChunk = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerChunk);
 			if (EditorGUI.EndChangeCheck ())
 			{
