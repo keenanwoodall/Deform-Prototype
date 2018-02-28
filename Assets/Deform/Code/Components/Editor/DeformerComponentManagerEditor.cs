@@ -14,21 +14,37 @@ namespace Deform
 		{
 			var manager = target as DeformerComponentManager;
 
-			DrawUpdateModeGUI (manager);
-			DrawMaxVerticesPerFrameGUI (manager);
+			DrawThreadedGUI (manager);
+			if (!manager.threaded || !Application.isPlaying)
+			{
+				DrawUpdateModeGUI (manager);
+				DrawMaxVerticesPerFrameGUI (manager);
+			}
 			DrawNormalsCalculationGUI (manager);
 			DrawRecalculateBoundsGUI (manager);
 			DrawMultiframeCalculationGUI (manager);
 			DrawDiscardChangesOnDestroyGUI (manager);
 
-			DrawDebugGUI (manager);
+			//DrawDebugGUI (manager);
 
 			manager.RefreshDeformerOrder ();
 
 			if (!Application.isPlaying)
-				manager.UpdateMesh ();
+				manager.UpdateMesh (manager.updateMode, manager.normalsCalculation);
 
 			Repaint ();
+		}
+
+		private void DrawThreadedGUI (DeformerComponentManager manager)
+		{
+			EditorGUI.BeginChangeCheck ();
+			var threaded = manager.threaded;
+			threaded = EditorGUILayout.Toggle ("Threaded" + ((Application.isPlaying) ? "" : " (in play-mode)"), threaded);
+			if (EditorGUI.EndChangeCheck ())
+			{
+				Undo.RecordObject (manager, "Threaded");
+				manager.threaded = threaded;
+			}
 		}
 
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
@@ -53,7 +69,7 @@ namespace Deform
 
 			if (manager.updateMode == UpdateMode.Pause)
 				if (GUILayout.Button ("Step", GUILayout.Width (50)))
-					manager.UpdateMeshInstant ();
+					manager.UpdateMeshInstant (manager.normalsCalculation);
 			GUILayout.EndHorizontal ();
 		}
 

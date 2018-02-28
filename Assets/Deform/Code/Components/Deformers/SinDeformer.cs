@@ -35,16 +35,16 @@ namespace Deform.Deformers
 			}
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData)
+		public override Chunk Modify (Chunk chunk)
 		{
 			if (useWorldPosition)
-				for (var vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
-					vertexData[vertexIndex].position += Sin3D (vertexData[vertexIndex].position + transform.position + axisOffset);
+				for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+					chunk.vertexData[vertexIndex].position += Sin3D (chunk.vertexData[vertexIndex].position + chunk.transformData.position + axisOffset);
 			else
-				for (var vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
-					vertexData[vertexIndex].position += Sin3D (vertexData[vertexIndex].position + axisOffset);
+				for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+					chunk.vertexData[vertexIndex].position += Sin3D (chunk.vertexData[vertexIndex].position + axisOffset);
 
-			return vertexData;
+			return chunk;
 		}
 
 		private Vector3 Sin3D (Vector3 sample)

@@ -7,6 +7,12 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerComponentManager : DeformerBase
 	{
+		public bool threaded = true;
+		public UpdateMode updateMode = UpdateMode.Update;
+		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
+
+		public bool recalculateBounds = true;
+
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
@@ -16,19 +22,28 @@ namespace Deform
 			ChangeTarget (GetComponent<MeshFilter> ());
 #if UNITY_EDITOR
 			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
-				UpdateMeshInstant ();
+				UpdateMeshInstant (normalsCalculation);
 #else
-				UpdateMeshInstant ();
+				UpdateMeshInstant (normalsCalculation);
 #endif
 		}
 
-		private void Update ()
+		public void Update ()
 		{
 #if UNITY_EDITOR
 			if (Application.isPlaying)
-				UpdateMesh ();
+			{
+				if (threaded)
+					UpdateMeshAsync (normalsCalculation);
+				else
+					UpdateMesh (updateMode, normalsCalculation);
+			}
 #else
-			UpdateMesh ();
+			if (threaded)
+					UpdateMeshAsync (normalsCalculation);
+				else
+					UpdateMesh (updateMode, normalsCalculation);
+			}
 #endif
 		}
 		private void OnDestroy ()
@@ -59,7 +74,7 @@ namespace Deform
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
 					for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-						chunks[chunkIndex].vertexData = deformers[deformerIndex].Modify (chunks[chunkIndex].vertexData);
+						chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
 
 			NotifyPostModify ();
 		}
@@ -75,7 +90,7 @@ namespace Deform
 			// Modify chunk
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
-					chunks[index].vertexData = deformers[deformerIndex].Modify (chunks[index].vertexData);
+					chunks[index] = deformers[deformerIndex].Modify (chunks[index]);
 
 			if (notifyPrePostModify)
 				NotifyPostModify ();

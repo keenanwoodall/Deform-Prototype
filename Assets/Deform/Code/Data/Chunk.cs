@@ -6,11 +6,13 @@ namespace Deform
 	public struct Chunk
 	{
 		public VertexData[] vertexData;
+		public TransformData transformData;
 		public int Size { get { return vertexData.Length; } }
 
-		public Chunk (VertexData[] vertexData)
+		public Chunk (VertexData[] vertexData, TransformData transformData)
 		{
 			this.vertexData = vertexData;
+			this.transformData = transformData;
 		}
 
 		public Chunk (Vector3[] positions, Vector3[] normals, Color[] colors)
@@ -24,6 +26,8 @@ namespace Deform
 				var color = colors[i];
 				vertexData[i] = new VertexData (position, position, normal, color);
 			}
+
+			transformData = new TransformData ();
 		}
 
 		public Chunk (Vector3[] basePositions, Vector3[] positions, Vector3[] normals, Color[] colors)
@@ -38,6 +42,8 @@ namespace Deform
 				var color = colors[i];
 				vertexData[i] = new VertexData (basePosition, position, normal, color);
 			}
+
+			transformData = new TransformData ();
 		}
 
 		public void ResetPositions ()

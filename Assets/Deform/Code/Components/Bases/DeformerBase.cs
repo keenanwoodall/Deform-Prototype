@@ -6,9 +6,6 @@ namespace Deform
 	[ExecuteInEditMode]
 	public abstract class DeformerBase : MonoBehaviour
 	{
-		public UpdateMode updateMode = UpdateMode.Update;
-		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
-		public bool recalculateBounds = true;
 		public bool multiFrameCalculation = true;
 		public bool discardChangesOnDestroy = true;
 
@@ -22,6 +19,7 @@ namespace Deform
 		private List<Vector3> originalNormals = new List<Vector3> ();
 
 		protected int deformChunkIndex;
+		protected bool asyncUpdateInProgress { get; private set; }
 
 		[SerializeField, HideInInspector]
 		private int maxVerticesPerFrame = 500;
@@ -73,8 +71,10 @@ namespace Deform
 			RecreateChunks ();
 		}
 
-		public void UpdateMeshInstant (bool updateSyncedTime = false)
+		public void UpdateMeshInstant (NormalsCalculation normalsCalculation, bool updateSyncedTime = false, bool recalculateBounds = true)
 		{
+			UpdateChunkTransformData ();
+
 			// Reset chunks if deformation isn't finished or just starting
 			if (deformChunkIndex != 0 && deformChunkIndex != ChunkCount - 1)
 				ResetChunks ();
@@ -87,7 +87,7 @@ namespace Deform
 			deformChunkIndex = 0;
 		}
 
-		public void UpdateMesh ()
+		public void UpdateMesh (UpdateMode updateMode, NormalsCalculation normalsCalculation, bool recalculateBounds = true)
 		{
 			switch (updateMode)
 			{
@@ -95,7 +95,7 @@ namespace Deform
 					// If there's only one chunk, update all chunks and immediately apply
 					// changes to the mesh.
 					if (ChunkCount == 1 || !multiFrameCalculation)
-						UpdateMeshInstant (true);
+						UpdateMeshInstant (normalsCalculation, true);
 					// Otherwise deform the current chunk.
 					else
 					{
@@ -103,6 +103,7 @@ namespace Deform
 						if (deformChunkIndex >= chunks.Length)
 						{
 							UpdateSyncedTime ();
+							UpdateChunkTransformData ();
 							ApplyChunksToTarget (normalsCalculation, recalculateBounds);
 							ResetChunks ();
 							deformChunkIndex = 0;
@@ -120,6 +121,21 @@ namespace Deform
 			}
 		}
 
+		public async void UpdateMeshAsync (NormalsCalculation normalsCalculation, bool recalculateBounds = true)
+		{
+			if (asyncUpdateInProgress)
+				return;
+			UpdateChunkTransformData ();
+			UpdateSyncedTime ();
+			asyncUpdateInProgress = true;
+			await new WaitForBackgroundThread ();
+			DeformChunks ();
+			await new WaitForUpdate ();
+			asyncUpdateInProgress = false;
+			ApplyChunksToTarget (normalsCalculation, recalculateBounds);
+			ResetChunks ();
+		}
+
 		private void UpdateSyncedTime ()
 		{
 			SyncedDeltaTime = Time.time - SyncedTime;
@@ -129,6 +145,13 @@ namespace Deform
 		public void RecreateChunks ()
 		{
 			chunks = ChunkUtil.CreateChunks (originalMesh, ChunkCount);
+			UpdateChunkTransformData ();
+		}
+
+		public void UpdateChunkTransformData ()
+		{
+			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+				chunks[chunkIndex].transformData = new TransformData (transform);
 		}
 
 		protected void ApplyChunksToTarget (NormalsCalculation normalsCalculation, bool recalculateBounds)

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityAsyncAwaitUtil;
+using System.Threading.Tasks;
 
 namespace Deform
 {
@@ -29,8 +31,14 @@ namespace Deform
 			Manager.RemoveDeformer (this);
 		}
 
+
 		public virtual void PreModify () { }
-		public abstract VertexData[] Modify (VertexData[] vertexData);
+		public abstract Chunk Modify (Chunk chunk);
+		public async Task<Chunk> ModifyAsync (Chunk chunk)
+		{
+			await new WaitForBackgroundThread ();
+			return Modify (chunk);
+		}
 		public virtual void PostModify () { }
 	}
 }
