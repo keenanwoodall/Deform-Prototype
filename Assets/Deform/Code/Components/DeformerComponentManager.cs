@@ -7,7 +7,7 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerComponentManager : DeformerBase
 	{
-		public bool threaded = true;
+		public bool multithreaded = true;
 		public UpdateMode updateMode = UpdateMode.Update;
 		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
 
@@ -33,7 +33,7 @@ namespace Deform
 #if UNITY_EDITOR
 			if (Application.isPlaying)
 			{
-				if (threaded)
+				if (multithreaded)
 					UpdateMeshAsync (normalsCalculation);
 				else
 					UpdateMesh (updateMode, normalsCalculation);

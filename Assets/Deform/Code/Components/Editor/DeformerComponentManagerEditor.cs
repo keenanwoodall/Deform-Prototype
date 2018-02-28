@@ -15,7 +15,7 @@ namespace Deform
 			var manager = target as DeformerComponentManager;
 
 			DrawThreadedGUI (manager);
-			if (!manager.threaded || !Application.isPlaying)
+			if (!manager.multithreaded || !Application.isPlaying)
 			{
 				DrawUpdateModeGUI (manager);
 				DrawMaxVerticesPerFrameGUI (manager);
@@ -37,12 +37,12 @@ namespace Deform
 		private void DrawThreadedGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			var threaded = manager.threaded;
-			threaded = EditorGUILayout.Toggle ("Threaded" + ((Application.isPlaying) ? "" : " (in play-mode)"), threaded);
+			var threaded = manager.multithreaded;
+			threaded = EditorGUILayout.Toggle ("Multi-Threaded" + ((Application.isPlaying) ? "" : " (in play-mode)"), threaded);
 			if (EditorGUI.EndChangeCheck ())
 			{
-				Undo.RecordObject (manager, "Threaded");
-				manager.threaded = threaded;
+				Undo.RecordObject (manager, "Multi-Threaded");
+				manager.multithreaded = threaded;
 			}
 		}
 
