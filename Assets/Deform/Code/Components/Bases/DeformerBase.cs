@@ -6,7 +6,6 @@ namespace Deform
 	[ExecuteInEditMode]
 	public abstract class DeformerBase : MonoBehaviour
 	{
-		public bool multiFrameCalculation = true;
 		public bool discardChangesOnDestroy = true;
 
 		[SerializeField, HideInInspector]
@@ -94,7 +93,7 @@ namespace Deform
 				case UpdateMode.Update:
 					// If there's only one chunk, update all chunks and immediately apply
 					// changes to the mesh.
-					if (ChunkCount == 1 || !multiFrameCalculation)
+					if (ChunkCount == 1)
 						UpdateMeshInstant (normalsCalculation, true);
 					// Otherwise deform the current chunk.
 					else

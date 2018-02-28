@@ -22,7 +22,6 @@ namespace Deform
 			}
 			DrawNormalsCalculationGUI (manager);
 			DrawRecalculateBoundsGUI (manager);
-			DrawMultiframeCalculationGUI (manager);
 			DrawDiscardChangesOnDestroyGUI (manager);
 
 			//DrawDebugGUI (manager);
@@ -107,18 +106,6 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Recalculate Bounds");
 				manager.recalculateBounds = recalculateBounds;
-			}
-		}
-
-		private void DrawMultiframeCalculationGUI (DeformerComponentManager manager)
-		{
-			EditorGUI.BeginChangeCheck ();
-			var multiFrameCalculation = manager.multiFrameCalculation;
-			multiFrameCalculation = EditorGUILayout.Toggle ("Multiframe Calculation", multiFrameCalculation);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				Undo.RecordObject (manager, "Multiframe Calculation");
-				manager.multiFrameCalculation = multiFrameCalculation;
 			}
 		}
 
