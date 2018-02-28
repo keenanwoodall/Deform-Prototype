@@ -4,4 +4,8 @@ A framework for deforming meshes at runtime in Unity. This is basically a v2 of 
 Features:
   Very easily extendable
   Runs in edit mode
+  Multi-threaded
   Calculation splitting/chunking
+
+Current Deformers
+  Sin, Transform, Vertex Color Mask
