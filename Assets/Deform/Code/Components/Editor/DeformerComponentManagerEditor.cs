@@ -34,18 +34,17 @@ namespace Deform
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			EditorGUILayout.BeginHorizontal ();
+			GUILayout.BeginHorizontal ();
 			var updateMode = manager.updateMode;
 			if (updateMode != UpdateMode.Update)
-				if (GUILayout.Button ("Play"))
+				if (GUILayout.Button ("Play", GUILayout.Width (50)))
 					updateMode = UpdateMode.Update;
 			if (updateMode != UpdateMode.Pause && updateMode != UpdateMode.Stop)
-				if (GUILayout.Button ("Pause"))
+				if (GUILayout.Button ("Pause", GUILayout.Width (50)))
 					updateMode = UpdateMode.Pause;
 			if (updateMode != UpdateMode.Stop)
-				if (GUILayout.Button ("Stop"))
+				if (GUILayout.Button ("Stop", GUILayout.Width (50)))
 					updateMode = UpdateMode.Stop;
-			EditorGUILayout.EndHorizontal ();
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Update Mode");
@@ -53,8 +52,9 @@ namespace Deform
 			}
 
 			if (manager.updateMode == UpdateMode.Pause)
-				if (GUILayout.Button ("Step"))
+				if (GUILayout.Button ("Step", GUILayout.Width (50)))
 					manager.UpdateMeshInstant ();
+			GUILayout.EndHorizontal ();
 		}
 
 		private void DrawMaxVerticesPerFrameGUI (DeformerComponentManager manager)

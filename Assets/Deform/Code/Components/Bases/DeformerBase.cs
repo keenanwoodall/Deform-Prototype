@@ -19,7 +19,6 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
 
-		private bool usingOriginalNormals;
 		private List<Vector3> originalNormals = new List<Vector3> ();
 
 		protected int deformChunkIndex;
