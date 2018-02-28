@@ -22,7 +22,7 @@ namespace Deform
 			DrawRecalculateBoundsGUI (manager);
 			DrawDiscardChangesOnDestroyGUI (manager);
 
-			//DrawDebugGUI (manager);
+			DrawDebugGUI (manager);
 
 			manager.RefreshDeformerOrder ();
 
@@ -126,6 +126,8 @@ namespace Deform
 
 			EditorGUILayout.Separator ();
 
+
+			EditorGUILayout.LabelField ("Debug:");
 			EditorGUILayout.LabelField (string.Format ("Vertex Count: {0}", manager.VertexCount));
 			EditorGUILayout.LabelField (string.Format ("Chunk Count: {0}", manager.ChunkCount));
 			EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
