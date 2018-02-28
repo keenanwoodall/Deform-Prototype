@@ -15,11 +15,9 @@ namespace Deform
 			var manager = target as DeformerComponentManager;
 
 			DrawThreadedGUI (manager);
-			if (!manager.multithreaded || !Application.isPlaying)
-			{
+			if (!manager.multithreaded)
 				DrawUpdateModeGUI (manager);
-				DrawMaxVerticesPerFrameGUI (manager);
-			}
+			DrawMaxVerticesPerChunkGUI (manager);
 			DrawNormalsCalculationGUI (manager);
 			DrawRecalculateBoundsGUI (manager);
 			DrawDiscardChangesOnDestroyGUI (manager);
@@ -72,15 +70,15 @@ namespace Deform
 			GUILayout.EndHorizontal ();
 		}
 
-		private void DrawMaxVerticesPerFrameGUI (DeformerComponentManager manager)
+		private void DrawMaxVerticesPerChunkGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			var label = new GUIContent ("Max Vertices Per Frame");
-			var maxVerticesPerFrame = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerFrame);
+			var label = new GUIContent ("Max Vertices Per Chunk");
+			var maxVerticesPerChunk = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerChunk);
 			if (EditorGUI.EndChangeCheck ())
 			{
-				Undo.RecordObject (manager, " Max Vertices Per Frame");
-				manager.MaxVerticesPerFrame = maxVerticesPerFrame;
+				Undo.RecordObject (manager, " Max Vertices Per Chunk");
+				manager.MaxVerticesPerChunk = maxVerticesPerChunk;
 				manager.RecreateChunks ();
 			}
 		}

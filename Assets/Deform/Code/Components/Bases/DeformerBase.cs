@@ -22,12 +22,12 @@ namespace Deform
 
 		[SerializeField, HideInInspector]
 		private int maxVerticesPerFrame = 500;
-		public int MaxVerticesPerFrame
+		public int MaxVerticesPerChunk
 		{
 			get { return maxVerticesPerFrame; }
 			set { maxVerticesPerFrame = Mathf.Clamp (value, 100, VertexCount); }
 		}
-		public int ChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerFrame); } }
+		public int ChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerChunk); } }
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
