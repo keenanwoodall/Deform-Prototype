@@ -19,6 +19,8 @@ namespace Deform
 				DrawUpdateModeGUI (manager);
 			DrawMaxVerticesPerChunkGUI (manager);
 			DrawNormalsCalculationGUI (manager);
+			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
+				DrawSmoothAngleGUI (manager);
 			DrawRecalculateBoundsGUI (manager);
 			DrawDiscardChangesOnDestroyGUI (manager);
 
@@ -27,7 +29,7 @@ namespace Deform
 			manager.RefreshDeformerOrder ();
 
 			if (!Application.isPlaying)
-				manager.UpdateMesh (manager.updateMode, manager.normalsCalculation);
+				manager.UpdateMesh (manager.updateMode, manager.normalsCalculation, manager.SmoothingAngle);
 
 			Repaint ();
 		}
@@ -66,7 +68,7 @@ namespace Deform
 
 			if (manager.updateMode == UpdateMode.Pause)
 				if (GUILayout.Button ("Step", GUILayout.Width (50)))
-					manager.UpdateMeshInstant (manager.normalsCalculation);
+					manager.UpdateMeshInstant (manager.normalsCalculation, manager.SmoothingAngle);
 			GUILayout.EndHorizontal ();
 		}
 
@@ -87,11 +89,23 @@ namespace Deform
 		{
 			EditorGUI.BeginChangeCheck ();
 			var normalsCalculation = manager.normalsCalculation;
-			normalsCalculation = (NormalsCalculation)EditorGUILayout.EnumPopup ("Normals Calculation", normalsCalculation);
+			normalsCalculation = (NormalsCalculationMode)EditorGUILayout.EnumPopup ("Normals Calculation", normalsCalculation);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Normals Calculation");
 				manager.normalsCalculation = normalsCalculation;
+			}
+		}
+
+		private void DrawSmoothAngleGUI (DeformerComponentManager manager)
+		{
+			EditorGUI.BeginChangeCheck ();
+			var smoothingAngle = manager.SmoothingAngle;
+			smoothingAngle = EditorGUILayout.FloatField ("Smoothing Angle", smoothingAngle);
+			if (EditorGUI.EndChangeCheck ())
+			{
+				Undo.RecordObject (manager, "Smoothing Angle");
+				manager.SmoothingAngle = smoothingAngle;
 			}
 		}
 

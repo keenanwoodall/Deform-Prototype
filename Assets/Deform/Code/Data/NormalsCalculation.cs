@@ -1,4 +1,4 @@
 ﻿namespace Deform
 {
-	public enum NormalsCalculation { Unity, Smooth, Maintain, Original }
+	public enum NormalsCalculationMode { Unity, Smooth, Maintain, Original }
 }

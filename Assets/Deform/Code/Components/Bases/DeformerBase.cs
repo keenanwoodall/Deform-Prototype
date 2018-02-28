@@ -70,7 +70,7 @@ namespace Deform
 			RecreateChunks ();
 		}
 
-		public void UpdateMeshInstant (NormalsCalculation normalsCalculation, bool updateSyncedTime = false, bool recalculateBounds = true)
+		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool updateSyncedTime = false, bool recalculateBounds = true)
 		{
 			UpdateChunkTransformData ();
 
@@ -81,12 +81,12 @@ namespace Deform
 			if (updateSyncedTime)
 				UpdateSyncedTime ();
 			DeformChunks ();
-			ApplyChunksToTarget (normalsCalculation, recalculateBounds);
+			ApplyChunksToTarget (normalsCalculation, smoothingAngle, recalculateBounds);
 			ResetChunks ();
 			deformChunkIndex = 0;
 		}
 
-		public void UpdateMesh (UpdateMode updateMode, NormalsCalculation normalsCalculation, bool recalculateBounds = true)
+		public void UpdateMesh (UpdateMode updateMode, NormalsCalculationMode normalsCalculation, float smoothingAngle, bool recalculateBounds = true)
 		{
 			switch (updateMode)
 			{
@@ -94,7 +94,7 @@ namespace Deform
 					// If there's only one chunk, update all chunks and immediately apply
 					// changes to the mesh.
 					if (ChunkCount == 1)
-						UpdateMeshInstant (normalsCalculation, true);
+						UpdateMeshInstant (normalsCalculation, smoothingAngle, true);
 					// Otherwise deform the current chunk.
 					else
 					{
@@ -103,7 +103,7 @@ namespace Deform
 						{
 							UpdateSyncedTime ();
 							UpdateChunkTransformData ();
-							ApplyChunksToTarget (normalsCalculation, recalculateBounds);
+							ApplyChunksToTarget (normalsCalculation, smoothingAngle, recalculateBounds);
 							ResetChunks ();
 							deformChunkIndex = 0;
 						}
@@ -115,12 +115,12 @@ namespace Deform
 					return;
 				case UpdateMode.Stop:
 					ResetChunks ();
-					ApplyChunksToTarget (NormalsCalculation.Original, recalculateBounds);
+					ApplyChunksToTarget (NormalsCalculationMode.Original, smoothingAngle, recalculateBounds);
 					return;
 			}
 		}
 
-		public async void UpdateMeshAsync (NormalsCalculation normalsCalculation, bool recalculateBounds = true)
+		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool recalculateBounds = true)
 		{
 			if (asyncUpdateInProgress)
 				return;
@@ -131,7 +131,7 @@ namespace Deform
 			DeformChunks ();
 			await new WaitForUpdate ();
 			asyncUpdateInProgress = false;
-			ApplyChunksToTarget (normalsCalculation, recalculateBounds);
+			ApplyChunksToTarget (normalsCalculation, smoothingAngle, recalculateBounds);
 			ResetChunks ();
 		}
 
@@ -153,21 +153,21 @@ namespace Deform
 				chunks[chunkIndex].transformData = new TransformData (transform);
 		}
 
-		protected void ApplyChunksToTarget (NormalsCalculation normalsCalculation, bool recalculateBounds)
+		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool recalculateBounds)
 		{
 			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
 
 			switch (normalsCalculation)
 			{
-				case NormalsCalculation.Unity:
+				case NormalsCalculationMode.Unity:
 					target.sharedMesh.RecalculateNormals ();
 					break;
-				case NormalsCalculation.Smooth:
-					target.sharedMesh.RecalculateNormals (60f);
+				case NormalsCalculationMode.Smooth:
+					target.sharedMesh.RecalculateNormals (smoothingAngle);
 					break;
-				case NormalsCalculation.Maintain:
+				case NormalsCalculationMode.Maintain:
 					break;
-				case NormalsCalculation.Original:
+				case NormalsCalculationMode.Original:
 					target.sharedMesh.SetNormals (originalNormals);
 					break;
 			}

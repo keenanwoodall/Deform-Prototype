@@ -9,7 +9,15 @@ namespace Deform
 	{
 		public bool multithreaded = true;
 		public UpdateMode updateMode = UpdateMode.Update;
-		public NormalsCalculation normalsCalculation = NormalsCalculation.Unity;
+		public NormalsCalculationMode normalsCalculation = NormalsCalculationMode.Unity;
+
+		[HideInInspector, SerializeField]
+		private float smoothingAngle = 60f;
+		public float SmoothingAngle
+		{
+			get { return smoothingAngle; }
+			set { smoothingAngle = Mathf.Clamp (value, 0f, 180f); }
+		}
 
 		public bool recalculateBounds = true;
 
@@ -22,10 +30,10 @@ namespace Deform
 			ChangeTarget (GetComponent<MeshFilter> ());
 #if UNITY_EDITOR
 			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
-				UpdateMeshInstant (normalsCalculation);
+				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 #else
-				UpdateMeshInstant (normalsCalculation);
 #endif
+				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 		}
 
 		public void Update ()
@@ -34,16 +42,15 @@ namespace Deform
 			if (Application.isPlaying)
 			{
 				if (multithreaded)
-					UpdateMeshAsync (normalsCalculation);
+					UpdateMeshAsync (normalsCalculation, SmoothingAngle);
 				else
-					UpdateMesh (updateMode, normalsCalculation);
+					UpdateMesh (updateMode, normalsCalculation, SmoothingAngle);
 			}
 #else
-			if (threaded)
-					UpdateMeshAsync (normalsCalculation);
-				else
-					UpdateMesh (updateMode, normalsCalculation);
-			}
+			if (multithreaded)
+					UpdateMeshAsync (normalsCalculation, SmoothingAngle);
+			else
+				UpdateMesh (updateMode, normalsCalculation, SmoothingAngle);
 #endif
 		}
 		private void OnDestroy ()
