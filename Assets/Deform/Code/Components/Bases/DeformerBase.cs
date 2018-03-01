@@ -6,8 +6,6 @@ namespace Deform
 	[ExecuteInEditMode]
 	public abstract class DeformerBase : MonoBehaviour
 	{
-		public bool discardChangesOnDestroy = true;
-
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
 		[SerializeField, HideInInspector]
@@ -35,8 +33,7 @@ namespace Deform
 
 		private void OnDestroy ()
 		{
-			if (discardChangesOnDestroy)
-				DiscardChanges ();
+			DiscardChanges ();
 		}
 
 		public void ChangeTarget (MeshFilter meshFilter)
@@ -102,6 +99,7 @@ namespace Deform
 				UpdateChunkTransformData ();
 			if (updateSyncedTime)
 				UpdateSyncedTime ();
+
 			asyncUpdateInProgress = true;
 			await new WaitForBackgroundThread ();
 			DeformChunks ();
@@ -109,6 +107,24 @@ namespace Deform
 			asyncUpdateInProgress = false;
 			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
+		}
+
+		public void UpdateNormals (NormalsCalculationMode normalsCalculation, float smoothingAngle)
+		{
+			switch (normalsCalculation)
+			{
+				case NormalsCalculationMode.Unity:
+					target.sharedMesh.RecalculateNormals ();
+					break;
+				case NormalsCalculationMode.Smooth:
+					target.sharedMesh.RecalculateNormals (smoothingAngle);
+					break;
+				case NormalsCalculationMode.Maintain:
+					break;
+				case NormalsCalculationMode.Original:
+					target.sharedMesh.SetNormals (originalNormals);
+					break;
+			}
 		}
 
 		public void UpdateSyncedTime ()
@@ -132,21 +148,7 @@ namespace Deform
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
 			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
-
-			switch (normalsCalculation)
-			{
-				case NormalsCalculationMode.Unity:
-					target.sharedMesh.RecalculateNormals ();
-					break;
-				case NormalsCalculationMode.Smooth:
-					target.sharedMesh.RecalculateNormals (smoothingAngle);
-					break;
-				case NormalsCalculationMode.Maintain:
-					break;
-				case NormalsCalculationMode.Original:
-					target.sharedMesh.SetNormals (originalNormals);
-					break;
-			}
+			UpdateNormals (normalsCalculation, smoothingAngle);
 
 			target.sharedMesh.RecalculateBounds ();
 		}
