@@ -6,9 +6,12 @@ namespace Deform
 	[CustomEditor (typeof (DeformerComponentManager))]
 	public class DeformerComponentManagerEditor : Editor
 	{
+		private const string TINY_INDENT = @"  ";
 		private const string SMALL_INDENT = @"    ";
 		private const string LARGE_INDENT = @"      ";
-		private const bool SHOW_DEBUG_INFO = true;
+
+		[SerializeField]
+		private bool showDebug = false;
 
 		public override void OnInspectorGUI ()
 		{
@@ -105,18 +108,18 @@ namespace Deform
 
 		private void DrawDebugGUI (DeformerComponentManager manager)
 		{
-			if (!SHOW_DEBUG_INFO)
+			EditorGUILayout.BeginHorizontal (GUILayout.MaxWidth (5));
+			EditorGUILayout.LabelField ("Debug Info", GUILayout.MaxWidth (70));
+			showDebug = GUILayout.Toggle (showDebug, string.Empty);
+			EditorGUILayout.EndHorizontal ();
+			if (!showDebug)
 				return;
 
-			EditorGUILayout.Separator ();
-
-
-			EditorGUILayout.LabelField ("Debug");
-			EditorGUILayout.LabelField (string.Format ("Vertex Count: {0}", manager.VertexCount));
-			EditorGUILayout.LabelField (string.Format ("Chunk Count: {0}", manager.ChunkCount));
+			EditorGUILayout.LabelField (string.Format ("{0}Vertex Count: {1}", TINY_INDENT, manager.VertexCount));
+			EditorGUILayout.LabelField (string.Format ("{0}Chunk Count: {1}", TINY_INDENT, manager.ChunkCount));
 			//EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
 			//EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
-			EditorGUILayout.LabelField ("Deformers:");
+			EditorGUILayout.LabelField (TINY_INDENT + "Deformers:");
 			var deformers = manager.GetDeformers ();
 			foreach (var deformer in deformers)
 			{
