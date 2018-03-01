@@ -41,26 +41,10 @@ namespace Deform
 					UpdateMeshInstant (normalsCalculation, smoothingAngle, true);
 					return;
 				case UpdateMode.UpdateAsync:
-#if UNITY_EDITOR
-					if (Application.isPlaying)
-						UpdateMeshAsync (normalsCalculation, SmoothingAngle);
-					else
-						UpdateMeshInstant (normalsCalculation, SmoothingAngle);
-#else
-					UpdateMeshAsync (normalsCalculation, SmoothingAngle);
-#endif
+					UpdateAsync ();
 					return;
 				case UpdateMode.UpdateFrameSplit:
-					if (deformChunkIndex >= chunks.Length)
-					{
-						UpdateSyncedTime ();
-						UpdateChunkTransformData ();
-						ApplyChunksToTarget (normalsCalculation, smoothingAngle);
-						ResetChunks ();
-						deformChunkIndex = 0;
-					}
-					DeformChunk (deformChunkIndex);
-					deformChunkIndex++;
+					UpdateFrameSplit ();
 					return;
 				case UpdateMode.Pause:
 					return;
@@ -74,6 +58,31 @@ namespace Deform
 		private void OnDestroy ()
 		{
 			deformers.Clear ();
+		}
+
+		private void UpdateAsync ()
+		{
+#if UNITY_EDITOR
+			if (Application.isPlaying)
+				UpdateMeshAsync (normalsCalculation, SmoothingAngle);
+			else
+				UpdateFrameSplit ();
+#else
+			UpdateMeshAsync (normalsCalculation, SmoothingAngle);
+#endif
+		}
+		private void UpdateFrameSplit ()
+		{
+			if (deformChunkIndex >= chunks.Length)
+			{
+				UpdateSyncedTime ();
+				UpdateChunkTransformData ();
+				ApplyChunksToTarget (normalsCalculation, smoothingAngle);
+				ResetChunks ();
+				deformChunkIndex = 0;
+			}
+			DeformChunk (deformChunkIndex);
+			deformChunkIndex++;
 		}
 
 		private void NotifyPreModify ()
