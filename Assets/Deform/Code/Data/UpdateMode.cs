@@ -1,4 +1,4 @@
 ﻿namespace Deform
 {
-	public enum UpdateMode { Update, Pause, Stop }
+	public enum UpdateMode { UpdateInstant, UpdateAsync, UpdateFrameSplit, Pause, Stop }
 }

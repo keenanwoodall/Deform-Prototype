@@ -7,8 +7,7 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerComponentManager : DeformerBase
 	{
-		public bool multithreaded = true;
-		public UpdateMode updateMode = UpdateMode.Update;
+		public UpdateMode updateMode = UpdateMode.UpdateInstant;
 		public NormalsCalculationMode normalsCalculation = NormalsCalculationMode.Unity;
 
 		[HideInInspector, SerializeField]
@@ -38,21 +37,42 @@ namespace Deform
 
 		public void Update ()
 		{
-#if UNITY_EDITOR
-			if (Application.isPlaying)
+			switch (updateMode)
 			{
-				if (multithreaded)
-					UpdateMeshAsync (normalsCalculation, SmoothingAngle);
-				else
-					UpdateMesh (updateMode, normalsCalculation, SmoothingAngle);
-			}
+				case UpdateMode.UpdateInstant:
+					UpdateMeshInstant (normalsCalculation, smoothingAngle, true);
+					return;
+				case UpdateMode.UpdateAsync:
+#if UNITY_EDITOR
+					if (Application.isPlaying)
+						UpdateMeshAsync (normalsCalculation, SmoothingAngle);
+					else
+						UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 #else
-			if (multithreaded)
 					UpdateMeshAsync (normalsCalculation, SmoothingAngle);
-			else
-				UpdateMesh (updateMode, normalsCalculation, SmoothingAngle);
 #endif
+					return;
+				case UpdateMode.UpdateFrameSplit:
+					if (deformChunkIndex >= chunks.Length)
+					{
+						UpdateSyncedTime ();
+						UpdateChunkTransformData ();
+						ApplyChunksToTarget (normalsCalculation, smoothingAngle);
+						ResetChunks ();
+						deformChunkIndex = 0;
+					}
+					DeformChunk (deformChunkIndex);
+					deformChunkIndex++;
+					return;
+				case UpdateMode.Pause:
+					return;
+				case UpdateMode.Stop:
+					ResetChunks ();
+					ApplyChunksToTarget (NormalsCalculationMode.Original, smoothingAngle);
+					return;
+			}
 		}
+
 		private void OnDestroy ()
 		{
 			deformers.Clear ();
@@ -86,12 +106,9 @@ namespace Deform
 			NotifyPostModify ();
 		}
 
-		protected override void DeformChunk (int index, bool notifyPrePostModify = false)
+		protected override void DeformChunk (int index)
 		{
-			if (ChunkCount != chunks.Length)
-				RecreateChunks ();
-
-			if (notifyPrePostModify)
+			if (index == 0)
 				NotifyPreModify ();
 
 			// Modify chunk
@@ -99,7 +116,7 @@ namespace Deform
 				if (deformers[deformerIndex].update)
 					chunks[index] = deformers[deformerIndex].Modify (chunks[index]);
 
-			if (notifyPrePostModify)
+			if (index == chunks.Length - 1)
 				NotifyPostModify ();
 		}
 

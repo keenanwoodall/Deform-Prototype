@@ -27,7 +27,8 @@ namespace Deform
 			get { return maxVerticesPerFrame; }
 			set { maxVerticesPerFrame = Mathf.Clamp (value, 100, VertexCount); }
 		}
-		public int ChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerChunk); } }
+		public int FrameSplitChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerChunk); } }
+		public int ChunkCount { get { return chunks.Length; } }
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
@@ -70,80 +71,55 @@ namespace Deform
 			RecreateChunks ();
 		}
 
-		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool updateSyncedTime = false, bool recalculateBounds = true)
+		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool updateSyncedTime = true, bool updateTransformData = true)
 		{
-			UpdateChunkTransformData ();
-
-			// Reset chunks if deformation isn't finished or just starting
-			if (deformChunkIndex != 0 && deformChunkIndex != ChunkCount - 1)
-				ResetChunks ();
-
+			if (updateTransformData)
+				UpdateChunkTransformData ();
 			if (updateSyncedTime)
 				UpdateSyncedTime ();
+			// Reset chunks if deformation isn't finished or just starting
+			if (deformChunkIndex != 0 && deformChunkIndex != FrameSplitChunkCount - 1)
+				ResetChunks ();
+
 			DeformChunks ();
-			ApplyChunksToTarget (normalsCalculation, smoothingAngle, recalculateBounds);
+			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
 			deformChunkIndex = 0;
 		}
 
-		public void UpdateMesh (UpdateMode updateMode, NormalsCalculationMode normalsCalculation, float smoothingAngle, bool recalculateBounds = true)
+		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool updateSyncedTime = true, bool updateTransformData = true)
 		{
-			switch (updateMode)
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
 			{
-				case UpdateMode.Update:
-					// If there's only one chunk, update all chunks and immediately apply
-					// changes to the mesh.
-					if (ChunkCount == 1)
-						UpdateMeshInstant (normalsCalculation, smoothingAngle, true);
-					// Otherwise deform the current chunk.
-					else
-					{
-						// If the current chunk is the last chunk, apply the changes to the chunks.
-						if (deformChunkIndex >= chunks.Length)
-						{
-							UpdateSyncedTime ();
-							UpdateChunkTransformData ();
-							ApplyChunksToTarget (normalsCalculation, smoothingAngle, recalculateBounds);
-							ResetChunks ();
-							deformChunkIndex = 0;
-						}
-						DeformChunk (deformChunkIndex, deformChunkIndex == 0);
-						deformChunkIndex++;
-					}
-					return;
-				case UpdateMode.Pause:
-					return;
-				case UpdateMode.Stop:
-					ResetChunks ();
-					ApplyChunksToTarget (NormalsCalculationMode.Original, smoothingAngle, recalculateBounds);
-					return;
+				Debug.LogError ("UpdateMeshAsync doesn't work in edit-mode");
+				return;
 			}
-		}
-
-		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool recalculateBounds = true)
-		{
+#endif
 			if (asyncUpdateInProgress)
 				return;
-			UpdateChunkTransformData ();
-			UpdateSyncedTime ();
+			if (updateTransformData)
+				UpdateChunkTransformData ();
+			if (updateSyncedTime)
+				UpdateSyncedTime ();
 			asyncUpdateInProgress = true;
 			await new WaitForBackgroundThread ();
 			DeformChunks ();
 			await new WaitForUpdate ();
 			asyncUpdateInProgress = false;
-			ApplyChunksToTarget (normalsCalculation, smoothingAngle, recalculateBounds);
+			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
 		}
 
-		private void UpdateSyncedTime ()
+		public void UpdateSyncedTime ()
 		{
 			SyncedDeltaTime = Time.time - SyncedTime;
 			SyncedTime = Time.time;
 		}
 
-		public void RecreateChunks ()
+		public void RecreateChunks (bool forceSingleChunk = false)
 		{
-			chunks = ChunkUtil.CreateChunks (originalMesh, ChunkCount);
+			chunks = ChunkUtil.CreateChunks (originalMesh, forceSingleChunk ? 1 : FrameSplitChunkCount);
 			UpdateChunkTransformData ();
 		}
 
@@ -153,7 +129,7 @@ namespace Deform
 				chunks[chunkIndex].transformData = new TransformData (transform);
 		}
 
-		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool recalculateBounds)
+		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
 			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
 
@@ -172,11 +148,10 @@ namespace Deform
 					break;
 			}
 
-			if (recalculateBounds)
-				target.sharedMesh.RecalculateBounds ();
+			target.sharedMesh.RecalculateBounds ();
 		}
 
-		protected abstract void DeformChunk (int index, bool notifyPrePostModify = false);
+		protected abstract void DeformChunk (int index);
 		protected abstract void DeformChunks ();
 
 		protected void ResetChunks ()

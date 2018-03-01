@@ -14,10 +14,9 @@ namespace Deform
 		{
 			var manager = target as DeformerComponentManager;
 
-			DrawThreadedGUI (manager);
-			if (!manager.multithreaded)
-				DrawUpdateModeGUI (manager);
-			DrawMaxVerticesPerChunkGUI (manager);
+			DrawUpdateModeGUI (manager);
+			if (manager.updateMode == UpdateMode.UpdateFrameSplit)
+				DrawMaxVerticesPerChunkGUI (manager);
 			DrawNormalsCalculationGUI (manager);
 			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
 				DrawSmoothAngleGUI (manager);
@@ -29,59 +28,43 @@ namespace Deform
 			manager.RefreshDeformerOrder ();
 
 			if (!Application.isPlaying)
-				manager.UpdateMesh (manager.updateMode, manager.normalsCalculation, manager.SmoothingAngle);
+				manager.Update ();
 
 			Repaint ();
-		}
-
-		private void DrawThreadedGUI (DeformerComponentManager manager)
-		{
-			EditorGUI.BeginChangeCheck ();
-			var threaded = manager.multithreaded;
-			threaded = EditorGUILayout.Toggle ("Multi-Threaded" + ((Application.isPlaying) ? "" : " (In Play-Mode)"), threaded);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				Undo.RecordObject (manager, "Multi-Threaded");
-				manager.multithreaded = threaded;
-			}
 		}
 
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			GUILayout.BeginHorizontal ();
 			var updateMode = manager.updateMode;
-			if (updateMode != UpdateMode.Update)
-				if (GUILayout.Button ("Play", GUILayout.Width (50)))
-					updateMode = UpdateMode.Update;
-			if (updateMode != UpdateMode.Pause && updateMode != UpdateMode.Stop)
-				if (GUILayout.Button ("Pause", GUILayout.Width (50)))
-					updateMode = UpdateMode.Pause;
-			if (updateMode != UpdateMode.Stop)
-				if (GUILayout.Button ("Stop", GUILayout.Width (50)))
-					updateMode = UpdateMode.Stop;
+			updateMode = (UpdateMode)EditorGUILayout.EnumPopup ("Update Mode", updateMode);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Update Mode");
 				manager.updateMode = updateMode;
+				if (updateMode == UpdateMode.UpdateInstant || updateMode == UpdateMode.UpdateAsync)
+					manager.RecreateChunks (true);
+				else if (updateMode == UpdateMode.UpdateFrameSplit)
+					manager.RecreateChunks ();
 			}
 
-			if (manager.updateMode == UpdateMode.Pause)
-				if (GUILayout.Button ("Step", GUILayout.Width (50)))
-					manager.UpdateMeshInstant (manager.normalsCalculation, manager.SmoothingAngle);
-			GUILayout.EndHorizontal ();
+			if (updateMode == UpdateMode.UpdateAsync)
+			{
+				EditorGUILayout.HelpBox ("UpdateAsync only works in Play-Mode, UpdateInstant will be used in the editor", MessageType.Info);
+			}
 		}
 
 		private void DrawMaxVerticesPerChunkGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			var label = new GUIContent ("Max Vertices Per Chunk" + ((manager.multithreaded ? " (In Edit-Mode)" : "")));
+			var label = new GUIContent ("Max Vertices Per Chunk");
 			var maxVerticesPerChunk = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerChunk);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, " Max Vertices Per Chunk");
 				manager.MaxVerticesPerChunk = maxVerticesPerChunk;
-				manager.RecreateChunks ();
+				if (manager.updateMode == UpdateMode.UpdateFrameSplit)
+					manager.RecreateChunks ();
 			}
 		}
 
