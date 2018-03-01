@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityAsyncAwaitUtil;
-using System.Threading.Tasks;
 
 namespace Deform
 {
@@ -34,11 +32,6 @@ namespace Deform
 
 		public virtual void PreModify () { }
 		public abstract Chunk Modify (Chunk chunk);
-		public async Task<Chunk> ModifyAsync (Chunk chunk)
-		{
-			await new WaitForBackgroundThread ();
-			return Modify (chunk);
-		}
 		public virtual void PostModify () { }
 	}
 }
