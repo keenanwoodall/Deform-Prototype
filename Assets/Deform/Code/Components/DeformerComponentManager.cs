@@ -18,8 +18,6 @@ namespace Deform
 			set { smoothingAngle = Mathf.Clamp (value, 0f, 180f); }
 		}
 
-		public bool refreshBoundsBetweenDeformers = true;
-
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
@@ -31,8 +29,8 @@ namespace Deform
 			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
 				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 #else
+			UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 #endif
-				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 		}
 
 		public void Update ()
@@ -103,8 +101,6 @@ namespace Deform
 				{
 					for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 						chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
-					if (refreshBoundsBetweenDeformers)
-						target.sharedMesh.RecalculateBounds ();
 				}
 			}
 

@@ -23,7 +23,6 @@ namespace Deform
 			DrawNormalsCalculationGUI (manager);
 			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
 				DrawSmoothAngleGUI (manager);
-			DrawRefreshBoundsBetweenDeformersGUI (manager);
 
 			DrawDebugGUI (manager);
 
@@ -93,18 +92,6 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Smoothing Angle");
 				manager.SmoothingAngle = smoothingAngle;
-			}
-		}
-
-		private void DrawRefreshBoundsBetweenDeformersGUI (DeformerComponentManager manager)
-		{
-			EditorGUI.BeginChangeCheck ();
-			var refreshBounds = manager.refreshBoundsBetweenDeformers;
-			refreshBounds = EditorGUILayout.Toggle ("Refresh Bounds Between Deformers", refreshBounds);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				Undo.RecordObject (manager, "Refresh Bounds Between Deformers");
-				manager.refreshBoundsBetweenDeformers = refreshBounds;
 			}
 		}
 
