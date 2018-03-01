@@ -10,8 +10,7 @@ namespace Deform
 		private const string SMALL_INDENT = @"    ";
 		private const string LARGE_INDENT = @"      ";
 
-		[SerializeField]
-		private bool showDebug = false;
+		private static bool showDebug = false;
 
 		public override void OnInspectorGUI ()
 		{

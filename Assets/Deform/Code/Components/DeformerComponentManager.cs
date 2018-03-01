@@ -7,7 +7,7 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerComponentManager : DeformerBase
 	{
-		public UpdateMode updateMode = UpdateMode.UpdateInstant;
+		public UpdateMode updateMode = UpdateMode.UpdateFrameSplit;
 		public NormalsCalculationMode normalsCalculation = NormalsCalculationMode.Unity;
 
 		[HideInInspector, SerializeField]
