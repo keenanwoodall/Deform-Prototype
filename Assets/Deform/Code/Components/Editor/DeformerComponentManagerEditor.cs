@@ -111,12 +111,12 @@ namespace Deform
 			EditorGUILayout.Separator ();
 
 
-			EditorGUILayout.LabelField ("Debug:");
+			EditorGUILayout.LabelField ("Debug");
 			EditorGUILayout.LabelField (string.Format ("Vertex Count: {0}", manager.VertexCount));
 			EditorGUILayout.LabelField (string.Format ("Chunk Count: {0}", manager.ChunkCount));
-			EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
-			EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
-
+			//EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
+			//EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
+			EditorGUILayout.LabelField ("Deformers:");
 			var deformers = manager.GetDeformers ();
 			foreach (var deformer in deformers)
 			{
