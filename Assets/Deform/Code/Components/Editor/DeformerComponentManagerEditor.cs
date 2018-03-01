@@ -21,7 +21,6 @@ namespace Deform
 			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
 				DrawSmoothAngleGUI (manager);
 			DrawRecalculateBoundsGUI (manager);
-			DrawDiscardChangesOnDestroyGUI (manager);
 
 			DrawDebugGUI (manager);
 
@@ -101,18 +100,6 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Recalculate Bounds");
 				manager.recalculateBounds = recalculateBounds;
-			}
-		}
-
-		private void DrawDiscardChangesOnDestroyGUI (DeformerComponentManager manager)
-		{
-			EditorGUI.BeginChangeCheck ();
-			var discardChangesOnDestroy = manager.discardChangesOnDestroy;
-			discardChangesOnDestroy = EditorGUILayout.Toggle ("Discard Changes On Destroy", discardChangesOnDestroy);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				Undo.RecordObject (manager, "Discard Changes On Destroy");
-				manager.discardChangesOnDestroy = discardChangesOnDestroy;
 			}
 		}
 
