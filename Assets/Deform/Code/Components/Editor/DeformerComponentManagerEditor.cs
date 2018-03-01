@@ -23,7 +23,6 @@ namespace Deform
 			DrawNormalsCalculationGUI (manager);
 			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
 				DrawSmoothAngleGUI (manager);
-			DrawRecalculateBoundsGUI (manager);
 
 			DrawDebugGUI (manager);
 
@@ -73,8 +72,9 @@ namespace Deform
 		private void DrawNormalsCalculationGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
+			var label = new GUIContent ("Normals Calculation", "Unity - Pretty Fast. Uses Unity's runtime normal recalculation\nSmooth - Very Slow. Looks much better than Unity's method.\nMaintain - Fastest. Keeps the current normals.\nOriginal - Very Fast. Applies the normals of the original, unmodified mesh.");
 			var normalsCalculation = manager.normalsCalculation;
-			normalsCalculation = (NormalsCalculationMode)EditorGUILayout.EnumPopup (new GUIContent ("Normals Calculation", "Unity - Pretty Fast. Uses Unity's runtime normal recalculation\nSmooth - Very Slow. Looks much better than Unity's method.\nMaintain - Fastest. Keeps the current normals.\nOriginal - Very Fast. Applies the normals of the original, unmodified mesh."), normalsCalculation);
+			normalsCalculation = (NormalsCalculationMode)EditorGUILayout.EnumPopup (label, normalsCalculation);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Normals Calculation");
@@ -91,18 +91,6 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Smoothing Angle");
 				manager.SmoothingAngle = smoothingAngle;
-			}
-		}
-
-		private void DrawRecalculateBoundsGUI (DeformerComponentManager manager)
-		{
-			EditorGUI.BeginChangeCheck ();
-			var recalculateBounds = manager.recalculateBounds;
-			recalculateBounds = EditorGUILayout.Toggle ("Recalculate Bounds", recalculateBounds);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				Undo.RecordObject (manager, "Recalculate Bounds");
-				manager.recalculateBounds = recalculateBounds;
 			}
 		}
 

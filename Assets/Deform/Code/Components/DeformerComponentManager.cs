@@ -18,8 +18,6 @@ namespace Deform
 			set { smoothingAngle = Mathf.Clamp (value, 0f, 180f); }
 		}
 
-		public bool recalculateBounds = true;
-
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
