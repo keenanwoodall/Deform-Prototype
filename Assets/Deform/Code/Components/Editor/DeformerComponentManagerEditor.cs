@@ -23,6 +23,7 @@ namespace Deform
 			DrawNormalsCalculationGUI (manager);
 			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
 				DrawSmoothAngleGUI (manager);
+			DrawRefreshBoundsBetweenDeformersGUI (manager);
 
 			DrawDebugGUI (manager);
 
@@ -37,8 +38,9 @@ namespace Deform
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
+			var label = new GUIContent ("Update Mode", "UpdateInstant: Performs deformation calculations to the entire mesh every frame.\n\nUpdateAsync: Performs all calculations on another thread. Has great performance, but update-rate may seem a little slow in some scenarios.\n\nUpdateFrameSplit: Splits the mesh into chunks and calculates one chunk each frame.\n\nPause: Maintains the current mesh.\n\nStop: Removes all deformation and shows the original mesh.");
 			var updateMode = manager.updateMode;
-			updateMode = (UpdateMode)EditorGUILayout.EnumPopup ("Update Mode", updateMode);
+			updateMode = (UpdateMode)EditorGUILayout.EnumPopup (label, updateMode);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Update Mode");
@@ -72,7 +74,7 @@ namespace Deform
 		private void DrawNormalsCalculationGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			var label = new GUIContent ("Normals Calculation", "Unity - Pretty Fast. Uses Unity's runtime normal recalculation\nSmooth - Very Slow. Looks much better than Unity's method.\nMaintain - Fastest. Keeps the current normals.\nOriginal - Very Fast. Applies the normals of the original, unmodified mesh.");
+			var label = new GUIContent ("Normals Calculation", "Unity - Pretty Fast. Uses Unity's runtime normal recalculation\n\nSmooth - Very Slow. Looks much better than Unity's method.\n\nMaintain - Fastest. Keeps the current normals.\n\nOriginal - Very Fast. Applies the normals of the original, unmodified mesh.");
 			var normalsCalculation = manager.normalsCalculation;
 			normalsCalculation = (NormalsCalculationMode)EditorGUILayout.EnumPopup (label, normalsCalculation);
 			if (EditorGUI.EndChangeCheck ())
@@ -91,6 +93,18 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Smoothing Angle");
 				manager.SmoothingAngle = smoothingAngle;
+			}
+		}
+
+		private void DrawRefreshBoundsBetweenDeformersGUI (DeformerComponentManager manager)
+		{
+			EditorGUI.BeginChangeCheck ();
+			var refreshBounds = manager.refreshBoundsBetweenDeformers;
+			refreshBounds = EditorGUILayout.Toggle ("Refresh Bounds Between Deformers", refreshBounds);
+			if (EditorGUI.EndChangeCheck ())
+			{
+				Undo.RecordObject (manager, "Refresh Bounds Between Deformers");
+				manager.refreshBoundsBetweenDeformers = refreshBounds;
 			}
 		}
 
