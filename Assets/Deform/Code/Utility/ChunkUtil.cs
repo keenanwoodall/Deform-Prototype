@@ -25,7 +25,7 @@ namespace Deform
 
 		public static Chunk CreateChunk (Mesh mesh)
 		{
-			return new Chunk (mesh.vertices, mesh.normals, mesh.colors);
+			return new Chunk (mesh.vertices, mesh.normals, mesh.tangents, mesh.colors);
 		}
 
 		public static Chunk[] CreateChunks (Mesh mesh, int count)
@@ -38,6 +38,7 @@ namespace Deform
 			// Cache the mesh data.
 			var vertices = VertexDataUtil.GetPositions (vertexData);
 			var normals = VertexDataUtil.GetNormals (vertexData);
+			var tangents = VertexDataUtil.GetTangents (vertexData);
 			var colors = VertexDataUtil.GetColors (vertexData);
 
 			// Create the array of chunks.
@@ -62,10 +63,11 @@ namespace Deform
 					endIndex += vertexCount - (chunkSize * count);
 
 				// Create the arrays to hold the chunk data.
-				var chunkLength = endIndex - startIndex;
-				var chunkPositions = new Vector3[chunkLength];
-				var chunkNormals = new Vector3[chunkLength];
-				var chunkColors = new Color[chunkLength];
+				var currentChunkSize = endIndex - startIndex;
+				var chunkPositions = new Vector3[currentChunkSize];
+				var chunkNormals = new Vector3[currentChunkSize];
+				var chunkTangents = new Vector4[currentChunkSize];
+				var chunkColors = new Color[currentChunkSize];
 
 				// Loop through each vertex in the chunk.
 				var chunkVertexIndex = 0;
@@ -74,12 +76,13 @@ namespace Deform
 					// Put the current vertex data into the chunk arrays.
 					chunkPositions[chunkVertexIndex] = vertices[vertexIndex];
 					chunkNormals[chunkVertexIndex] = normals[vertexIndex];
+					chunkTangents[chunkVertexIndex] = tangents[vertexIndex];
 					chunkColors[chunkVertexIndex] = colors[vertexIndex];
 					chunkVertexIndex++;
 				}
 
 				// Create a chunk from the chunk arrays.
-				chunks[chunkIndex] = new Chunk (chunkPositions, chunkNormals, chunkColors);
+				chunks[chunkIndex] = new Chunk (chunkPositions, chunkNormals, chunkTangents, chunkColors);
 			}
 
 			return chunks;

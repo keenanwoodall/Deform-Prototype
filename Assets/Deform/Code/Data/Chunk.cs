@@ -15,7 +15,7 @@ namespace Deform
 			this.transformData = transformData;
 		}
 
-		public Chunk (Vector3[] positions, Vector3[] normals, Color[] colors)
+		public Chunk (Vector3[] positions, Vector3[] normals, Vector4[] tangents, Color[] colors)
 		{
 			vertexData = new VertexData[positions.Length];
 
@@ -23,14 +23,15 @@ namespace Deform
 			{
 				var position = positions[i];
 				var normal = normals[i];
+				var tangent = tangents[i];
 				var color = colors[i];
-				vertexData[i] = new VertexData (position, position, normal, color);
+				vertexData[i] = new VertexData (position, position, normal, tangent, color);
 			}
 
 			transformData = new TransformData ();
 		}
 
-		public Chunk (Vector3[] basePositions, Vector3[] positions, Vector3[] normals, Color[] colors)
+		public Chunk (Vector3[] basePositions, Vector3[] positions, Vector3[] normals, Vector4[] tangents, Color[] colors)
 		{
 			vertexData = new VertexData[positions.Length];
 
@@ -39,8 +40,9 @@ namespace Deform
 				var basePosition = basePositions[i];
 				var position = positions[i];
 				var normal = normals[i];
+				var tangent = tangents[i];
 				var color = colors[i];
-				vertexData[i] = new VertexData (basePosition, position, normal, color);
+				vertexData[i] = new VertexData (basePosition, position, normal, tangent, color);
 			}
 
 			transformData = new TransformData ();
