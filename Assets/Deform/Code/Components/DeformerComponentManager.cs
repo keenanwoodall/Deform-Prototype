@@ -66,7 +66,7 @@ namespace Deform
 			if (Application.isPlaying)
 				UpdateMeshAsync (normalsCalculation, SmoothingAngle);
 			else
-				UpdateFrameSplit ();
+				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 #else
 			UpdateMeshAsync (normalsCalculation, SmoothingAngle);
 #endif

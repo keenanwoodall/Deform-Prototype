@@ -17,7 +17,7 @@ namespace Deform
 			var manager = target as DeformerComponentManager;
 
 			DrawUpdateModeGUI (manager);
-			if (manager.updateMode == UpdateMode.UpdateFrameSplit || manager.updateMode == UpdateMode.UpdateAsync)
+			if (manager.updateMode == UpdateMode.UpdateFrameSplit)
 				DrawMaxVerticesPerChunkGUI (manager);
 			DrawNormalsCalculationGUI (manager);
 			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
@@ -51,13 +51,12 @@ namespace Deform
 
 			if (updateMode == UpdateMode.UpdateAsync)
 			{
-				EditorGUILayout.HelpBox ("UpdateAsync only works in Play-Mode, UpdateFrameSplit will be used in the editor", MessageType.Info);
+				EditorGUILayout.HelpBox ("UpdateAsync only works in Play-Mode, UpdateInstant will be used in the editor", MessageType.Info);
 			}
 		}
 
 		private void DrawMaxVerticesPerChunkGUI (DeformerComponentManager manager)
 		{
-			EditorGUI.BeginDisabledGroup (manager.updateMode == UpdateMode.UpdateAsync);
 			EditorGUI.BeginChangeCheck ();
 			var label = new GUIContent ("Max Vertices Per Chunk");
 			var maxVerticesPerChunk = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerChunk);
@@ -68,7 +67,6 @@ namespace Deform
 				if (manager.updateMode == UpdateMode.UpdateFrameSplit)
 					manager.RecreateChunks ();
 			}
-			EditorGUI.EndDisabledGroup ();
 		}
 
 		private void DrawNormalsCalculationGUI (DeformerComponentManager manager)
