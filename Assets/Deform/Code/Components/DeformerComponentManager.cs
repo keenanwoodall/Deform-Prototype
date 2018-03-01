@@ -24,7 +24,9 @@ namespace Deform
 		private void Awake ()
 		{
 			DiscardChanges ();
-			ChangeTarget (GetComponent<MeshFilter> ());
+			ChangeTarget (GetComponent<MeshFilter> (), false);
+			RecreateChunks (updateMode == UpdateMode.UpdateInstant || updateMode == UpdateMode.UpdateAsync);
+
 #if UNITY_EDITOR
 			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
 				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
@@ -33,12 +35,14 @@ namespace Deform
 #endif
 		}
 
-		public void Update ()
+		public void LateUpdate ()
 		{
 			switch (updateMode)
 			{
 				case UpdateMode.UpdateInstant:
-					UpdateMeshInstant (normalsCalculation, smoothingAngle, true);
+					UpdateTransformData ();
+					UpdateSyncedTime ();
+					UpdateMeshInstant (normalsCalculation, smoothingAngle);
 					return;
 				case UpdateMode.UpdateAsync:
 					UpdateAsync ();
@@ -62,6 +66,8 @@ namespace Deform
 
 		private void UpdateAsync ()
 		{
+			UpdateTransformData ();
+			UpdateSyncedTime ();
 #if UNITY_EDITOR
 			if (Application.isPlaying)
 				UpdateMeshAsync (normalsCalculation, SmoothingAngle);
@@ -76,7 +82,7 @@ namespace Deform
 			if (deformChunkIndex >= chunks.Length)
 			{
 				UpdateSyncedTime ();
-				UpdateChunkTransformData ();
+				UpdateTransformData ();
 				ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 				ResetChunks ();
 				deformChunkIndex = 0;
@@ -104,14 +110,31 @@ namespace Deform
 		{
 			NotifyPreModify ();
 
-			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+			var deformerWasNull = false;
+
+			lock (chunks)
 			{
-				if (deformers[deformerIndex].update)
+				lock (deformers)
 				{
-					for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-						chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
+					for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+					{
+						if (deformers[deformerIndex] == null)
+						{
+							print ("Deformer at index " + deformerIndex + " was null.");
+							deformerWasNull = true;
+							continue;
+						}
+						if (deformers[deformerIndex].update)
+						{
+							for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+								chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
+						}
+					}
 				}
 			}
+
+			if (deformerWasNull)
+				GetDeformers ();
 
 			NotifyPostModify ();
 		}

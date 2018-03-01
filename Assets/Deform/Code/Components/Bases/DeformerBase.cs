@@ -36,7 +36,7 @@ namespace Deform
 			DiscardChanges ();
 		}
 
-		public void ChangeTarget (MeshFilter meshFilter)
+		public void ChangeTarget (MeshFilter meshFilter, bool createChunks = true)
 		{
 			// Assign the target.
 			target = meshFilter;
@@ -53,7 +53,8 @@ namespace Deform
 			deformChunkIndex = 0;
 
 			// Create chunk data.
-			RecreateChunks ();
+			if (createChunks)
+				RecreateChunks ();
 		}
 
 		public void ChangeMesh (Mesh mesh)
@@ -68,12 +69,8 @@ namespace Deform
 			RecreateChunks ();
 		}
 
-		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool updateSyncedTime = true, bool updateTransformData = true)
+		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
-			if (updateTransformData)
-				UpdateChunkTransformData ();
-			if (updateSyncedTime)
-				UpdateSyncedTime ();
 			// Reset chunks if deformation isn't finished or just starting
 			if (deformChunkIndex != 0 && deformChunkIndex != FrameSplitChunkCount - 1)
 				ResetChunks ();
@@ -84,7 +81,7 @@ namespace Deform
 			deformChunkIndex = 0;
 		}
 
-		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, bool updateSyncedTime = true, bool updateTransformData = true)
+		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
@@ -95,10 +92,6 @@ namespace Deform
 #endif
 			if (asyncUpdateInProgress)
 				return;
-			if (updateTransformData)
-				UpdateChunkTransformData ();
-			if (updateSyncedTime)
-				UpdateSyncedTime ();
 
 			asyncUpdateInProgress = true;
 			await new WaitForBackgroundThread ();
@@ -136,10 +129,10 @@ namespace Deform
 		public void RecreateChunks (bool forceSingleChunk = false)
 		{
 			chunks = ChunkUtil.CreateChunks (originalMesh, forceSingleChunk ? 1 : FrameSplitChunkCount);
-			UpdateChunkTransformData ();
+			UpdateTransformData ();
 		}
 
-		public void UpdateChunkTransformData ()
+		public void UpdateTransformData ()
 		{
 			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 				chunks[chunkIndex].transformData = new TransformData (transform);
