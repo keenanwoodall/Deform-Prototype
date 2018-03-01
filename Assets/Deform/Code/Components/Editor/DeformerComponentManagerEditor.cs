@@ -74,7 +74,7 @@ namespace Deform
 		{
 			EditorGUI.BeginChangeCheck ();
 			var normalsCalculation = manager.normalsCalculation;
-			normalsCalculation = (NormalsCalculationMode)EditorGUILayout.EnumPopup ("Normals Calculation", normalsCalculation);
+			normalsCalculation = (NormalsCalculationMode)EditorGUILayout.EnumPopup (new GUIContent ("Normals Calculation", "Unity - Pretty Fast. Uses Unity's runtime normal recalculation\nSmooth - Very Slow. Looks much better than Unity's method.\nMaintain - Fastest. Keeps the current normals.\nOriginal - Very Fast. Applies the normals of the original, unmodified mesh."), normalsCalculation);
 			if (EditorGUI.EndChangeCheck ())
 			{
 				Undo.RecordObject (manager, "Normals Calculation");
