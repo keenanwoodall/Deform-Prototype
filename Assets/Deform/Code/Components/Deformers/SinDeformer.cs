@@ -8,6 +8,8 @@ namespace Deform.Deformers
 		public float offset;
 		public float speed;
 		public bool useWorldPosition;
+		public bool useRotation;
+		public bool useScale;
 
 		public Axis along = Axis.X;
 		public Axis by = Axis.Y;
@@ -37,12 +39,17 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk)
 		{
-			if (useWorldPosition)
-				for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
-					chunk.vertexData[vertexIndex].position += Sin3D (chunk.vertexData[vertexIndex].position + chunk.transformData.position + axisOffset);
-			else
-				for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
-					chunk.vertexData[vertexIndex].position += Sin3D (chunk.vertexData[vertexIndex].position + axisOffset);
+			for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			{
+				var samplePosition = chunk.vertexData[vertexIndex].position + axisOffset;
+				if (useWorldPosition)
+					samplePosition += chunk.transformData.position;
+				if (useRotation)
+					samplePosition = chunk.transformData.rotation * samplePosition;
+				if (useScale)
+					samplePosition.Scale (chunk.transformData.localScale);
+				chunk.vertexData[vertexIndex].position += Sin3D (samplePosition);
+			}
 
 			return chunk;
 		}
