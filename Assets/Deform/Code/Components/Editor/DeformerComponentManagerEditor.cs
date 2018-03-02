@@ -104,12 +104,12 @@ namespace Deform
 			if (!showDebug)
 				return;
 
+			if (GUILayout.Button (new GUIContent ("Save Mesh", "Saves the current mesh to your Assets folder"), GUILayout.Width (100)))
+				MeshUtil.Save (manager.Target.sharedMesh, manager.transform.name);
 			EditorGUILayout.LabelField (string.Format ("{0}Vertex Count: {1}", TINY_INDENT, manager.VertexCount));
 			EditorGUILayout.LabelField (string.Format ("{0}Chunk Count: {1}", TINY_INDENT, manager.ChunkCount));
 			//EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
 			//EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
-			if (GUILayout.Button (new GUIContent ("Save Mesh", "Saves the current mesh to your Assets folder")))
-				MeshUtil.Save (manager.Target.sharedMesh, manager.transform.name);
 			EditorGUILayout.LabelField (TINY_INDENT + "Deformers:");
 			var deformers = manager.GetDeformers ();
 			foreach (var deformer in deformers)
