@@ -165,18 +165,21 @@ namespace Deform
 		{
 			// Not sure why locking the deformers list doesn't prevent this method from changing it while the other thread works on it
 			// For now this if statement seems to prevent an error.
-			if (asyncUpdateInProgress)
-				return;
+			//if (asyncUpdateInProgress)
+			//	return;
 
-			var oldDeformers = new List<DeformerComponent> ();
-			oldDeformers.AddRange (deformers);
-			deformers.Clear ();
+			lock (deformers)
+			{
+				var oldDeformers = new List<DeformerComponent> ();
+				oldDeformers.AddRange (deformers);
+				deformers = new List<DeformerComponent> ();
 
-			var currentDeformers = GetComponents<DeformerComponent> ();
+				var currentDeformers = GetComponents<DeformerComponent> ();
 
-			for (int i = 0; i < currentDeformers.Length; i++)
-				if (oldDeformers.Contains (currentDeformers[i]))
-					deformers.Add (currentDeformers[i]);
+				for (int i = 0; i < currentDeformers.Length; i++)
+					if (oldDeformers.Contains (currentDeformers[i]))
+						deformers.Add (currentDeformers[i]);
+			}
 		}
 
 		public List<DeformerComponent> GetDeformers ()
