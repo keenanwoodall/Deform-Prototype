@@ -30,15 +30,15 @@ namespace Deform
 
 		public static Chunk CreateChunk (Mesh mesh)
 		{
-			return new Chunk (mesh.vertices, mesh.normals, mesh.tangents, mesh.colors);
+			return new Chunk (mesh.vertices, mesh.normals, mesh.tangents, mesh.colors, mesh.bounds);
 		}
 
 		public static Chunk[] CreateChunks (Mesh mesh, int count)
 		{
-			return CreateChunks (VertexDataUtil.GetVertexData (mesh), count);
+			return CreateChunks (VertexDataUtil.GetVertexData (mesh), count, mesh.bounds);
 		}
 
-		public static Chunk[] CreateChunks (VertexData[] vertexData, int count)
+		public static Chunk[] CreateChunks (VertexData[] vertexData, int count, Bounds bounds)
 		{
 			// Cache the mesh data.
 			var vertices = VertexDataUtil.GetPositions (vertexData);
@@ -87,7 +87,7 @@ namespace Deform
 				}
 
 				// Create a chunk from the chunk arrays.
-				chunks[chunkIndex] = new Chunk (chunkPositions, chunkNormals, chunkTangents, chunkColors);
+				chunks[chunkIndex] = new Chunk (chunkPositions, chunkNormals, chunkTangents, chunkColors, bounds);
 			}
 
 			return chunks;
