@@ -52,7 +52,7 @@ namespace Deform
 			}
 		}
 
-		protected Vector3 TransformNoiseSpace (Vector3 noise, VertexData vertex)
+		protected Vector3 TransformNoise (Vector3 noise, VertexData vertex)
 		{
 			switch (space)
 			{
