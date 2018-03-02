@@ -94,10 +94,8 @@ namespace Deform
 		private void NotifyPreModify ()
 		{
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
-			{
 				if (deformers[deformerIndex].update)
 					deformers[deformerIndex].PreModify ();
-			}
 		}
 		private void NotifyPostModify ()
 		{
@@ -165,6 +163,11 @@ namespace Deform
 
 		public void RefreshDeformerOrder ()
 		{
+			// Not sure why locking the deformers list doesn't prevent this method from changing it while the other thread works on it
+			// For now this if statement seems to prevent an error.
+			if (asyncUpdateInProgress)
+				return;
+
 			var oldDeformers = new List<DeformerComponent> ();
 			oldDeformers.AddRange (deformers);
 			deformers.Clear ();
