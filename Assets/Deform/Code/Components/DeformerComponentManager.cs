@@ -110,31 +110,25 @@ namespace Deform
 		{
 			NotifyPreModify ();
 
-			var deformerWasNull = false;
-
 			lock (chunks)
 			{
 				lock (deformers)
 				{
 					for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 					{
-						if (deformers[deformerIndex] == null)
+						lock (deformers[deformerIndex])
 						{
-							print ("Deformer at index " + deformerIndex + " was null.");
-							deformerWasNull = true;
-							continue;
-						}
-						if (deformers[deformerIndex].update)
-						{
-							for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-								chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
+							if (deformers[deformerIndex].update)
+							{
+								for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+								{
+									chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
+								}
+							}
 						}
 					}
 				}
 			}
-
-			if (deformerWasNull)
-				GetDeformers ();
 
 			NotifyPostModify ();
 		}

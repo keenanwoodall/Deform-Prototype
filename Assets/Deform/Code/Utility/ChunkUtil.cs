@@ -8,6 +8,11 @@ namespace Deform
 		private static List<Vector3> VerticeCache = new List<Vector3> ();
 		public static void ApplyChunks (Chunk[] chunks, Mesh mesh)
 		{
+			if (mesh == null)
+			{
+				Debug.Log ("Mesh is null");
+				return;
+			}
 			mesh.GetVertices (VerticeCache);
 
 			var vertexIndex = 0;

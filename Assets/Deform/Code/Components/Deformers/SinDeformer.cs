@@ -7,7 +7,7 @@ namespace Deform.Deformers
 	{
 		public float offset;
 		public float speed;
-		public bool useWorldPosition;
+		public bool usePosition;
 		public bool useRotation;
 		public bool useScale;
 
@@ -42,7 +42,7 @@ namespace Deform.Deformers
 			for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var samplePosition = chunk.vertexData[vertexIndex].position + axisOffset;
-				if (useWorldPosition)
+				if (usePosition)
 					samplePosition += chunk.transformData.position;
 				if (useRotation)
 					samplePosition = chunk.transformData.rotation * samplePosition;

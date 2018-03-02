@@ -49,7 +49,7 @@ namespace Deform
 					manager.RecreateChunks ();
 			}
 
-			if (updateMode == UpdateMode.UpdateAsync)
+			if (updateMode == UpdateMode.UpdateAsync && !Application.isPlaying)
 			{
 				EditorGUILayout.HelpBox ("UpdateAsync only works in Play-Mode, UpdateInstant will be used in the editor", MessageType.Info);
 			}
