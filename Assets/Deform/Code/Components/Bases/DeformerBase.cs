@@ -30,6 +30,7 @@ namespace Deform
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
+		public MeshFilter Target { get { return target; } }
 
 		private void OnDestroy ()
 		{

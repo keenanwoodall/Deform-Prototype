@@ -17,12 +17,9 @@ namespace Deform
 			var manager = target as DeformerComponentManager;
 
 			DrawUpdateModeGUI (manager);
-			if (manager.updateMode == UpdateMode.UpdateFrameSplit)
-				DrawMaxVerticesPerChunkGUI (manager);
+			DrawMaxVerticesPerChunkGUI (manager);
 			DrawNormalsCalculationGUI (manager);
-			if (manager.normalsCalculation == NormalsCalculationMode.Smooth)
-				DrawSmoothAngleGUI (manager);
-
+			DrawSmoothAngleGUI (manager);
 			DrawDebugGUI (manager);
 
 			manager.RefreshDeformerOrder ();
@@ -57,6 +54,8 @@ namespace Deform
 
 		private void DrawMaxVerticesPerChunkGUI (DeformerComponentManager manager)
 		{
+			if (manager.updateMode != UpdateMode.UpdateFrameSplit)
+				return;
 			EditorGUI.BeginChangeCheck ();
 			var label = new GUIContent ("Max Vertices Per Chunk");
 			var maxVerticesPerChunk = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerChunk);
@@ -84,6 +83,8 @@ namespace Deform
 
 		private void DrawSmoothAngleGUI (DeformerComponentManager manager)
 		{
+			if (manager.normalsCalculation != NormalsCalculationMode.Smooth)
+				return;
 			EditorGUI.BeginChangeCheck ();
 			var smoothingAngle = manager.SmoothingAngle;
 			smoothingAngle = EditorGUILayout.FloatField ("Smoothing Angle", smoothingAngle);
@@ -107,6 +108,8 @@ namespace Deform
 			EditorGUILayout.LabelField (string.Format ("{0}Chunk Count: {1}", TINY_INDENT, manager.ChunkCount));
 			//EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
 			//EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
+			if (GUILayout.Button (new GUIContent ("Save Mesh", "Saves the current mesh to your Assets folder")))
+				MeshUtil.Save (manager.Target.sharedMesh, manager.transform.name);
 			EditorGUILayout.LabelField (TINY_INDENT + "Deformers:");
 			var deformers = manager.GetDeformers ();
 			foreach (var deformer in deformers)

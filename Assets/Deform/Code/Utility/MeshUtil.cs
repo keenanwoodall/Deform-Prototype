@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace Deform
 {
@@ -18,6 +19,12 @@ namespace Deform
 			copy.colors = mesh.colors;
 
 			return copy;
+		}
+
+		public static void Save (Mesh mesh, string name)
+		{
+			var copy = Copy (mesh);
+			AssetDatabase.CreateAsset (copy, AssetDatabase.GenerateUniqueAssetPath (string.Format ("Assets/{0}.asset", name)));
 		}
 	}
 }
