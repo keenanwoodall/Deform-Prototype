@@ -6,7 +6,7 @@ namespace Deform.Deformers
 	{
 		public float amount = 0f;
 
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 				chunk.vertexData[vertexIndex].position += chunk.vertexData[vertexIndex].normal * amount;

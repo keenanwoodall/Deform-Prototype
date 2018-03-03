@@ -37,17 +37,17 @@ namespace Deform.Deformers
 			}
 		}
 
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var samplePosition = chunk.vertexData[vertexIndex].position + axisOffset;
 				if (usePosition)
-					samplePosition += chunk.transformData.position;
+					samplePosition += transformData.position;
 				if (useRotation)
-					samplePosition = chunk.transformData.rotation * samplePosition;
+					samplePosition = transformData.rotation * samplePosition;
 				if (useScale)
-					samplePosition.Scale (chunk.transformData.localScale);
+					samplePosition.Scale (transformData.localScale);
 				chunk.vertexData[vertexIndex].position += Sin3D (samplePosition);
 			}
 

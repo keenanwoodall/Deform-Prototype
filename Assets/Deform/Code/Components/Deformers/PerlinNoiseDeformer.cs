@@ -1,4 +1,5 @@
-﻿using LibNoise.Generator;
+﻿using UnityEngine;
+using LibNoise.Generator;
 
 namespace Deform.Deformers
 {
@@ -6,11 +7,11 @@ namespace Deform.Deformers
 	{
 		public Perlin perlin = new Perlin ();
 
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
-				var noise = 0.5f + (float)perlin.GetValue (CalculateSampleCoordinate (chunk.vertexData[vertexIndex], chunk.transformData));
+				var noise = 0.5f + (float)perlin.GetValue (CalculateSampleCoordinate (chunk.vertexData[vertexIndex], transformData));
 				chunk.vertexData[vertexIndex].position = TransformNoise (noise, chunk.vertexData[vertexIndex]);
 			}
 

@@ -120,7 +120,7 @@ namespace Deform
 							{
 								for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 								{
-									chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex]);
+									chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex], SyncedTransform, Bounds);
 								}
 							}
 						}
@@ -139,7 +139,7 @@ namespace Deform
 			// Modify chunk
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
-					chunks[index] = deformers[deformerIndex].Modify (chunks[index]);
+					chunks[index] = deformers[deformerIndex].Modify (chunks[index], SyncedTransform, Bounds);
 
 			if (index == chunks.Length - 1)
 				NotifyPostModify ();

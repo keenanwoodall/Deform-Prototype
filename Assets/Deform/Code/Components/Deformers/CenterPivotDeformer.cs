@@ -4,11 +4,11 @@ namespace Deform.Deformers
 {
 	public class CenterPivotDeformer : DeformerComponent
 	{
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
-				chunk.vertexData[vertexIndex].position -= chunk.bounds.center;
+				chunk.vertexData[vertexIndex].position -= bounds.center;
 			}
 
 			return chunk;

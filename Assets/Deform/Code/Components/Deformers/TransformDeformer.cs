@@ -16,7 +16,7 @@ namespace Deform.Deformers
 			transformSpace *= Matrix4x4.TRS (position, Quaternion.Euler (rotation), scale);
 		}
 
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 				chunk.vertexData[vertexIndex].position = transformSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);

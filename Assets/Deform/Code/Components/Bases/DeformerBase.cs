@@ -30,6 +30,8 @@ namespace Deform
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
+		public TransformData SyncedTransform { get; private set; }
+		public Bounds Bounds { get; private set; }
 		public MeshFilter Target { get { return target; } }
 
 		private void OnDestroy ()
@@ -48,6 +50,7 @@ namespace Deform
 				originalMesh = MeshUtil.Copy (target.sharedMesh);
 			// Change the mesh to one we can modify.
 			target.sharedMesh = MeshUtil.Copy (originalMesh);
+			Bounds = target.sharedMesh.bounds;
 			// Cache the original normals.
 			target.sharedMesh.GetNormals (originalNormals);
 
@@ -62,6 +65,7 @@ namespace Deform
 		{
 			originalMesh = MeshUtil.Copy (mesh);
 			target.sharedMesh = MeshUtil.Copy (mesh);
+			Bounds = target.sharedMesh.bounds;
 			target.sharedMesh.GetNormals (originalNormals);
 
 			deformChunkIndex = 0;
@@ -135,8 +139,7 @@ namespace Deform
 
 		public void UpdateTransformData ()
 		{
-			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-				chunks[chunkIndex].transformData = new TransformData (transform);
+			SyncedTransform = new TransformData (transform);
 		}
 
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)

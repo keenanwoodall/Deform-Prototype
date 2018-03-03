@@ -30,7 +30,7 @@ namespace Deform
 
 		public static Chunk CreateChunk (Mesh mesh)
 		{
-			return new Chunk (mesh.vertices, mesh.normals, mesh.tangents, mesh.colors, mesh.bounds);
+			return new Chunk (mesh.vertices, mesh.normals, mesh.tangents, mesh.colors);
 		}
 
 		public static Chunk[] CreateChunks (Mesh mesh, int count)
@@ -87,7 +87,7 @@ namespace Deform
 				}
 
 				// Create a chunk from the chunk arrays.
-				chunks[chunkIndex] = new Chunk (chunkPositions, chunkNormals, chunkTangents, chunkColors, bounds);
+				chunks[chunkIndex] = new Chunk (chunkPositions, chunkNormals, chunkTangents, chunkColors);
 			}
 
 			return chunks;

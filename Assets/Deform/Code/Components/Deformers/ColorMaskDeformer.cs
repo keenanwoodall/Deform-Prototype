@@ -9,7 +9,7 @@ namespace Deform.Deformers
 
 		private Vector3[] start, end;
 
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			if (!invert)
 			{

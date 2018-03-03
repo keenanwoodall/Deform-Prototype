@@ -14,7 +14,7 @@ namespace Deform.Deformers
 		}
 #endif
 
-		public override Chunk Modify (Chunk chunk)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
