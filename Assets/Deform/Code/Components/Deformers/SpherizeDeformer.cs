@@ -7,10 +7,12 @@ namespace Deform.Deformers
 		public float radius = 1f;
 		public float strength = 0f;
 
+#if UNITY_EDITOR
 		private void OnDrawGizmosSelected ()
 		{
 			Gizmos.DrawWireSphere (transform.position, radius);
 		}
+#endif
 
 		public override Chunk Modify (Chunk chunk)
 		{
