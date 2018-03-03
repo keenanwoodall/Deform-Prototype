@@ -3,6 +3,7 @@ namespace Deform.Deformers
 {
 	public class SquashAndStretchDeformer : DeformerComponent
 	{
+		[Header ("This deformer is a WIP right now, so it's pretty janky.")]
 		public float amount = 0f;
 		public Transform axis;
 
