@@ -23,20 +23,20 @@ namespace Deform.Deformers
 		{
 			base.PreModify ();
 
-			// Calculate the amount to squash/stretch
-			finalAmount = (amount + 1f) + axis.localScale.z;
-			if (finalAmount == 0f)
-				finalAmount = Mathf.Epsilon;
-			oneOverFinalAmount = 1f / finalAmount;
-
+			// Ensure there's an axis.
 			if (axis == null)
 			{
 				axis = new GameObject ("Axis").transform;
 				axis.transform.SetParent (transform);
 			}
 
-			var rotation = Quaternion.Euler (-axis.eulerAngles.x, -axis.eulerAngles.y, axis.eulerAngles.z);
-			scaleSpace = Matrix4x4.TRS (Vector3.zero, rotation, Vector3.one);
+			// Calculate the amount to squash/stretch
+			finalAmount = (amount + 1f) + axis.localScale.z;
+			if (finalAmount == 0f)
+				finalAmount = Mathf.Epsilon;
+			oneOverFinalAmount = 1f / finalAmount;
+			
+			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.localRotation), Vector3.one);
 			meshSpace = scaleSpace.inverse;
 		}
 
