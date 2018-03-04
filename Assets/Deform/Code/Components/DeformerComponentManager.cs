@@ -40,9 +40,7 @@ namespace Deform
 			switch (updateMode)
 			{
 				case UpdateMode.UpdateInstant:
-					UpdateTransformData ();
-					UpdateSyncedTime ();
-					UpdateMeshInstant (normalsCalculation, smoothingAngle);
+					UpdateInstant ();
 					return;
 				case UpdateMode.UpdateAsync:
 					UpdateAsync ();
@@ -64,21 +62,32 @@ namespace Deform
 			deformers.Clear ();
 		}
 
+		private void UpdateInstant ()
+		{
+			UpdateTransformData ();
+			UpdateSyncedTime ();
+			NotifyPreModify ();
+			UpdateMeshInstant (normalsCalculation, smoothingAngle);
+			NotifyPostModify ();
+		}
+
 		private void UpdateAsync ()
 		{
 			UpdateTransformData ();
 			UpdateSyncedTime ();
+			NotifyPreModify ();
 #if UNITY_EDITOR
 			if (Application.isPlaying)
-				UpdateMeshAsync (normalsCalculation, SmoothingAngle);
+				UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
 			else
 				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 #else
-			UpdateMeshAsync (normalsCalculation, SmoothingAngle);
+			UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
 #endif
 		}
 		private void UpdateFrameSplit ()
 		{
+			// Updating the last chunk?
 			if (deformChunkIndex >= chunks.Length)
 			{
 				UpdateSyncedTime ();
@@ -86,7 +95,11 @@ namespace Deform
 				ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 				ResetChunks ();
 				deformChunkIndex = 0;
+				NotifyPostModify ();
 			}
+			// Updating the first chunk?
+			else if (deformChunkIndex == 0)
+				NotifyPreModify ();
 			DeformChunk (deformChunkIndex);
 			deformChunkIndex++;
 		}
@@ -106,8 +119,6 @@ namespace Deform
 
 		protected override void DeformChunks ()
 		{
-			NotifyPreModify ();
-
 			lock (chunks)
 			{
 				lock (deformers)

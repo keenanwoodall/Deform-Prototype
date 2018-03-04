@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Deform
@@ -19,7 +20,7 @@ namespace Deform
 		protected bool asyncUpdateInProgress { get; private set; }
 
 		[SerializeField, HideInInspector]
-		private int maxVerticesPerFrame = 200;
+		private int maxVerticesPerFrame = 500;
 		public int MaxVerticesPerChunk
 		{
 			get { return maxVerticesPerFrame; }
@@ -86,7 +87,7 @@ namespace Deform
 			deformChunkIndex = 0;
 		}
 
-		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle)
+		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
@@ -105,6 +106,9 @@ namespace Deform
 			asyncUpdateInProgress = false;
 			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
+
+			if (onComplete != null)
+				onComplete.Invoke ();
 		}
 
 		public void UpdateNormals (NormalsCalculationMode normalsCalculation, float smoothingAngle)

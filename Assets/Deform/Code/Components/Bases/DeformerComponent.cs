@@ -29,7 +29,6 @@ namespace Deform
 			Manager.RemoveDeformer (this);
 		}
 
-
 		public virtual void PreModify () { }
 		public abstract Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds);
 		public virtual void PostModify () { }

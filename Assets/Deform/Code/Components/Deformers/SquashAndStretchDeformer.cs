@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+
 namespace Deform.Deformers
 {
 	public class SquashAndStretchDeformer : DeformerComponent
 	{
-		[Header ("This deformer is a WIP right now, so it's pretty janky.")]
+		[Tooltip ("You can also scale the axis' transform on the z axis to get the same effect.")]
 		public float amount = 0f;
 		public Transform axis;
 
@@ -11,62 +12,54 @@ namespace Deform.Deformers
 			scaleSpace,
 			meshSpace;
 
-		private Vector3
-			scaleAxisX,
-			scaleAxisY,
-			scaleAxisZ;
-		private TransformData cachedAxis;
+		// Calculations that don't need to be calculated for each vertex and can be cached
+		private float finalAmount;
+		private float oneOverFinalAmount;
 
+		// This is called on the main thread before the vertex data is modified.
+		// It's the best place to cache any info you only need to calculate once or
+		// that you'll need when on another thread.
 		public override void PreModify ()
 		{
 			base.PreModify ();
 
-			EnsureAxis ();
-			cachedAxis = new TransformData (axis);
+			// Calculate the amount to squash/stretch
+			finalAmount = (amount + 1f) + axis.localScale.z;
+			if (finalAmount == 0f)
+				finalAmount = Mathf.Epsilon;
+			oneOverFinalAmount = 1f / finalAmount;
 
-			scaleAxisZ = transform.worldToLocalMatrix.MultiplyPoint3x4 (axis.up);
+			if (axis == null)
+			{
+				axis = new GameObject ("Axis").transform;
+				axis.transform.SetParent (transform);
+			}
 
-			Vector3.OrthoNormalize (ref scaleAxisX, ref scaleAxisY, ref scaleAxisZ);
-
-			scaleSpace.SetRow (0, scaleAxisX);
-			scaleSpace.SetRow (1, scaleAxisY);
-			scaleSpace.SetRow (2, scaleAxisZ);
-			scaleSpace[3, 3] = 1f;
-
-			scaleSpace *= Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (cachedAxis.rotation), Vector3.one);
-
+			var rotation = Quaternion.Euler (-axis.eulerAngles.x, -axis.eulerAngles.y, axis.eulerAngles.z);
+			scaleSpace = Matrix4x4.TRS (Vector3.zero, rotation, Vector3.one);
 			meshSpace = scaleSpace.inverse;
 		}
 
+		// This method runs on another thread, hence the TransformData instead of Transform
+		// Also, think of a Chunk as a mesh
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
+			// Here's where the vertices are actually being modified.
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = chunk.vertexData[vertexIndex].position;
 
-				if (Mathf.Approximately (amount, 0f))
-					continue;
+				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (position);
 
-				var basePositionOnAxis = scaleSpace.MultiplyPoint3x4 (position);
-				var amountPlus1 = (amount + 1f) * cachedAxis.localScale.y;
+				positionOnAxis.x *= oneOverFinalAmount;
+				positionOnAxis.y *= oneOverFinalAmount;
+				positionOnAxis.z *= finalAmount;
 
-				basePositionOnAxis.x *= 1f / amountPlus1;
-				basePositionOnAxis.y *= 1f / amountPlus1;
-				basePositionOnAxis.z *= amountPlus1;
-
-				chunk.vertexData[vertexIndex].position = meshSpace.MultiplyPoint3x4 (basePositionOnAxis);
+				chunk.vertexData[vertexIndex].position = meshSpace.MultiplyPoint3x4 (positionOnAxis);
 			}
 
+			// The chunk that is returned is applied to the mesh on the main thread
 			return chunk;
-		}
-
-		private void EnsureAxis ()
-		{
-			if (axis == null)
-			{
-				axis = new GameObject ("Axis").transform;
-				axis.SetParent (transform);
-			}
 		}
 	}
 }
