@@ -26,14 +26,15 @@ namespace Deform.Deformers
 			// Ensure there's an axis.
 			if (axis == null)
 			{
-				axis = new GameObject ("Axis").transform;
+				axis = new GameObject ("SquashAxis").transform;
+				axis.transform.Rotate (-90f, 0f, 0f);
 				axis.transform.SetParent (transform);
 			}
 
 			// Calculate the amount to squash/stretch
-			finalAmount = (amount + 1f) + axis.localScale.z;
-			if (finalAmount == 0f)
-				finalAmount = Mathf.Epsilon;
+			finalAmount = amount + axis.localScale.z;
+			if (finalAmount < 0.01f)
+				finalAmount = 0.01f;
 			oneOverFinalAmount = 1f / finalAmount;
 			
 			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.localRotation), Vector3.one);
@@ -44,10 +45,12 @@ namespace Deform.Deformers
 		// Also, think of a Chunk as a mesh
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
+			if (finalAmount == 0f)
+				return chunk;
+
 			// Here's where the vertices are actually being modified.
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
-				var position = chunk.vertexData[vertexIndex].position;
 
 				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (position);
 
