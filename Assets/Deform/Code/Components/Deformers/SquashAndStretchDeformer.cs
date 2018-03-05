@@ -17,7 +17,9 @@ namespace Deform.Deformers
 		// Calculations that don't need to be calculated for each vertex and can be cached
 		private float finalAmount;
 		private float oneOverFinalAmount;
+		private float oneMinusOneOverFinalAmount;
 		private float curvatureOverAmount;
+		private float curvatureMult;
 
 		public override void PreModify ()
 		{
@@ -38,7 +40,9 @@ namespace Deform.Deformers
 				finalAmount = 0.01f;
 
 			oneOverFinalAmount = 1f / finalAmount;
+			oneMinusOneOverFinalAmount = 1f - oneOverFinalAmount;
 			curvatureOverAmount = curvature / finalAmount;
+			curvatureMult = 16f * curvatureOverAmount;
 
 			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
 			meshSpace = scaleSpace.inverse;
@@ -51,6 +55,7 @@ namespace Deform.Deformers
 
 			float minHeight = 0f;
 			float maxHeight = 0f;
+			float height = 0f;
 
 			// Find the min/max height.
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
@@ -62,17 +67,17 @@ namespace Deform.Deformers
 					minHeight = positionOnAxis.z;
 			}
 
+			height = maxHeight - minHeight;
+
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 
-				var normalizedHeight = Mathf.InverseLerp (minHeight, maxHeight, positionOnAxis.z);
+				var normalizedHeight = (positionOnAxis.z - minHeight) / (height);
 
-				var curvatureMult = 16f * curvatureOverAmount;
-				var oneMinusOneOverFinalAmount = 1f - oneOverFinalAmount;
 				var a = curvatureMult * oneMinusOneOverFinalAmount;
 				var b = -curvatureMult * oneMinusOneOverFinalAmount;
-				var finalCurvature = ((((a * (normalizedHeight)) + b) * (normalizedHeight)) + 1f);
+				var finalCurvature = (((a * (normalizedHeight)) + b) * (normalizedHeight)) + 1f;
 
 				positionOnAxis.x *= oneOverFinalAmount * finalCurvature;
 				positionOnAxis.y *= oneOverFinalAmount * finalCurvature;

@@ -135,15 +135,14 @@ namespace Deform
 			SyncedTime = Time.time;
 		}
 
-		public void RecreateChunks (bool forceSingleChunk = false)
-		{
-			chunks = ChunkUtil.CreateChunks (originalMesh, forceSingleChunk ? 1 : FrameSplitChunkCount);
-			UpdateTransformData ();
-		}
-
 		public void UpdateTransformData ()
 		{
 			SyncedTransform = new TransformData (transform);
+		}
+
+		public void RecreateChunks (bool forceSingleChunk = false)
+		{
+			chunks = ChunkUtil.CreateChunks (originalMesh, forceSingleChunk ? 1 : FrameSplitChunkCount);
 		}
 
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)

@@ -87,6 +87,9 @@ namespace Deform
 		}
 		private void UpdateFrameSplit ()
 		{
+			DeformChunk (deformChunkIndex);
+			deformChunkIndex++;
+
 			// Updating the last chunk?
 			if (deformChunkIndex >= chunks.Length)
 			{
@@ -100,8 +103,6 @@ namespace Deform
 			// Updating the first chunk?
 			else if (deformChunkIndex == 0)
 				NotifyPreModify ();
-			DeformChunk (deformChunkIndex);
-			deformChunkIndex++;
 		}
 
 		private void NotifyPreModify ()

@@ -13,6 +13,7 @@ namespace Deform
 				Debug.Log ("Mesh is null");
 				return;
 			}
+
 			mesh.GetVertices (VerticeCache);
 
 			var vertexIndex = 0;
@@ -54,7 +55,7 @@ namespace Deform
 
 			if (count > vertexCount)
 			{
-				Debug.LogWarning ("Chunk count is greater than vertex count.");
+				Debug.LogWarning ("Chunk count is greater than vertex count. Setting chunk count to vertex count.");
 				count = vertexCount;
 			}
 
@@ -63,9 +64,11 @@ namespace Deform
 			{
 				// Calculate the start and end index of the chunk
 				var startIndex = chunkSize * chunkIndex;
-				var endIndex = chunkSize * (chunkIndex + 1);
+				var endIndex = 0;
 				if (chunkIndex + 1 == count)
-					endIndex += vertexCount - (chunkSize * count);
+					endIndex = vertexData.Length;
+				else
+					endIndex = chunkSize * (chunkIndex + 1);
 
 				// Create the arrays to hold the chunk data.
 				var currentChunkSize = endIndex - startIndex;
