@@ -41,6 +41,21 @@ namespace Deform
 
 		public static Chunk[] CreateChunks (VertexData[] vertexData, int count, Bounds bounds)
 		{
+			var vertexCount = vertexData.Length;
+
+			if (count > vertexCount)
+			{
+				Debug.LogWarning ("Chunk count is greater than vertex count. Setting chunk count to vertex count.");
+				count = vertexCount;
+			}
+			else if (count < 1)
+			{
+				Debug.LogWarning ("Chunk count cannot be less than 1. Setting chunk count to 1.");
+				count = 1;
+			}
+
+			var chunkSize = vertexCount / count;
+
 			// Cache the mesh data.
 			var vertices = VertexDataUtil.GetPositions (vertexData);
 			var normals = VertexDataUtil.GetNormals (vertexData);
@@ -49,15 +64,6 @@ namespace Deform
 
 			// Create the array of chunks.
 			var chunks = new Chunk[count];
-			// Cache chunk info.
-			var vertexCount = vertexData.Length;
-			var chunkSize = vertexCount / count;
-
-			if (count > vertexCount)
-			{
-				Debug.LogWarning ("Chunk count is greater than vertex count. Setting chunk count to vertex count.");
-				count = vertexCount;
-			}
 
 			// Loop through each chunk.
 			for (var chunkIndex = 0; chunkIndex < count; chunkIndex++)

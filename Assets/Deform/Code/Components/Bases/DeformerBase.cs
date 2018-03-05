@@ -24,7 +24,7 @@ namespace Deform
 		public int MaxVerticesPerChunk
 		{
 			get { return maxVerticesPerFrame; }
-			set { maxVerticesPerFrame = Mathf.Clamp (value, 100, VertexCount); }
+			set { maxVerticesPerFrame = Mathf.Clamp (value, 1, VertexCount); }
 		}
 		public int FrameSplitChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerChunk); } }
 		public int ChunkCount { get { return chunks.Length; } }
