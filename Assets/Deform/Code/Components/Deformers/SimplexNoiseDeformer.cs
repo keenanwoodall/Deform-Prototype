@@ -17,5 +17,10 @@ namespace Deform.Deformers
 
 			return chunk;
 		}
+
+		protected override float GetFrequency ()
+		{
+			return frequency;
+		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Deform
 		public override void PreModify ()
 		{
 			_magnitude = magnitude * globalMagnitude;
-			speedOffset += speed * Manager.SyncedDeltaTime;
+			speedOffset += speed * Manager.SyncedDeltaTime / GetFrequency ();
 		}
 
 		protected Vector3 CalculateSampleCoordinate (VertexData vertex, TransformData transformData)
@@ -66,5 +66,7 @@ namespace Deform
 					return Vector3.Scale (vertex.position, Vector3.one + Vector3.Scale (noise, _magnitude));
 			}
 		}
+
+		protected abstract float GetFrequency ();
 	}
 }

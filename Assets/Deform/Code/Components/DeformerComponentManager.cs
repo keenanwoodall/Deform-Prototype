@@ -27,12 +27,7 @@ namespace Deform
 			ChangeTarget (GetComponent<MeshFilter> (), false);
 			RecreateChunks (updateMode == UpdateMode.UpdateInstant || updateMode == UpdateMode.UpdateAsync);
 
-#if UNITY_EDITOR
-			if (!Application.isPlaying || (Application.isPlaying && Time.frameCount == 0))
-				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
-#else
 			UpdateMeshInstant (normalsCalculation, SmoothingAngle);
-#endif
 		}
 
 		public void Update ()
@@ -85,6 +80,7 @@ namespace Deform
 			UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
 #endif
 		}
+
 		private void UpdateFrameSplit ()
 		{
 			DeformChunk (deformChunkIndex);

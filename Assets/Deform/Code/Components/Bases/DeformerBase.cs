@@ -20,7 +20,7 @@ namespace Deform
 		protected bool asyncUpdateInProgress { get; private set; }
 
 		[SerializeField, HideInInspector]
-		private int maxVerticesPerFrame = 500;
+		private int maxVerticesPerFrame = 2000;
 		public int MaxVerticesPerChunk
 		{
 			get { return maxVerticesPerFrame; }

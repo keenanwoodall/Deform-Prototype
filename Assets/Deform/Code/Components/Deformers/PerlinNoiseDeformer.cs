@@ -25,5 +25,10 @@ namespace Deform.Deformers
 			if (!perlin.IsDisposed)
 				perlin.Dispose ();
 		}
+
+		protected override float GetFrequency ()
+		{
+			return (float)perlin.Frequency;
+		}
 	}
 }
