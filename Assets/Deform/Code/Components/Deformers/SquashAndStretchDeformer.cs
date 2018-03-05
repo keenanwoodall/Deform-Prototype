@@ -6,6 +6,8 @@ namespace Deform.Deformers
 	{
 		[Tooltip ("You can also scale the axis' transform on the z axis to get the same effect.")]
 		public float amount = 0f;
+		[Range (0f, 1f)]
+		public float curvature = 0.75f;
 		public Transform axis;
 
 		private Matrix4x4
@@ -15,10 +17,8 @@ namespace Deform.Deformers
 		// Calculations that don't need to be calculated for each vertex and can be cached
 		private float finalAmount;
 		private float oneOverFinalAmount;
+		private float curvatureOverAmount;
 
-		// This is called on the main thread before the vertex data is modified.
-		// It's the best place to cache any info you only need to calculate once or
-		// that you'll need when on another thread.
 		public override void PreModify ()
 		{
 			base.PreModify ();
@@ -27,41 +27,60 @@ namespace Deform.Deformers
 			if (axis == null)
 			{
 				axis = new GameObject ("SquashAxis").transform;
-				axis.transform.Rotate (-90f, 0f, 0f);
 				axis.transform.SetParent (transform);
+				axis.transform.Rotate (-90f, 0f, 0f);
+				axis.transform.localPosition = Vector3.zero;
 			}
 
 			// Calculate the amount to squash/stretch
 			finalAmount = amount + axis.localScale.z;
 			if (finalAmount < 0.01f)
 				finalAmount = 0.01f;
+
 			oneOverFinalAmount = 1f / finalAmount;
-			
-			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.localRotation), Vector3.one);
+			curvatureOverAmount = curvature / finalAmount;
+
+			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
 			meshSpace = scaleSpace.inverse;
 		}
 
-		// This method runs on another thread, hence the TransformData instead of Transform
-		// Also, think of a Chunk as a mesh
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
 			if (finalAmount == 0f)
 				return chunk;
 
-			// Here's where the vertices are actually being modified.
+			float minHeight = 0f;
+			float maxHeight = 0f;
+
+			// Find the min/max height.
 			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
+				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				if (positionOnAxis.z > maxHeight)
+					maxHeight = positionOnAxis.z;
+				if (positionOnAxis.z < minHeight)
+					minHeight = positionOnAxis.z;
+			}
 
-				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (position);
+			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			{
+				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 
-				positionOnAxis.x *= oneOverFinalAmount;
-				positionOnAxis.y *= oneOverFinalAmount;
+				var normalizedHeight = Mathf.InverseLerp (minHeight, maxHeight, positionOnAxis.z);
+
+				var curvatureMult = 16f * curvatureOverAmount;
+				var oneMinusOneOverFinalAmount = 1f - oneOverFinalAmount;
+				var a = curvatureMult * oneMinusOneOverFinalAmount;
+				var b = -curvatureMult * oneMinusOneOverFinalAmount;
+				var finalCurvature = ((((a * (normalizedHeight)) + b) * (normalizedHeight)) + 1f);
+
+				positionOnAxis.x *= oneOverFinalAmount * finalCurvature;
+				positionOnAxis.y *= oneOverFinalAmount * finalCurvature;
 				positionOnAxis.z *= finalAmount;
 
 				chunk.vertexData[vertexIndex].position = meshSpace.MultiplyPoint3x4 (positionOnAxis);
 			}
 
-			// The chunk that is returned is applied to the mesh on the main thread
 			return chunk;
 		}
 	}

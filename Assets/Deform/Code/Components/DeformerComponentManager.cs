@@ -35,7 +35,7 @@ namespace Deform
 #endif
 		}
 
-		public void LateUpdate ()
+		public void Update ()
 		{
 			switch (updateMode)
 			{

@@ -24,9 +24,6 @@ namespace Deform
 
 			manager.RefreshDeformerOrder ();
 
-			if (!Application.isPlaying)
-				manager.LateUpdate ();
-
 			Repaint ();
 		}
 
