@@ -2,7 +2,7 @@
 
 namespace Deform.Deformers
 {
-	public class CenterPivotDeformer : DeformerComponent
+	public class PivotToCenterDeformer : DeformerComponent
 	{
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
