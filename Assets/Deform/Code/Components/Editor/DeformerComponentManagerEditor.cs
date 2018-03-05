@@ -24,7 +24,8 @@ namespace Deform
 
 			manager.RefreshDeformerOrder ();
 
-			Repaint ();
+			if (!Application.isPlaying)
+				Repaint ();
 		}
 
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
