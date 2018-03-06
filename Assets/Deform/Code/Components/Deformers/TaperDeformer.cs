@@ -2,9 +2,9 @@
 
 namespace Deform.Deformers
 {
-	public class ScaleAlongAxisDeformer : DeformerComponent
+	public class TaperDeformer : DeformerComponent
 	{
-		public AnimationCurve curve = AnimationCurve.Linear (0f, 1f, 1f, 0.5f);
+		public AnimationCurve curve = AnimationCurve.Linear (0f, 0.5f, 1f, 1f);
 		public Transform axis;
 
 		private Matrix4x4 scaleSpace;

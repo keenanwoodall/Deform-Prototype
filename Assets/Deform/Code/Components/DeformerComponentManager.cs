@@ -79,6 +79,7 @@ namespace Deform
 
 		private void NotifyPreModify ()
 		{
+			RemoveNullDeformers ();
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 			{
 				if (deformers[deformerIndex].update)
@@ -87,6 +88,7 @@ namespace Deform
 		}
 		private void NotifyPostModify ()
 		{
+			RemoveNullDeformers ();
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
 					deformers[deformerIndex].PostModify ();
@@ -98,6 +100,8 @@ namespace Deform
 			{
 				lock (deformers)
 				{
+					RemoveNullDeformers ();
+
 					for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 					{
 						lock (deformers[deformerIndex])
@@ -178,8 +182,10 @@ namespace Deform
 			for (int deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 			{
 				if (deformers[deformerIndex] == null)
+				{
 					deformers.RemoveAt (deformerIndex);
-				deformerIndex--;
+					deformerIndex--;
+				}
 			}
 		}
 	}
