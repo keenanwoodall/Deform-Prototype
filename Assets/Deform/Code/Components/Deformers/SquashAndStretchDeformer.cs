@@ -58,7 +58,7 @@ namespace Deform.Deformers
 			float height = 0f;
 
 			// Find the min/max height.
-			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 				if (positionOnAxis.z > maxHeight)
@@ -69,7 +69,7 @@ namespace Deform.Deformers
 
 			height = maxHeight - minHeight;
 
-			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 

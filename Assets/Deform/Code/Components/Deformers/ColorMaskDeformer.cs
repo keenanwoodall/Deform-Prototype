@@ -22,7 +22,7 @@ namespace Deform.Deformers
 				start = VertexDataUtil.GetPositions (chunk.vertexData);
 			}
 
-			for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				chunk.vertexData[vertexIndex].position = Vector3.Lerp (
 					start[vertexIndex], 

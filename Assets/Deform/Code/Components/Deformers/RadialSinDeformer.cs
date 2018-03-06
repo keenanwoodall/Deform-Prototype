@@ -35,7 +35,7 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var position = moveSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 				var positionOffset = new Vector3 (0f, 0f, sin.Solve (speedOffset + (chunk.vertexData[vertexIndex].position - offset).sqrMagnitude));

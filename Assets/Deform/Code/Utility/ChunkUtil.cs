@@ -16,7 +16,7 @@ namespace Deform
 
 			mesh.GetVertices (VerticeCache);
 
-			var vertexIndex = 0;
+			int vertexIndex = 0;
 			for (var currentChunk = 0; currentChunk < chunks.Length; currentChunk++)
 			{
 				for (var currentChunkVertex = 0; currentChunkVertex < chunks[currentChunk].Size; currentChunkVertex++)
@@ -117,7 +117,7 @@ namespace Deform
 		public static Vector3[] GetBasePositions (Chunk[] chunks)
 		{
 			var basePositions = new Vector3[GetChunksSize (chunks)];
-			var vertexIndex = 0;
+			int vertexIndex = 0;
 			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 			{
 				for (var chunkVertexIndex = 0; chunkVertexIndex < chunks[chunkIndex].Size; chunkIndex++)
@@ -132,7 +132,7 @@ namespace Deform
 		public static Vector3[] GetPositions (Chunk[] chunks)
 		{
 			var positions = new Vector3[GetChunksSize (chunks)];
-			var vertexIndex = 0;
+			int vertexIndex = 0;
 			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 			{
 				for (var chunkVertexIndex = 0; chunkVertexIndex < chunks[chunkIndex].Size; chunkIndex++)
@@ -147,7 +147,7 @@ namespace Deform
 		public static Vector3[] GetNormals (Chunk[] chunks)
 		{
 			var normals = new Vector3[GetChunksSize (chunks)];
-			var vertexIndex = 0;
+			int vertexIndex = 0;
 			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 			{
 				for (var chunkVertexIndex = 0; chunkVertexIndex < chunks[chunkIndex].Size; chunkIndex++)
@@ -162,7 +162,7 @@ namespace Deform
 		public static Vector3[] GetTangents (Chunk[] chunks)
 		{
 			var tangents = new Vector3[GetChunksSize (chunks)];
-			var vertexIndex = 0;
+			int vertexIndex = 0;
 			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 			{
 				for (var chunkVertexIndex = 0; chunkVertexIndex < chunks[chunkIndex].Size; chunkIndex++)

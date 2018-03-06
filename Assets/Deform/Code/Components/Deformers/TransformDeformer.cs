@@ -18,7 +18,7 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 				chunk.vertexData[vertexIndex].position = transformSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 
 			return chunk;

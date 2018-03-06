@@ -9,7 +9,7 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			for (var vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var noise = 0.5f + (float)perlin.GetValue (CalculateSampleCoordinate (chunk.vertexData[vertexIndex], transformData));
 				chunk.vertexData[vertexIndex].position = TransformNoise (noise, chunk.vertexData[vertexIndex]);

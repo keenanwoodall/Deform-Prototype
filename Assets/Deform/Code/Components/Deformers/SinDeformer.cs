@@ -39,7 +39,7 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			for (var vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var samplePosition = chunk.vertexData[vertexIndex].position + axisOffset;
 				if (usePosition)
