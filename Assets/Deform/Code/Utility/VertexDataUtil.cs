@@ -23,6 +23,8 @@ namespace Deform
 			var vertices = mesh.vertices;
 			var normals = mesh.normals;
 			var tangents = mesh.tangents;
+			if (tangents == null | tangents.Length == 0)
+				tangents = new Vector4[vertexCount];
 			var colors = mesh.colors;
 			if (colors == null || colors.Length == 0)
 				colors = new Color[vertexCount];
