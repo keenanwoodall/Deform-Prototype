@@ -4,7 +4,7 @@ namespace Deform.Deformers
 {
 	public class ScaleAlongAxisDeformer : DeformerComponent
 	{
-		public AnimationCurve curve = AnimationCurve.Linear (0f, 0f, 1f, 1f);
+		public AnimationCurve curve = AnimationCurve.Linear (0f, 1f, 1f, 0.5f);
 		public Transform axis;
 
 		private Matrix4x4 scaleSpace;
@@ -16,7 +16,7 @@ namespace Deform.Deformers
 
 			if (axis == null)
 			{
-				axis = new GameObject ("ScaleAlongAxisDeformerAxis").transform;
+				axis = new GameObject ("ScaleAlongAxisAxis").transform;
 				axis.SetParent (transform);
 				axis.localPosition = Vector3.zero;
 				axis.Rotate (-90f, 0f, 0f);
@@ -30,7 +30,6 @@ namespace Deform.Deformers
 		{
 			float minHeight = 0f;
 			float maxHeight = 0f;
-			float height = 0f;
 
 			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
@@ -41,12 +40,14 @@ namespace Deform.Deformers
 				if (position.z < minHeight)
 					minHeight = position.z;
 			}
-			height = maxHeight - minHeight;
+
+			float height = maxHeight - minHeight;
+			float oneOverHeight = 1f / height;
 
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				var normalizedHeight = (position.z - minHeight) / (height);
+				var normalizedHeight = 1f - ((position.z - minHeight) * oneOverHeight);
 				var scale = curve.Evaluate (normalizedHeight);
 				position.x *= scale;
 				position.y *= scale;

@@ -2,7 +2,7 @@
 
 namespace Deform.Deformers
 {
-	public class NormalScaleDeformer : DeformerComponent
+	public class ScaleAlongNormalDeformer : DeformerComponent
 	{
 		public float amount = 0f;
 

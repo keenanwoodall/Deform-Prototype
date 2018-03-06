@@ -80,8 +80,10 @@ namespace Deform
 		private void NotifyPreModify ()
 		{
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+			{
 				if (deformers[deformerIndex].update)
 					deformers[deformerIndex].PreModify ();
+			}
 		}
 		private void NotifyPostModify ()
 		{
@@ -169,6 +171,16 @@ namespace Deform
 		public List<DeformerComponent> GetDeformers ()
 		{
 			return deformers;
+		}
+
+		private void RemoveNullDeformers ()
+		{
+			for (int deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+			{
+				if (deformers[deformerIndex] == null)
+					deformers.RemoveAt (deformerIndex);
+				deformerIndex--;
+			}
 		}
 	}
 }
