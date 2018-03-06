@@ -3,20 +3,25 @@
 public struct TransformData
 {
 	public Vector3 position;
+	public Vector3 localPosition;
 	public Quaternion rotation;
+	public Quaternion localRotation;
 	public Vector3 localScale;
-
-	public TransformData (Vector3 position, Quaternion rotation, Vector3 localScale)
-	{
-		this.position = position;
-		this.rotation = rotation;
-		this.localScale = localScale;
-	}
+	public Vector3 lossyScale;
+	public Vector3 right;
+	public Vector3 up;
+	public Vector3 forward;
 
 	public TransformData (Transform transform)
 	{
-		this.position = transform.position;
-		this.rotation = transform.rotation;
-		this.localScale = transform.localScale;
+		position = transform.position;
+		localPosition = transform.localPosition;
+		rotation = transform.rotation;
+		localRotation = transform.localRotation;
+		localScale = transform.localScale;
+		lossyScale = transform.lossyScale;
+		right = transform.right;
+		up = transform.up;
+		forward = transform.forward;
 	}
 }

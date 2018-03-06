@@ -5,10 +5,12 @@ namespace Deform.Deformers
 	public class TwistDeformer : DeformerComponent
 	{
 		public float angle;
+		public float offset;
 		public Transform axis;
 
 		private Matrix4x4 scaleSpace;
 		private Matrix4x4 meshSpace;
+		private TransformData axisCache;
 
 		public override void PreModify ()
 		{
@@ -22,6 +24,8 @@ namespace Deform.Deformers
 				axis.Rotate (-90f, 0f, 0f);
 			}
 
+			axisCache = new TransformData (axis);
+
 			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
 			meshSpace = scaleSpace.inverse;
 		}
@@ -31,7 +35,7 @@ namespace Deform.Deformers
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				position = Quaternion.Euler (0f, 0f, angle * position.z) * position;
+				position = Quaternion.Euler (0f, 0f, offset + angle * position.z) * position;
 				chunk.vertexData[vertexIndex].position = meshSpace.MultiplyPoint3x4 (position);
 			}
 
