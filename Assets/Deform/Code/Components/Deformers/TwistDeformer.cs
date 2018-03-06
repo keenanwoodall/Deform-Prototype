@@ -2,9 +2,9 @@
 
 namespace Deform.Deformers
 {
-	public class TaperDeformer : DeformerComponent
+	public class TwistDeformer : DeformerComponent
 	{
-		public AnimationCurve curve = AnimationCurve.Linear (0f, 0.5f, 1f, 1f);
+		public float angle;
 		public Transform axis;
 
 		private Matrix4x4 scaleSpace;
@@ -16,7 +16,7 @@ namespace Deform.Deformers
 
 			if (axis == null)
 			{
-				axis = new GameObject ("TaperAxis").transform;
+				axis = new GameObject ("TwistAxis").transform;
 				axis.SetParent (transform);
 				axis.localPosition = Vector3.zero;
 				axis.Rotate (-90f, 0f, 0f);
@@ -28,29 +28,10 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			float minHeight = 0f;
-			float maxHeight = 0f;
-
-			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				if (position.z > maxHeight)
-					maxHeight = position.z;
-				if (position.z < minHeight)
-					minHeight = position.z;
-			}
-
-			float height = maxHeight - minHeight;
-			float oneOverHeight = 1f / height;
-
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
-			{
-				var position = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				var normalizedHeight = 1f - ((position.z - minHeight) * oneOverHeight);
-				var scale = curve.Evaluate (normalizedHeight);
-				position.x *= scale;
-				position.y *= scale;
+				position = Quaternion.Euler (0f, 0f, angle * position.z) * position;
 				chunk.vertexData[vertexIndex].position = meshSpace.MultiplyPoint3x4 (position);
 			}
 
