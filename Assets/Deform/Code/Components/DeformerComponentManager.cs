@@ -104,7 +104,7 @@ namespace Deform
 							{
 								for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
 								{
-									chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex], SyncedTransform, Bounds);
+									chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex], SyncedTransform, ChunkUtil.GetBounds (chunks));
 								}
 							}
 						}

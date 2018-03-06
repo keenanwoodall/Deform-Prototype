@@ -102,6 +102,18 @@ namespace Deform
 			return chunks;
 		}
 
+		public static Bounds GetBounds (Chunk[] chunks)
+		{
+			var chunksBounds = new Bounds ();
+			for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
+			{
+				var chunkBounds = VertexDataUtil.GetBounds (chunks[chunkIndex].vertexData);
+				chunksBounds.Encapsulate (chunkBounds);
+			}
+
+			return chunksBounds;
+		}
+
 		public static Vector3[] GetBasePositions (Chunk[] chunks)
 		{
 			var basePositions = new Vector3[GetChunksSize (chunks)];

@@ -6,13 +6,7 @@ namespace Deform.Deformers
 	{
 		public float radius = 1f;
 		public float strength = 0f;
-
-#if UNITY_EDITOR
-		private void OnDrawGizmosSelected ()
-		{
-			Gizmos.DrawWireSphere (transform.position, radius);
-		}
-#endif
+		public Vector3 offset;
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
@@ -20,7 +14,7 @@ namespace Deform.Deformers
 			{
 				chunk.vertexData[vertexIndex].position = Vector3.LerpUnclamped (
 					chunk.vertexData[vertexIndex].position,
-					chunk.vertexData[vertexIndex].position.normalized * radius,
+					bounds.center + offset + ((chunk.vertexData[vertexIndex].position - bounds.center).normalized * radius),
 					strength);
 			}
 

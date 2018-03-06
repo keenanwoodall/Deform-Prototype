@@ -35,6 +35,14 @@ namespace Deform
 			return vertexData;
 		}
 
+		public static Bounds GetBounds (VertexData[] vertexData)
+		{
+			var bounds = new Bounds ();
+			for (var vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+				bounds.Encapsulate (vertexData[vertexIndex].position);
+			return bounds;
+		}
+
 		public static Vector3[] GetBasePositions (VertexData[] vertexData)
 		{
 			var vertexCount = vertexData.Length;
