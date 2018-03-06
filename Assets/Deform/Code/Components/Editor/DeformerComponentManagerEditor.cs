@@ -31,7 +31,7 @@ namespace Deform
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
 		{
 			EditorGUI.BeginChangeCheck ();
-			var label = new GUIContent ("Update Mode", "UpdateInstant: Performs deformation calculations to the entire mesh every frame.\n\nUpdateAsync: Performs all calculations on another thread. Has great performance, but update-rate may seem a little slow in some scenarios.\n\nUpdateFrameSplit: Splits the mesh into chunks and calculates one chunk each frame.\n\nPause: Maintains the current mesh.\n\nStop: Removes all deformation and shows the original mesh.");
+			var label = new GUIContent ("Update Mode", "UpdateInstant: Performs deformation calculations to the entire mesh every frame.\n\nUpdateAsync: Performs all calculations on another thread. Has great performance, but update-rate may seem a little slow in some scenarios.\n\nPause: Maintains the current mesh.\n\nStop: Removes all deformation and shows the original mesh.");
 			var updateMode = manager.updateMode;
 			updateMode = (UpdateMode)EditorGUILayout.EnumPopup (label, updateMode);
 			if (EditorGUI.EndChangeCheck ())
