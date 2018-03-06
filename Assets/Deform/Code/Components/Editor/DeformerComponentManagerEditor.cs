@@ -17,12 +17,12 @@ namespace Deform
 			var manager = target as DeformerComponentManager;
 
 			DrawUpdateModeGUI (manager);
-			DrawMaxVerticesPerChunkGUI (manager);
 			DrawNormalsCalculationGUI (manager);
 			DrawSmoothAngleGUI (manager);
 			DrawDebugGUI (manager);
 
-			manager.RefreshDeformerOrder ();
+			if (GUI.changed)
+				manager.RefreshDeformerOrder ();
 
 			if (!Application.isPlaying)
 				Repaint ();
@@ -38,31 +38,11 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Update Mode");
 				manager.updateMode = updateMode;
-				if (updateMode == UpdateMode.UpdateInstant || updateMode == UpdateMode.UpdateAsync)
-					manager.RecreateChunks (true);
-				else if (updateMode == UpdateMode.UpdateFrameSplit)
-					manager.RecreateChunks ();
 			}
 
 			if (updateMode == UpdateMode.UpdateAsync && !Application.isPlaying)
 			{
 				EditorGUILayout.HelpBox ("UpdateAsync only works in Play-Mode, UpdateInstant will be used in the editor", MessageType.Info);
-			}
-		}
-
-		private void DrawMaxVerticesPerChunkGUI (DeformerComponentManager manager)
-		{
-			if (manager.updateMode != UpdateMode.UpdateFrameSplit)
-				return;
-			EditorGUI.BeginChangeCheck ();
-			var label = new GUIContent ("Max Vertices Per Chunk");
-			var maxVerticesPerChunk = EditorGUILayout.DelayedIntField (label, manager.MaxVerticesPerChunk);
-			if (EditorGUI.EndChangeCheck ())
-			{
-				Undo.RecordObject (manager, " Max Vertices Per Chunk");
-				manager.MaxVerticesPerChunk = maxVerticesPerChunk;
-				if (manager.updateMode == UpdateMode.UpdateFrameSplit)
-					manager.RecreateChunks ();
 			}
 		}
 
@@ -105,9 +85,8 @@ namespace Deform
 			if (GUILayout.Button (new GUIContent ("Save Mesh", "Saves the current mesh to your Assets folder"), GUILayout.Width (100)))
 				MeshUtil.Save (manager.Target.sharedMesh, manager.transform.name);
 			EditorGUILayout.LabelField (string.Format ("{0}Vertex Count: {1}", TINY_INDENT, manager.VertexCount));
-			EditorGUILayout.LabelField (string.Format ("{0}Chunk Count: {1}", TINY_INDENT, manager.ChunkCount));
-			//EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
-			//EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
+			EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));
+			EditorGUILayout.LabelField (string.Format ("Delta Time: {0}", manager.SyncedDeltaTime));
 			EditorGUILayout.LabelField (TINY_INDENT + "Deformers:");
 			var deformers = manager.GetDeformers ();
 			foreach (var deformer in deformers)

@@ -7,7 +7,7 @@ namespace Deform
 	[ExecuteInEditMode]
 	public class DeformerComponentManager : DeformerBase
 	{
-		public UpdateMode updateMode = UpdateMode.UpdateFrameSplit;
+		public UpdateMode updateMode = UpdateMode.UpdateAsync;
 		public NormalsCalculationMode normalsCalculation = NormalsCalculationMode.Unity;
 
 		[HideInInspector, SerializeField]
@@ -25,8 +25,7 @@ namespace Deform
 		{
 			DiscardChanges ();
 			ChangeTarget (GetComponent<MeshFilter> (), false);
-			RecreateChunks (updateMode == UpdateMode.UpdateInstant || updateMode == UpdateMode.UpdateAsync);
-
+			RecreateChunks ();
 			UpdateMeshInstant (normalsCalculation, SmoothingAngle);
 		}
 
@@ -39,9 +38,6 @@ namespace Deform
 					return;
 				case UpdateMode.UpdateAsync:
 					UpdateAsync ();
-					return;
-				case UpdateMode.UpdateFrameSplit:
-					UpdateFrameSplit ();
 					return;
 				case UpdateMode.Pause:
 					return;
@@ -79,26 +75,6 @@ namespace Deform
 #else
 			UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
 #endif
-		}
-
-		private void UpdateFrameSplit ()
-		{
-			DeformChunk (deformChunkIndex);
-			deformChunkIndex++;
-
-			// Updating the last chunk?
-			if (deformChunkIndex >= chunks.Length)
-			{
-				UpdateSyncedTime ();
-				UpdateTransformData ();
-				ApplyChunksToTarget (normalsCalculation, smoothingAngle);
-				ResetChunks ();
-				deformChunkIndex = 0;
-				NotifyPostModify ();
-			}
-			// Updating the first chunk?
-			else if (deformChunkIndex == 0)
-				NotifyPreModify ();
 		}
 
 		private void NotifyPreModify ()

@@ -18,16 +18,7 @@ namespace Deform
 
 		protected int deformChunkIndex;
 		protected bool asyncUpdateInProgress { get; private set; }
-
-		[SerializeField, HideInInspector]
-		private int maxVerticesPerFrame = 2000;
-		public int MaxVerticesPerChunk
-		{
-			get { return maxVerticesPerFrame; }
-			set { maxVerticesPerFrame = Mathf.Clamp (value, 1, VertexCount); }
-		}
-		public int FrameSplitChunkCount { get { return Mathf.CeilToInt (VertexCount / MaxVerticesPerChunk); } }
-		public int ChunkCount { get { return chunks.Length; } }
+		
 		public int VertexCount { get { return originalMesh.vertexCount; } }
 		public float SyncedTime { get; private set; }
 		public float SyncedDeltaTime { get; private set; }
@@ -77,10 +68,6 @@ namespace Deform
 
 		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
-			// Reset chunks if deformation isn't finished or just starting
-			if (deformChunkIndex != 0 && deformChunkIndex != FrameSplitChunkCount - 1)
-				ResetChunks ();
-
 			DeformChunks ();
 			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
@@ -140,9 +127,9 @@ namespace Deform
 			SyncedTransform = new TransformData (transform);
 		}
 
-		public void RecreateChunks (bool forceSingleChunk = false)
+		public void RecreateChunks ()
 		{
-			chunks = ChunkUtil.CreateChunks (originalMesh, forceSingleChunk ? 1 : FrameSplitChunkCount);
+			chunks = ChunkUtil.CreateChunks (originalMesh, 1);
 		}
 
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
