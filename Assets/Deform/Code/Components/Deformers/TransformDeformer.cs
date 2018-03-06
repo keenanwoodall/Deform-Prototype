@@ -12,8 +12,7 @@ namespace Deform.Deformers
 
 		public override void PreModify ()
 		{
-			transformSpace = Matrix4x4.identity;
-			transformSpace *= Matrix4x4.TRS (position, Quaternion.Euler (rotation), scale);
+			transformSpace = Matrix4x4.TRS (position, Quaternion.Euler (rotation), scale);
 		}
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
