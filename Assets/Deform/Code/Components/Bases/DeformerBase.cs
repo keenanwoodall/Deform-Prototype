@@ -133,15 +133,15 @@ namespace Deform
 			switch (normalsCalculation)
 			{
 				case NormalsCalculationMode.Unity:
-					originalMesh.RecalculateNormals ();
+					modifyMesh.RecalculateNormals ();
 					break;
 				case NormalsCalculationMode.Smooth:
-					originalMesh.RecalculateNormals (smoothingAngle);
+					modifyMesh.RecalculateNormals (smoothingAngle);
 					break;
 				case NormalsCalculationMode.Maintain:
 					break;
 				case NormalsCalculationMode.Original:
-					originalMesh.SetNormals (originalNormals);
+					modifyMesh.SetNormals (originalNormals);
 					break;
 			}
 		}
