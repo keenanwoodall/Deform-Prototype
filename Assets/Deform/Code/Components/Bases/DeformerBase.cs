@@ -10,9 +10,13 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
 		[SerializeField, HideInInspector]
+		protected SkinnedMeshRenderer skinnedTarget;
+		[SerializeField, HideInInspector]
 		protected Chunk[] chunks;
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
+		[SerializeField, HideInInspector]
+		protected Mesh modifyMesh;
 
 		private List<Vector3> originalNormals = new List<Vector3> ();
 
@@ -38,11 +42,15 @@ namespace Deform
 
 			// If it's not null, the object was probably duplicated
 			if (originalMesh == null)
+			{
 				// Store the original mesh.
-				originalMesh = MeshUtil.Copy (target.sharedMesh);
+				originalMesh = Instantiate (target.sharedMesh);
+				originalMesh.name = "Original";
+			}
 			// Change the mesh to one we can modify.
-			target.sharedMesh = MeshUtil.Copy (originalMesh);
-			Bounds = target.sharedMesh.bounds;
+			modifyMesh = target.sharedMesh = Instantiate (originalMesh);
+			modifyMesh.name = "Mesh";
+			Bounds = originalMesh.bounds;
 			// Cache the original normals.
 			target.sharedMesh.GetNormals (originalNormals);
 
@@ -53,10 +61,32 @@ namespace Deform
 				RecreateChunks (1);
 		}
 
+		public void ChangeTarget (SkinnedMeshRenderer skinnedMesh, bool createChunks = true)
+		{
+			// Assign the target.
+			skinnedTarget = skinnedMesh;
+
+			// If it's not null, the object was probably duplicated
+			if (originalMesh == null)
+				// Store the original mesh.
+				originalMesh = Instantiate (skinnedTarget.sharedMesh);
+			// Change the mesh to one we can modify.
+			modifyMesh = skinnedTarget.sharedMesh = Instantiate (originalMesh);
+			Bounds = originalMesh.bounds;
+			// Cache the original normals.
+			originalMesh.GetNormals (originalNormals);
+
+			deformChunkIndex = 0;
+
+			// Create chunk data.
+			if (createChunks)
+				RecreateChunks (1);
+		}
+
 		public void ChangeMesh (Mesh mesh)
 		{
-			originalMesh = MeshUtil.Copy (mesh);
-			target.sharedMesh = MeshUtil.Copy (mesh);
+			originalMesh = Instantiate (mesh);
+			target.sharedMesh = Instantiate (mesh);
 			Bounds = target.sharedMesh.bounds;
 			target.sharedMesh.GetNormals (originalNormals);
 
@@ -103,15 +133,15 @@ namespace Deform
 			switch (normalsCalculation)
 			{
 				case NormalsCalculationMode.Unity:
-					target.sharedMesh.RecalculateNormals ();
+					originalMesh.RecalculateNormals ();
 					break;
 				case NormalsCalculationMode.Smooth:
-					target.sharedMesh.RecalculateNormals (smoothingAngle);
+					originalMesh.RecalculateNormals (smoothingAngle);
 					break;
 				case NormalsCalculationMode.Maintain:
 					break;
 				case NormalsCalculationMode.Original:
-					target.sharedMesh.SetNormals (originalNormals);
+					originalMesh.SetNormals (originalNormals);
 					break;
 			}
 		}
@@ -137,10 +167,10 @@ namespace Deform
 
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
-			ChunkUtil.ApplyChunks (chunks, target.sharedMesh);
+			ChunkUtil.ApplyChunks (chunks, modifyMesh);
 			UpdateNormals (normalsCalculation, smoothingAngle);
 
-			target.sharedMesh.RecalculateBounds ();
+			modifyMesh.RecalculateBounds ();
 		}
 
 		protected abstract void DeformChunk (int index);
@@ -154,7 +184,7 @@ namespace Deform
 		public void DiscardChanges ()
 		{
 			if (originalMesh != null && target != null)
-				target.sharedMesh = MeshUtil.Copy (originalMesh);
+				target.sharedMesh = Instantiate (originalMesh);
 		}
 	}
 }

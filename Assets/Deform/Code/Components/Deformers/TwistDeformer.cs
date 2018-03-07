@@ -32,10 +32,11 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
+			var boundsSize = bounds.size.sqrMagnitude;
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				position = Quaternion.Euler (0f, 0f, offset + angle * position.z) * position;
+				position = Quaternion.Euler (0f, 0f, offset + angle * (position.z / boundsSize)) * position;
 				chunk.vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 

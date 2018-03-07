@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Deform
 {
-	[RequireComponent (typeof (MeshFilter))]
 	[ExecuteInEditMode]
 	public class DeformerComponentManager : DeformerBase
 	{
@@ -25,7 +24,19 @@ namespace Deform
 		{
 			DiscardChanges ();
 			if (target == null)
-				ChangeTarget (GetComponent<MeshFilter> (), chunks == null);
+			{
+				var mf = GetComponent<MeshFilter> ();
+				if (mf != null)
+					ChangeTarget (mf);
+				else
+				{
+					var sf = GetComponent<SkinnedMeshRenderer> ();
+					if (sf != null)
+						ChangeTarget (sf);
+					else
+						return;
+				}
+			}
 			UpdateInstant ();
 		}
 

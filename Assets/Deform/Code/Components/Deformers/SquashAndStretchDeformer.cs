@@ -6,6 +6,7 @@ namespace Deform.Deformers
 	{
 		[Tooltip ("You can also scale the axis' transform on the z axis to get the same effect.")]
 		public float amount = 0f;
+		public float offset;
 		[Range (0f, 1f)]
 		public float curvature = 0.75f;
 		public Transform axis;
@@ -31,6 +32,7 @@ namespace Deform.Deformers
 				axis = new GameObject ("SquashAxis").transform;
 				axis.transform.SetParent (transform);
 				axis.transform.Rotate (-90f, 0f, 0f);
+				axis.localScale = Vector3.one;
 				axis.transform.localPosition = Vector3.zero;
 			}
 
@@ -59,11 +61,11 @@ namespace Deform.Deformers
 			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
-				var positionOnAxis = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				if (positionOnAxis.z > maxHeight)
-					maxHeight = positionOnAxis.z;
-				if (positionOnAxis.z < minHeight)
-					minHeight = positionOnAxis.z;
+				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				if (position.z > maxHeight)
+					maxHeight = position.z;
+				if (position.z < minHeight)
+					minHeight = position.z;
 			}
 
 			float oneOverHeight = 1f / (maxHeight - minHeight);
