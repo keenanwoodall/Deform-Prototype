@@ -4,6 +4,7 @@ namespace Deform.Deformers
 {
 	public class PivotToBoundsDeformer : DeformerComponent
 	{
+		[Range (0f, 1f)]
 		public float x = 0.5f, y = 0.5f, z = 0.5f;
 		private Vector3 offset;
 
