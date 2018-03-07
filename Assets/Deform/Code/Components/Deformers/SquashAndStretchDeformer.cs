@@ -11,8 +11,8 @@ namespace Deform.Deformers
 		public Transform axis;
 
 		private Matrix4x4
-			scaleSpace,
-			meshSpace;
+			axisSpace,
+			inverseAxisSpace;
 
 		// Calculations that don't need to be calculated for each vertex and can be cached
 		private float finalAmount;
@@ -44,8 +44,8 @@ namespace Deform.Deformers
 			curvatureOverAmount = curvature / finalAmount;
 			curvatureMult = 16f * curvatureOverAmount;
 
-			scaleSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
-			meshSpace = scaleSpace.inverse;
+			axisSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
+			inverseAxisSpace = axisSpace.inverse;
 		}
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
@@ -60,7 +60,7 @@ namespace Deform.Deformers
 			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
-				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				var positionOnAxis = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 				if (positionOnAxis.z > maxHeight)
 					maxHeight = positionOnAxis.z;
 				if (positionOnAxis.z < minHeight)
@@ -71,19 +71,19 @@ namespace Deform.Deformers
 
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
-				var positionOnAxis = scaleSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 
-				var normalizedHeight = (positionOnAxis.z - minHeight) / (height);
+				var normalizedHeight = (position.z - minHeight) / (height);
 
 				var a = curvatureMult * oneMinusOneOverFinalAmount;
 				var b = -curvatureMult * oneMinusOneOverFinalAmount;
 				var finalCurvature = (((a * (normalizedHeight)) + b) * (normalizedHeight)) + 1f;
 
-				positionOnAxis.x *= oneOverFinalAmount * finalCurvature;
-				positionOnAxis.y *= oneOverFinalAmount * finalCurvature;
-				positionOnAxis.z *= finalAmount;
+				position.x *= oneOverFinalAmount * finalCurvature;
+				position.y *= oneOverFinalAmount * finalCurvature;
+				position.z *= finalAmount;
 
-				chunk.vertexData[vertexIndex].position = meshSpace.MultiplyPoint3x4 (positionOnAxis);
+				chunk.vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
 			return chunk;

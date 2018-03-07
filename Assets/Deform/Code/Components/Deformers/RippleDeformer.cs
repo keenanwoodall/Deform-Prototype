@@ -13,7 +13,7 @@ namespace Deform.Deformers
 		private TransformData axisCache;
 		private float speedOffset;
 		private Matrix4x4 moveSpace;
-		private Matrix4x4 meshSpace;
+		private Matrix4x4 inverseAxisSpace;
 
 		public override void PreModify ()
 		{
@@ -33,7 +33,7 @@ namespace Deform.Deformers
 			speedOffset += (Manager.SyncedDeltaTime * speed) / sin.frequency;
 
 			moveSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
-			meshSpace = moveSpace.inverse;
+			inverseAxisSpace = moveSpace.inverse;
 		}
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
@@ -44,7 +44,7 @@ namespace Deform.Deformers
 				var sinOffset = speedOffset + (bounds.center - position + offset).sqrMagnitude;
 				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset));
 				position += positionOffset;
-				position = meshSpace.MultiplyPoint3x4 (position);
+				position = inverseAxisSpace.MultiplyPoint3x4 (position);
 				chunk.vertexData[vertexIndex].position = position;
 			}
 
