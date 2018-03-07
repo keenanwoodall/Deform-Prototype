@@ -20,23 +20,21 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
-		private void Awake ()
+		private void Start ()
 		{
-			DiscardChanges ();
-			if (target == null)
+			var mf = GetComponent<MeshFilter> ();
+			if (mf != null)
+				SetTarget (mf);
+			else
 			{
-				var mf = GetComponent<MeshFilter> ();
-				if (mf != null)
-					ChangeTarget (mf);
+				var sf = GetComponent<SkinnedMeshRenderer> ();
+				if (sf != null)
+					SetTarget (sf);
 				else
-				{
-					var sf = GetComponent<SkinnedMeshRenderer> ();
-					if (sf != null)
-						ChangeTarget (sf);
-					else
-						return;
-				}
+					return;
 			}
+
+
 			UpdateInstant ();
 		}
 

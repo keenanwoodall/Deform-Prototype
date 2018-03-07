@@ -6,7 +6,6 @@ namespace Deform.Deformers
 	{
 		[Tooltip ("You can also scale the axis' transform on the z axis to get the same effect.")]
 		public float amount = 0f;
-		public float offset;
 		[Range (0f, 1f)]
 		public float curvature = 0.75f;
 		public Transform axis;

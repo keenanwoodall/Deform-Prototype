@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Deform
@@ -16,11 +17,10 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
 		[SerializeField, HideInInspector]
-		protected Mesh modifyMesh;
+		protected Mesh deformMesh;
 
 		private List<Vector3> originalNormals = new List<Vector3> ();
 
-		protected int deformChunkIndex;
 		protected bool asyncUpdateInProgress { get; private set; }
 		
 		public int VertexCount { get { return originalMesh.vertexCount; } }
@@ -35,34 +35,39 @@ namespace Deform
 			DiscardChanges ();
 		}
 
-		public void ChangeTarget (MeshFilter meshFilter, bool createChunks = true)
+		public void SetTarget (MeshFilter meshFilter, bool createChunks = true)
 		{
 			// Assign the target.
+			skinnedTarget = null;
 			target = meshFilter;
 
 			// If it's not null, the object was probably duplicated
 			if (originalMesh == null)
-			{
-				// Store the original mesh.
 				originalMesh = Instantiate (target.sharedMesh);
-				originalMesh.name = "Original";
-			}
-			// Change the mesh to one we can modify.
-			modifyMesh = target.sharedMesh = Instantiate (originalMesh);
-			modifyMesh.name = "Mesh";
-			Bounds = originalMesh.bounds;
-			// Cache the original normals.
-			target.sharedMesh.GetNormals (originalNormals);
+			else
+				originalMesh = Instantiate (originalMesh);
 
-			deformChunkIndex = 0;
+
+			// Change the mesh to one we can modify.
+			deformMesh = target.sharedMesh = Instantiate (originalMesh);
+
+			// Cache the original bounds.
+			Bounds = originalMesh.bounds;
+
+			// Cache the original normals.
+			deformMesh.GetNormals (originalNormals);
+
+			deformMesh.name = transform.name + " Deform Mesh";
+			originalMesh.name = "Original";
 
 			// Create chunk data.
 			if (createChunks)
 				RecreateChunks (1);
 		}
 
-		public void ChangeTarget (SkinnedMeshRenderer skinnedMesh, bool createChunks = true)
+		public void SetTarget (SkinnedMeshRenderer skinnedMesh, bool createChunks = true)
 		{
+			target = null;
 			// Assign the target.
 			skinnedTarget = skinnedMesh;
 
@@ -70,62 +75,61 @@ namespace Deform
 			if (originalMesh == null)
 				// Store the original mesh.
 				originalMesh = Instantiate (skinnedTarget.sharedMesh);
+			else
+				originalMesh = Instantiate (originalMesh);
+
 			// Change the mesh to one we can modify.
-			modifyMesh = skinnedTarget.sharedMesh = Instantiate (originalMesh);
+			deformMesh = skinnedTarget.sharedMesh = Instantiate (originalMesh);
+
 			Bounds = originalMesh.bounds;
 			// Cache the original normals.
 			originalMesh.GetNormals (originalNormals);
-
-			deformChunkIndex = 0;
 
 			// Create chunk data.
 			if (createChunks)
 				RecreateChunks (1);
 		}
 
-		public void ChangeMesh (Mesh mesh)
-		{
-			originalMesh = Instantiate (mesh);
-			target.sharedMesh = Instantiate (mesh);
-			Bounds = target.sharedMesh.bounds;
-			target.sharedMesh.GetNormals (originalNormals);
-
-			deformChunkIndex = 0;
-
-			// Create chunk data.
-			RecreateChunks (1);
-		}
-
 		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
+			// Don't update if another update is in progress.
+			if (asyncUpdateInProgress)
+				return;
+
 			DeformChunks ();
 			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
-			deformChunkIndex = 0;
 		}
 
-		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
+		public async Task<bool> UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 			{
 				Debug.LogError ("UpdateMeshAsync doesn't work in edit-mode");
-				return;
+				return false;
 			}
 #endif
 			if (asyncUpdateInProgress)
-				return;
+				return false;
 
 			asyncUpdateInProgress = true;
 			await new WaitForBackgroundThread ();
 			DeformChunks ();
 			await new WaitForUpdate ();
 			asyncUpdateInProgress = false;
+
+			// We have to handle the scenario in which the update starts in play mode and finishes in edit mode.
+			if (!Application.isPlaying)
+				return false;
+
 			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
 
 			if (onComplete != null)
 				onComplete.Invoke ();
+
+			return true;
 		}
 
 		public void UpdateNormals (NormalsCalculationMode normalsCalculation, float smoothingAngle)
@@ -133,15 +137,15 @@ namespace Deform
 			switch (normalsCalculation)
 			{
 				case NormalsCalculationMode.Unity:
-					modifyMesh.RecalculateNormals ();
+					deformMesh.RecalculateNormals ();
 					break;
 				case NormalsCalculationMode.Smooth:
-					modifyMesh.RecalculateNormals (smoothingAngle);
+					deformMesh.RecalculateNormals (smoothingAngle);
 					break;
 				case NormalsCalculationMode.Maintain:
 					break;
 				case NormalsCalculationMode.Original:
-					modifyMesh.SetNormals (originalNormals);
+					deformMesh.SetNormals (originalNormals);
 					break;
 			}
 		}
@@ -167,10 +171,10 @@ namespace Deform
 
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
-			ChunkUtil.ApplyChunks (chunks, modifyMesh);
+			ChunkUtil.ApplyChunks (chunks, deformMesh);
 			UpdateNormals (normalsCalculation, smoothingAngle);
 
-			modifyMesh.RecalculateBounds ();
+			deformMesh.RecalculateBounds ();
 		}
 
 		protected abstract void DeformChunk (int index);
@@ -183,8 +187,10 @@ namespace Deform
 
 		public void DiscardChanges ()
 		{
-			if (originalMesh != null && target != null)
-				target.sharedMesh = Instantiate (originalMesh);
+			if (originalMesh != null)
+			{
+				deformMesh = Instantiate (originalMesh);
+			}
 		}
 	}
 }

@@ -20,9 +20,6 @@ namespace Deform
 			DrawNormalsCalculationGUI (manager);
 			DrawSmoothAngleGUI (manager);
 			DrawDebugGUI (manager);
-
-			if (!Application.isPlaying)
-				Repaint ();
 		}
 
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
