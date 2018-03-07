@@ -5,11 +5,12 @@ namespace Deform.Deformers
 {
 	public class RippleDeformer : DeformerComponent
 	{
-		public Vector3 offset;
 		public float speed;
+		public Vector3 offset;
 		public Transform axis;
-		public Sin sin = new Sin ();
+		public Sin sin = new Sin () { frequency = 5f, amplitude = 0.2f };
 
+		private TransformData axisCache;
 		private float speedOffset;
 		private Matrix4x4 moveSpace;
 		private Matrix4x4 meshSpace;
@@ -21,13 +22,15 @@ namespace Deform.Deformers
 
 			if (axis == null)
 			{
-				axis = new GameObject ("RadialSinAxis").transform;
+				axis = new GameObject ("RippleAxis").transform;
 				axis.SetParent (transform);
 				axis.localPosition = Vector3.zero;
 				axis.Rotate (-90f, 0f, 0f);
 			}
 
-			speedOffset += Manager.SyncedDeltaTime * speed / sin.frequency;
+			axisCache = new TransformData (axis);
+
+			speedOffset += (Manager.SyncedDeltaTime * speed) / sin.frequency;
 
 			moveSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
 			meshSpace = moveSpace.inverse;
@@ -38,7 +41,8 @@ namespace Deform.Deformers
 			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var position = moveSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				var positionOffset = new Vector3 (0f, 0f, sin.Solve (speedOffset + (chunk.vertexData[vertexIndex].position - offset).sqrMagnitude));
+				var sinOffset = speedOffset + (bounds.center - position + offset).sqrMagnitude;
+				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset));
 				position += positionOffset;
 				position = meshSpace.MultiplyPoint3x4 (position);
 				chunk.vertexData[vertexIndex].position = position;
