@@ -17,14 +17,14 @@ namespace Deform.Deformers
 				Mathf.Lerp (bounds.min.z, bounds.max.z, z)
 				);
 		}
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				chunk.vertexData[vertexIndex].position -= offset;
+				vertexData[vertexIndex].position -= offset;
 			}
 
-			return chunk;
+			return vertexData;
 		}
 	}
 }

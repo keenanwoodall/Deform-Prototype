@@ -4,7 +4,7 @@ namespace Deform
 {
 	public static class VertexDataUtil
 	{
-		public static void ApplyVertexData (Mesh mesh, VertexData[] vertexData)
+		public static void ApplyVertexData (VertexData[] vertexData, Mesh mesh)
 		{
 			var vertices = mesh.vertices;
 			var vertexCount = vertices.Length;

@@ -50,7 +50,7 @@ namespace Deform.Math.Trig
 			if (frequency != oldFrequency)
 				CalculateNewFrequency (t);
 
-			return TrigFunction (t * oldFrequency + phase + offset) * amplitude;
+			return TrigFunction (t * oldFrequency + phase + offset * Mathf.PI) * amplitude;
 		}
 
 		protected abstract float TrigFunction (float t);

@@ -29,20 +29,20 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 
 				var xy = new Vector2 (position.x, position.y).normalized * radius;
 				var goalPosition = new Vector3 (xy.x, xy.y, position.z);
 				position = Vector3.Lerp (position, goalPosition, strength);
 
-				chunk.vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
+				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
-			return chunk;
+			return vertexData;
 		}
 	}
 }

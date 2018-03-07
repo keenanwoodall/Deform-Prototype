@@ -13,7 +13,7 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected SkinnedMeshRenderer skinnedTarget;
 		[SerializeField, HideInInspector]
-		protected Chunk[] chunks;
+		protected VertexData[] vertexData;
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
 		[SerializeField, HideInInspector]
@@ -35,7 +35,7 @@ namespace Deform
 			DiscardChanges ();
 		}
 
-		public void SetTarget (MeshFilter meshFilter, bool createChunks = true)
+		public void SetTarget (MeshFilter meshFilter, bool recreateVertexData = true)
 		{
 			// Assign the target.
 			skinnedTarget = null;
@@ -61,11 +61,11 @@ namespace Deform
 			originalMesh.name = "Original";
 
 			// Create chunk data.
-			if (createChunks)
-				RecreateChunks (1);
+			if (recreateVertexData)
+				RecreateVertexData ();
 		}
 
-		public void SetTarget (SkinnedMeshRenderer skinnedMesh, bool createChunks = true)
+		public void SetTarget (SkinnedMeshRenderer skinnedMesh, bool recreateVertexData = true)
 		{
 			target = null;
 			// Assign the target.
@@ -86,8 +86,8 @@ namespace Deform
 			originalMesh.GetNormals (originalNormals);
 
 			// Create chunk data.
-			if (createChunks)
-				RecreateChunks (1);
+			if (recreateVertexData)
+				RecreateVertexData ();
 		}
 
 		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
@@ -96,9 +96,9 @@ namespace Deform
 			if (asyncUpdateInProgress)
 				return;
 
-			DeformChunks ();
-			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
-			ResetChunks ();
+			DeformVertexData ();
+			ApplyVertexDataToTarget (normalsCalculation, smoothingAngle);
+			ResetVertexData ();
 		}
 
 		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
@@ -115,7 +115,7 @@ namespace Deform
 
 			asyncUpdateInProgress = true;
 			await new WaitForBackgroundThread ();
-			DeformChunks ();
+			DeformVertexData ();
 			await new WaitForUpdate ();
 			asyncUpdateInProgress = false;
 
@@ -123,8 +123,8 @@ namespace Deform
 			if (!Application.isPlaying)
 				return;
 
-			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
-			ResetChunks ();
+			ApplyVertexDataToTarget (normalsCalculation, smoothingAngle);
+			ResetVertexData ();
 
 			if (onComplete != null)
 				onComplete.Invoke ();
@@ -159,28 +159,24 @@ namespace Deform
 			SyncedTransform = new TransformData (transform);
 		}
 
-		public void RecreateChunks (int count)
+		public void RecreateVertexData ()
 		{
-			if (count > 1)
-				chunks = ChunkUtil.CreateChunks (originalMesh, count);
-			else
-				chunks = new Chunk[1] { ChunkUtil.CreateChunk (originalMesh) };
+			vertexData = VertexDataUtil.GetVertexData (deformMesh);
 		}
 
-		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
+		protected void ApplyVertexDataToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
-			ChunkUtil.ApplyChunks (chunks, deformMesh);
+			VertexDataUtil.ApplyVertexData (vertexData, deformMesh);
 			UpdateNormals (normalsCalculation, smoothingAngle);
 
 			deformMesh.RecalculateBounds ();
 		}
 
-		protected abstract void DeformChunk (int index);
-		protected abstract void DeformChunks ();
+		protected abstract void DeformVertexData ();
 
-		protected void ResetChunks ()
+		protected void ResetVertexData ()
 		{
-			ChunkUtil.ResetChunks (chunks);
+			VertexDataUtil.ResetVertexData (vertexData);
 		}
 
 		public void DiscardChanges ()

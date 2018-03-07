@@ -7,15 +7,15 @@ namespace Deform.Deformers
 	{
 		public Perlin perlin = new Perlin ();
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				var noise = 0.5f + (float)perlin.GetValue (CalculateSampleCoordinate (chunk.vertexData[vertexIndex], transformData));
-				chunk.vertexData[vertexIndex].position = TransformNoise (noise, chunk.vertexData[vertexIndex]);
+				var noise = 0.5f + (float)perlin.GetValue (CalculateSampleCoordinate (vertexData[vertexIndex], transformData));
+				vertexData[vertexIndex].position = TransformNoise (noise, vertexData[vertexIndex]);
 			}
 
-			return chunk;
+			return vertexData;
 		}
 
 		public override void PostModify ()

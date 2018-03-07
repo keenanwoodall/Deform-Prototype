@@ -15,12 +15,12 @@ namespace Deform.Deformers
 			transformSpace = Matrix4x4.TRS (position, Quaternion.Euler (rotation), scale);
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
-				chunk.vertexData[vertexIndex].position = transformSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+				vertexData[vertexIndex].position = transformSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 
-			return chunk;
+			return vertexData;
 		}
 	}
 }

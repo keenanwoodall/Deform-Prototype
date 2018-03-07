@@ -54,8 +54,8 @@ namespace Deform
 				case UpdateMode.Pause:
 					return;
 				case UpdateMode.Stop:
-					ResetChunks ();
-					ApplyChunksToTarget (NormalsCalculationMode.Original, smoothingAngle);
+					ResetVertexData ();
+					ApplyVertexDataToTarget (NormalsCalculationMode.Original, smoothingAngle);
 					return;
 			}
 		}
@@ -106,9 +106,9 @@ namespace Deform
 					deformers[deformerIndex].PostModify ();
 		}
 
-		protected override void DeformChunks ()
+		protected override void DeformVertexData ()
 		{
-			lock (chunks)
+			lock (vertexData)
 			{
 				lock (deformers)
 				{
@@ -120,10 +120,7 @@ namespace Deform
 						{
 							if (deformers[deformerIndex].update)
 							{
-								for (var chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
-								{
-									chunks[chunkIndex] = deformers[deformerIndex].Modify (chunks[chunkIndex], SyncedTransform, ChunkUtil.GetBounds (chunks));
-								}
+								vertexData = deformers[deformerIndex].Modify (vertexData, SyncedTransform, VertexDataUtil.GetBounds (vertexData));
 							}
 						}
 					}
@@ -131,20 +128,6 @@ namespace Deform
 			}
 
 			NotifyPostModify ();
-		}
-
-		protected override void DeformChunk (int index)
-		{
-			if (index == 0)
-				NotifyPreModify ();
-
-			// Modify chunk
-			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
-				if (deformers[deformerIndex].update)
-					chunks[index] = deformers[deformerIndex].Modify (chunks[index], SyncedTransform, Bounds);
-
-			if (index == chunks.Length - 1)
-				NotifyPostModify ();
 		}
 
 		public void AddDeformer (DeformerComponent deformer)

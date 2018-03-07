@@ -12,7 +12,7 @@ namespace Deform.Deformers
 
 		private TransformData axisCache;
 		private float speedOffset;
-		private Matrix4x4 moveSpace;
+		private Matrix4x4 axisSpace;
 		private Matrix4x4 inverseAxisSpace;
 
 		public override void PreModify ()
@@ -32,25 +32,35 @@ namespace Deform.Deformers
 
 			speedOffset += (Manager.SyncedDeltaTime * speed) / sin.frequency;
 
-			moveSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
-			inverseAxisSpace = moveSpace.inverse;
+			axisSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
+			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			var boundsSize = meshBounds.size.sqrMagnitude;
-			var oneOverBoundsSize = 1f / boundsSize;
-			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			float maxWidth = float.MinValue;
+
+			// Find the width.
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				var position = moveSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				var sinOffset = (speedOffset + (meshBounds.center - position + (offset * boundsSize)).sqrMagnitude) * oneOverBoundsSize;
-				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset) * boundsSize);
-				position += positionOffset;
-				position = inverseAxisSpace.MultiplyPoint3x4 (position);
-				chunk.vertexData[vertexIndex].position = position;
+				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var width = new Vector2 (position.x, position.y).sqrMagnitude;
+				if (width > maxWidth)
+					maxWidth = width;
 			}
 
-			return chunk;
+
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			{
+				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var sinOffset = (speedOffset + (meshBounds.center - position + (offset * maxWidth)).sqrMagnitude);
+				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset));
+				position += positionOffset;
+				position = inverseAxisSpace.MultiplyPoint3x4 (position);
+				vertexData[vertexIndex].position = position;
+			}
+
+			return vertexData;
 		}
 	}
 }

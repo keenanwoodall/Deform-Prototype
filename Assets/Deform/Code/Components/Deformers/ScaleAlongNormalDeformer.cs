@@ -6,12 +6,12 @@ namespace Deform.Deformers
 	{
 		public float amount = 0f;
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
-				chunk.vertexData[vertexIndex].position += chunk.vertexData[vertexIndex].normal * amount;
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+				vertexData[vertexIndex].position += vertexData[vertexIndex].normal * amount;
 
-			return chunk;
+			return vertexData;
 		}
 	}
 }

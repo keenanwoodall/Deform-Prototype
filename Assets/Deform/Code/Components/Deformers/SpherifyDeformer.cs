@@ -8,18 +8,18 @@ namespace Deform.Deformers
 		public float strength = 0f;
 		public Vector3 offset;
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
 			var boundsSize = meshBounds.size.sqrMagnitude;
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				chunk.vertexData[vertexIndex].position = Vector3.LerpUnclamped (
-					chunk.vertexData[vertexIndex].position,
-					meshBounds.center + offset + ((chunk.vertexData[vertexIndex].position - meshBounds.center).normalized * radius * boundsSize),
+				vertexData[vertexIndex].position = Vector3.LerpUnclamped (
+					vertexData[vertexIndex].position,
+					meshBounds.center + offset + ((vertexData[vertexIndex].position - meshBounds.center).normalized * radius * boundsSize),
 					strength);
 			}
 
-			return chunk;
+			return vertexData;
 		}
 	}
 }

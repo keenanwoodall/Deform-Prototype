@@ -49,18 +49,18 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
 			if (finalAmount == 0f)
-				return chunk;
+				return vertexData;
 
 			float minHeight = float.MaxValue;
 			float maxHeight = float.MinValue;
 
 			// Find the min/max height.
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 				if (position.z > maxHeight)
 					maxHeight = position.z;
 				if (position.z < minHeight)
@@ -69,9 +69,9 @@ namespace Deform.Deformers
 
 			float oneOverHeight = 1f / (maxHeight - minHeight);
 
-			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 
 				var a = curvatureMult * oneMinusOneOverFinalAmount;
@@ -82,10 +82,10 @@ namespace Deform.Deformers
 				position.y *= oneOverFinalAmount * finalCurvature;
 				position.z *= finalAmount;
 
-				chunk.vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
+				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
-			return chunk;
+			return vertexData;
 		}
 	}
 }

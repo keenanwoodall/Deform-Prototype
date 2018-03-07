@@ -9,28 +9,28 @@ namespace Deform.Deformers
 
 		private Vector3[] start, end;
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
 			if (!invert)
 			{
-				start = VertexDataUtil.GetBasePositions (chunk.vertexData);
-				end = VertexDataUtil.GetPositions (chunk.vertexData);
+				start = VertexDataUtil.GetBasePositions (vertexData);
+				end = VertexDataUtil.GetPositions (vertexData);
 			}
 			else
 			{
-				end = VertexDataUtil.GetBasePositions (chunk.vertexData);
-				start = VertexDataUtil.GetPositions (chunk.vertexData);
+				end = VertexDataUtil.GetBasePositions (vertexData);
+				start = VertexDataUtil.GetPositions (vertexData);
 			}
 
-			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				chunk.vertexData[vertexIndex].position = Vector3.Lerp (
+				vertexData[vertexIndex].position = Vector3.Lerp (
 					start[vertexIndex], 
 					end[vertexIndex], 
-					GetChannel (channel, chunk.vertexData[vertexIndex].color));
+					GetChannel (channel, vertexData[vertexIndex].color));
 			}
 
-			return chunk;
+			return vertexData;
 		}
 
 		private float GetChannel (ColorChannel channel, Color color)

@@ -14,7 +14,7 @@ namespace Deform.Deformers
 		public Axis along = Axis.X;
 		public Axis by = Axis.Y;
 
-		public Sin sin = new Sin ();
+		public Sin sin = new Sin () { amplitude = 0.25f, frequency = 5f };
 
 		private Vector3 axisOffset;
 		private float speedOffset;
@@ -37,21 +37,21 @@ namespace Deform.Deformers
 			}
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
+		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				var samplePosition = chunk.vertexData[vertexIndex].position + axisOffset;
+				var samplePosition = vertexData[vertexIndex].position + axisOffset;
 				if (usePosition)
 					samplePosition += transformData.position;
 				if (useRotation)
 					samplePosition = transformData.rotation * samplePosition;
 				if (useScale)
 					samplePosition.Scale (transformData.localScale);
-				chunk.vertexData[vertexIndex].position += Sin3D (samplePosition);
+				vertexData[vertexIndex].position += Sin3D (samplePosition);
 			}
 
-			return chunk;
+			return vertexData;
 		}
 
 		private Vector3 Sin3D (Vector3 sample)
