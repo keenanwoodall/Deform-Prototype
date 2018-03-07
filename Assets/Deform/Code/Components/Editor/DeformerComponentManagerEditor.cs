@@ -20,6 +20,8 @@ namespace Deform
 			DrawNormalsCalculationGUI (manager);
 			DrawSmoothAngleGUI (manager);
 			DrawDebugGUI (manager);
+
+			Repaint ();
 		}
 
 		private void DrawUpdateModeGUI (DeformerComponentManager manager)
