@@ -21,9 +21,6 @@ namespace Deform
 			DrawSmoothAngleGUI (manager);
 			DrawDebugGUI (manager);
 
-			if (GUI.changed)
-				manager.RefreshDeformerOrder ();
-
 			if (!Application.isPlaying)
 				Repaint ();
 		}
@@ -82,7 +79,9 @@ namespace Deform
 			if (!showDebug)
 				return;
 
-			if (GUILayout.Button (new GUIContent ("Save Mesh", "Saves the current mesh to your Assets folder"), GUILayout.Width (100)))
+			if (GUILayout.Button (new GUIContent ("Update Deformer Order", "Sets the execution order of the deformers to the order they appear in the inspector."), GUILayout.Width (200)))
+				manager.RefreshDeformerOrder ();
+			if (GUILayout.Button (new GUIContent ("Save Mesh", "Saves the current mesh to your Assets folder"), GUILayout.Width (200)))
 				MeshUtil.Save (manager.Target.sharedMesh, manager.transform.name);
 			EditorGUILayout.LabelField (string.Format ("{0}Vertex Count: {1}", TINY_INDENT, manager.VertexCount));
 			EditorGUILayout.LabelField (string.Format ("Time: {0}", manager.SyncedTime));

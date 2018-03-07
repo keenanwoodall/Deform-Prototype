@@ -53,9 +53,8 @@ namespace Deform.Deformers
 			if (finalAmount == 0f)
 				return chunk;
 
-			float minHeight = 0f;
-			float maxHeight = 0f;
-			float height = 0f;
+			float minHeight = float.MaxValue;
+			float maxHeight = float.MinValue;
 
 			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
@@ -67,13 +66,13 @@ namespace Deform.Deformers
 					minHeight = positionOnAxis.z;
 			}
 
-			height = maxHeight - minHeight;
+			float oneOverHeight = 1f / (maxHeight - minHeight);
 
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
 
-				var normalizedHeight = (position.z - minHeight) / (height);
+				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 
 				var a = curvatureMult * oneMinusOneOverFinalAmount;
 				var b = -curvatureMult * oneMinusOneOverFinalAmount;

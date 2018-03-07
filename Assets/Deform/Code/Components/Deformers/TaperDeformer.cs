@@ -4,7 +4,7 @@ namespace Deform.Deformers
 {
 	public class TaperDeformer : DeformerComponent
 	{
-		public AnimationCurve curve = AnimationCurve.Linear (0f, 0.5f, 1f, 1f);
+		public AnimationCurve curve = AnimationCurve.Linear (0f, 1f, 1f, 0f);
 		public Transform axis;
 
 		private Matrix4x4 axisSpace;
@@ -28,8 +28,8 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			float minHeight = 0f;
-			float maxHeight = 0f;
+			float minHeight = float.MaxValue;
+			float maxHeight = float.MinValue;
 
 			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
@@ -41,13 +41,12 @@ namespace Deform.Deformers
 					minHeight = position.z;
 			}
 
-			float height = maxHeight - minHeight;
-			float oneOverHeight = 1f / height;
+			float oneOverHeight = 1f / (maxHeight - minHeight);
 
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				var normalizedHeight = 1f - ((position.z - minHeight) * oneOverHeight);
+				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 				var scale = curve.Evaluate (normalizedHeight);
 				position.x *= scale;
 				position.y *= scale;

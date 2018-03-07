@@ -24,9 +24,9 @@ namespace Deform
 		private void Awake ()
 		{
 			DiscardChanges ();
-			ChangeTarget (GetComponent<MeshFilter> (), false);
-			RecreateChunks ();
-			UpdateMeshInstant (normalsCalculation, SmoothingAngle);
+			if (target == null)
+				ChangeTarget (GetComponent<MeshFilter> (), chunks == null);
+			UpdateInstant ();
 		}
 
 		public void Update ()
@@ -153,18 +153,13 @@ namespace Deform
 
 		public void RefreshDeformerOrder ()
 		{
-			// Not sure why locking the deformers list doesn't prevent this method from changing it while the other thread works on it
-			// For now this if statement seems to prevent an error.
-			//if (asyncUpdateInProgress)
-			//	return;
-
 			lock (deformers)
 			{
+				var currentDeformers = GetComponents<DeformerComponent> ();
+
 				var oldDeformers = new List<DeformerComponent> ();
 				oldDeformers.AddRange (deformers);
 				deformers = new List<DeformerComponent> ();
-
-				var currentDeformers = GetComponents<DeformerComponent> ();
 
 				for (int i = 0; i < currentDeformers.Length; i++)
 					if (oldDeformers.Contains (currentDeformers[i]))
