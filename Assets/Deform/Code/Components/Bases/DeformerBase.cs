@@ -101,17 +101,17 @@ namespace Deform
 			ResetChunks ();
 		}
 
-		public async Task<bool> UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
+		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 			{
 				Debug.LogError ("UpdateMeshAsync doesn't work in edit-mode");
-				return false;
+				return;
 			}
 #endif
 			if (asyncUpdateInProgress)
-				return false;
+				return;
 
 			asyncUpdateInProgress = true;
 			await new WaitForBackgroundThread ();
@@ -121,15 +121,13 @@ namespace Deform
 
 			// We have to handle the scenario in which the update starts in play mode and finishes in edit mode.
 			if (!Application.isPlaying)
-				return false;
+				return;
 
 			ApplyChunksToTarget (normalsCalculation, smoothingAngle);
 			ResetChunks ();
 
 			if (onComplete != null)
 				onComplete.Invoke ();
-
-			return true;
 		}
 
 		public void UpdateNormals (NormalsCalculationMode normalsCalculation, float smoothingAngle)

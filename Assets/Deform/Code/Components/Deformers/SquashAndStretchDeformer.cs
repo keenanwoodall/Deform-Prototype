@@ -72,7 +72,6 @@ namespace Deform.Deformers
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-
 				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 
 				var a = curvatureMult * oneMinusOneOverFinalAmount;

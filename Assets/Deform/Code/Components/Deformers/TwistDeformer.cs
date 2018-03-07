@@ -32,11 +32,26 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
-			var boundsSize = bounds.size.sqrMagnitude;
+			float minHeight = float.MaxValue;
+			float maxHeight = float.MinValue;
+
+			// Find the min/max height.
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				position = Quaternion.Euler (0f, 0f, offset + angle * (position.z / boundsSize)) * position;
+				if (position.z > maxHeight)
+					maxHeight = position.z;
+				if (position.z < minHeight)
+					minHeight = position.z;
+			}
+
+			float height = maxHeight - minHeight;
+
+			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
+			{
+				var position = axisSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
+				var amount = offset + angle * (Mathf.InverseLerp (0f, height, position.z));
+				position = Quaternion.Euler (0f, 0f, amount) * position;
 				chunk.vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
