@@ -7,7 +7,7 @@ namespace Deform.Deformers
 	{
 		public Perlin perlin = new Perlin ();
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
 		{
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{

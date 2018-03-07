@@ -36,14 +36,14 @@ namespace Deform.Deformers
 			inverseAxisSpace = moveSpace.inverse;
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
 		{
-			var boundsSize = bounds.size.sqrMagnitude;
+			var boundsSize = meshBounds.size.sqrMagnitude;
 			var oneOverBoundsSize = 1f / boundsSize;
 			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var position = moveSpace.MultiplyPoint3x4 (chunk.vertexData[vertexIndex].position);
-				var sinOffset = (speedOffset + (bounds.center - position + (offset * boundsSize)).sqrMagnitude) * oneOverBoundsSize;
+				var sinOffset = (speedOffset + (meshBounds.center - position + (offset * boundsSize)).sqrMagnitude) * oneOverBoundsSize;
 				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset) * boundsSize);
 				position += positionOffset;
 				position = inverseAxisSpace.MultiplyPoint3x4 (position);

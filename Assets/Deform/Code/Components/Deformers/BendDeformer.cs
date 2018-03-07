@@ -27,7 +27,7 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
 		{
 			float minHeight = float.MaxValue;
 			float maxHeight = float.MinValue;

@@ -30,7 +30,7 @@ namespace Deform
 		}
 
 		public virtual void PreModify () { }
-		public abstract Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds);
+		public abstract Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds);
 		public virtual void PostModify () { }
 	}
 }

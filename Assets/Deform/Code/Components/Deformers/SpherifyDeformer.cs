@@ -8,14 +8,14 @@ namespace Deform.Deformers
 		public float strength = 0f;
 		public Vector3 offset;
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
 		{
-			var boundsSize = bounds.size.sqrMagnitude;
+			var boundsSize = meshBounds.size.sqrMagnitude;
 			for (int vertexIndex = 0; vertexIndex < chunk.Size; vertexIndex++)
 			{
 				chunk.vertexData[vertexIndex].position = Vector3.LerpUnclamped (
 					chunk.vertexData[vertexIndex].position,
-					bounds.center + offset + ((chunk.vertexData[vertexIndex].position - bounds.center).normalized * radius * boundsSize),
+					meshBounds.center + offset + ((chunk.vertexData[vertexIndex].position - meshBounds.center).normalized * radius * boundsSize),
 					strength);
 			}
 

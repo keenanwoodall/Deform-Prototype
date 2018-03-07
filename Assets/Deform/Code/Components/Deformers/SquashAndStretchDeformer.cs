@@ -49,7 +49,7 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
+		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds meshBounds)
 		{
 			if (finalAmount == 0f)
 				return chunk;
