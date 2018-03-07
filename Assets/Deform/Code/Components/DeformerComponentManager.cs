@@ -40,6 +40,9 @@ namespace Deform
 
 		public void Update ()
 		{
+			if (target == null && skinnedTarget == null)
+				return;
+
 			switch (updateMode)
 			{
 				case UpdateMode.UpdateInstant:

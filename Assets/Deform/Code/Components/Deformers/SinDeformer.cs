@@ -39,6 +39,7 @@ namespace Deform.Deformers
 
 		public override Chunk Modify (Chunk chunk, TransformData transformData, Bounds bounds)
 		{
+			var boundsSize = bounds.size.sqrMagnitude;
 			for (int vertexIndex = 0; vertexIndex < chunk.vertexData.Length; vertexIndex++)
 			{
 				var samplePosition = chunk.vertexData[vertexIndex].position + axisOffset;
@@ -48,7 +49,7 @@ namespace Deform.Deformers
 					samplePosition = transformData.rotation * samplePosition;
 				if (useScale)
 					samplePosition.Scale (transformData.localScale);
-				chunk.vertexData[vertexIndex].position += Sin3D (samplePosition);
+				chunk.vertexData[vertexIndex].position += Sin3D (samplePosition / boundsSize) * boundsSize;
 			}
 
 			return chunk;
