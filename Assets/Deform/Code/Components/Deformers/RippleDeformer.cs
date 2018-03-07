@@ -3,7 +3,7 @@ using Deform.Math.Trig;
 
 namespace Deform.Deformers
 {
-	public class RadialSinDeformer : DeformerComponent
+	public class RippleDeformer : DeformerComponent
 	{
 		public Vector3 offset;
 		public float speed;
