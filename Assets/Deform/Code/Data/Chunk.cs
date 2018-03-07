@@ -20,6 +20,11 @@ namespace Deform
 		{
 			vertexData = new VertexData[positions.Length];
 
+			if (tangents == null || tangents.Length == 0)
+				tangents = new Vector4[vertexData.Length];
+			if (colors == null || colors.Length == 0)
+				colors = new Color[vertexData.Length];
+
 			for (var i = 0; i < positions.Length; i++)
 			{
 				var position = positions[i];
@@ -33,6 +38,11 @@ namespace Deform
 		public Chunk (Vector3[] basePositions, Vector3[] positions, Vector3[] normals, Vector4[] tangents, Color[] colors)
 		{
 			vertexData = new VertexData[positions.Length];
+
+			if (tangents == null || tangents.Length == 0)
+				tangents = new Vector4[vertexData.Length];
+			if (colors == null || colors.Length == 0)
+				colors = new Color[vertexData.Length];
 
 			for (var i = 0; i < positions.Length; i++)
 			{

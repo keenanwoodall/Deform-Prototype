@@ -50,7 +50,7 @@ namespace Deform
 
 			// Create chunk data.
 			if (createChunks)
-				RecreateChunks ();
+				RecreateChunks (1);
 		}
 
 		public void ChangeMesh (Mesh mesh)
@@ -63,7 +63,7 @@ namespace Deform
 			deformChunkIndex = 0;
 
 			// Create chunk data.
-			RecreateChunks ();
+			RecreateChunks (1);
 		}
 
 		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
@@ -127,9 +127,12 @@ namespace Deform
 			SyncedTransform = new TransformData (transform);
 		}
 
-		public void RecreateChunks ()
+		public void RecreateChunks (int count)
 		{
-			chunks = ChunkUtil.CreateChunks (originalMesh, 1);
+			if (count > 1)
+				chunks = ChunkUtil.CreateChunks (originalMesh, count);
+			else
+				chunks = new Chunk[1] { ChunkUtil.CreateChunk (originalMesh) };
 		}
 
 		protected void ApplyChunksToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
