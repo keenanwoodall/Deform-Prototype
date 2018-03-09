@@ -4,7 +4,7 @@ If you don't want to make your own deformations, it comes with many standard def
 **How it works**
 1. Find a game object in your scene.
 2. Add any deformer component.
-3. That's it; your mesh is deformed.
+3. That's it. Your mesh is deformed.
 
 **Features**
 - Runs in edit and play mode
