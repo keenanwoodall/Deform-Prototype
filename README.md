@@ -11,6 +11,7 @@ If you don't want to make your own deformations, it comes with many standard def
 - Multithreaded (optional)
 - Meshes can be saved
 - Deformers can be stacked and reordered
+- Works with skinned meshes (WIP)
 - Extendable
 
 **Built-in Deformers**
