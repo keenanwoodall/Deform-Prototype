@@ -6,9 +6,9 @@ namespace Deform.Deformers
 	public class RippleDeformer : DeformerComponent
 	{
 		public float speed;
-		public Vector3 offset;
+		public Vector2 offset;
 		public Transform axis;
-		public Sin sin = new Sin () { frequency = 5f, amplitude = 0.2f };
+		public Sin sin = new Sin () { frequency = 1f, amplitude = 0.2f };
 
 		private TransformData axisCache;
 		private float speedOffset;
@@ -53,7 +53,8 @@ namespace Deform.Deformers
 			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
-				var sinOffset = (speedOffset + (meshBounds.center - position + (offset * maxWidth)).sqrMagnitude);
+				var xyMagnitude = (new Vector2 (position.x, position.y) + offset).sqrMagnitude;
+				var sinOffset = speedOffset + xyMagnitude * maxWidth;
 				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset));
 				position += positionOffset;
 				position = inverseAxisSpace.MultiplyPoint3x4 (position);
