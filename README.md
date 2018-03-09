@@ -10,7 +10,7 @@ If you don't want to make your own deformations, it comes with many standard def
 - Runs in edit and play mode
 - Multithreaded (optional)
 - Meshes can be saved
-- Deformers can be
+- Deformers can be stacked and reordered
 - Extendable
 
 **Built-in Deformers**
