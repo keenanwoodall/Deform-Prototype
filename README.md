@@ -50,6 +50,6 @@ _Why am I getting the error,_ `xxx can only be called from the main thread`_?_
 
 _I don't like component based deformation, how can I make my own system?_
 - Inherit from DeformerBase. To see how to use it you can use DeformerComponentManager as a reference.
-
-
+<br />
+<br />
 If you have any suggestions/feedback feel free to email me at keenanwoodall@gmail.com
