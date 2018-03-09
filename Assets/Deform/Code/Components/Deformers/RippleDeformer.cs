@@ -6,12 +6,14 @@ namespace Deform.Deformers
 	public class RippleDeformer : DeformerComponent
 	{
 		public float speed;
-		public Vector2 offset;
+		public float offset;
+		public Vector2 positionOffset;
 		public Transform axis;
 		public Sin sin = new Sin () { frequency = 1f, amplitude = 0.2f };
 
 		private TransformData axisCache;
 		private float speedOffset;
+		private float finalOffset;
 		private Matrix4x4 axisSpace;
 		private Matrix4x4 inverseAxisSpace;
 
@@ -31,7 +33,7 @@ namespace Deform.Deformers
 			axisCache = new TransformData (axis);
 
 			speedOffset += (Manager.SyncedDeltaTime * speed) / sin.frequency;
-
+			finalOffset = speedOffset + ((sin.frequency != 0f) ? offset / sin.frequency : 0f);
 			axisSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * transform.rotation, Vector3.one);
 			inverseAxisSpace = axisSpace.inverse;
 		}
@@ -53,8 +55,8 @@ namespace Deform.Deformers
 			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
-				var xyMagnitude = (new Vector2 (position.x, position.y) + offset).sqrMagnitude;
-				var sinOffset = speedOffset + xyMagnitude * maxWidth;
+				var xyMagnitude = (new Vector2 (position.x, position.y) + this.positionOffset).sqrMagnitude;
+				var sinOffset = finalOffset + xyMagnitude * maxWidth;
 				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset));
 				position += positionOffset;
 				position = inverseAxisSpace.MultiplyPoint3x4 (position);
