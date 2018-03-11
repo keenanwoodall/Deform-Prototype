@@ -21,16 +21,30 @@ namespace Deform
 			var vertexData = new VertexData[vertexCount];
 
 			var vertices = mesh.vertices;
+
 			var normals = mesh.normals;
+			if (normals == null || normals.Length == 0)
+				normals = new Vector3[vertexCount];
+
 			var tangents = mesh.tangents;
 			if (tangents == null | tangents.Length == 0)
 				tangents = new Vector4[vertexCount];
+
+			var uvs = mesh.uv;
+			if (uvs == null || uvs.Length == 0)
+				uvs = new Vector2[vertexCount];
+
 			var colors = mesh.colors;
 			if (colors == null || colors.Length == 0)
 				colors = new Color[vertexCount];
 
 			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				vertexData[vertexIndex] = new VertexData (vertices[vertexIndex], normals[vertexIndex], tangents[vertexIndex], colors[vertexIndex]);
+				vertexData[vertexIndex] = new VertexData (
+					vertices[vertexIndex], 
+					normals[vertexIndex], 
+					tangents[vertexIndex], 
+					uvs[vertexIndex], 
+					colors[vertexIndex]);
 
 			return vertexData;
 		}
