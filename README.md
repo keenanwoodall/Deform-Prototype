@@ -30,6 +30,7 @@ If you don't want to make your own deformations, it comes with many standard def
 - Spherify
 - Squash and Stretch
 - Taper
+- Texture Mask
 - Transform
 - Twist
 
