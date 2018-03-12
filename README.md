@@ -44,17 +44,26 @@ _How do I make my own deformer?_
 5. Drag your script onto any object with a MeshFilter or SkinnedMeshRenderer.
 6. Mission complete.
 
+<br />
+
 _What is the VertexData struct?_
 - It holds the position and normal (as well as some other stuff) of a vertice.
+
+<br />
 
 _Why am I getting the error,_ `xxx can only be called from the main thread`_?_
 - Unity locks access to most things from other threads. You are probably accessing something like a Transform component from inside the `Modify` method, which runs on another thread when UpdateMode is set to UpdateAsync. I recommend overriding the virtual method, `PreModify`, and caching anything you need that is inaccessable from another thread. `PreModify` is called on the main thread right before any deformations calculations are run.
 
+<br />
+
 _Why am I getting the error,_ `xxx asynchronous functions cannot be used because it is not part of the C# 4.0 language specification`_?_
 - You need to go to Edit/Project Settings/Player/ and set the Scripting Runtime Version (under the Other Settings dropdown) to 4.6.
 
+<br />
+
 _I don't like component based deformation, how can I make my own system?_
 - Inherit from DeformerBase. To see how to use it you can use DeformerComponentManager as a reference.
+
 <br />
 <br />
 If you have any suggestions/feedback feel free to email me at keenanwoodall@gmail.com
