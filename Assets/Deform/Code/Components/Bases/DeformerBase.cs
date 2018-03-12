@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Deform
@@ -28,6 +27,7 @@ namespace Deform
 		public float SyncedDeltaTime { get; private set; }
 		public TransformData SyncedTransform { get; private set; }
 		public Bounds Bounds { get; private set; }
+		public SkinnedMeshRenderer SkinnedTarget { get { return skinnedTarget; } }
 		public MeshFilter Target { get { return target; } }
 
 		private void OnDestroy ()
@@ -90,6 +90,9 @@ namespace Deform
 				RecreateVertexData ();
 		}
 
+		/// <summary>
+		/// Deforms vertexData and applies to mesh instantly.
+		/// </summary>
 		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
 			// Don't update if another update is in progress.
@@ -101,6 +104,9 @@ namespace Deform
 			ResetVertexData ();
 		}
 
+		/// <summary>
+		/// Deforms the vertexData on another thread and then applies to the mesh.
+		/// </summary>
 		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
 		{
 #if UNITY_EDITOR
@@ -130,6 +136,11 @@ namespace Deform
 				onComplete.Invoke ();
 		}
 
+		/// <summary>
+		/// Updates the normals of the mesh.
+		/// </summary>
+		/// <param name="normalsCalculation"></param>
+		/// <param name="smoothingAngle"></param>
 		public void UpdateNormals (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
 			switch (normalsCalculation)
@@ -148,22 +159,34 @@ namespace Deform
 			}
 		}
 
+		/// <summary>
+		/// Updates the SyncedTime and SyncedDeltaTime property.
+		/// </summary>
 		public void UpdateSyncedTime ()
 		{
 			SyncedDeltaTime = Time.time - SyncedTime;
 			SyncedTime = Time.time;
 		}
 
+		/// <summary>
+		/// Updates the SyncedTransform property.
+		/// </summary>
 		public void UpdateTransformData ()
 		{
 			SyncedTransform = new TransformData (transform);
 		}
 
+		/// <summary>
+		/// Sets vertexData to the vertexData of the original mesh.
+		/// </summary>
 		public void RecreateVertexData ()
 		{
-			vertexData = VertexDataUtil.GetVertexData (deformMesh);
+			vertexData = VertexDataUtil.GetVertexData (originalMesh);
 		}
 
+		/// <summary>
+		/// Applies the vertexData to the deform mesh.
+		/// </summary>
 		protected void ApplyVertexDataToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
 		{
 			VertexDataUtil.ApplyVertexData (vertexData, deformMesh);
@@ -172,19 +195,26 @@ namespace Deform
 			deformMesh.RecalculateBounds ();
 		}
 
+		/// <summary>
+		/// This is called by UpdateInstant and UpdateAsync. Change the vertexData in here.
+		/// </summary>
 		protected abstract void DeformVertexData ();
 
+		/// <summary>
+		/// Sets the position of each vertex to it's base position.
+		/// </summary>
 		protected void ResetVertexData ()
 		{
 			VertexDataUtil.ResetVertexData (vertexData);
 		}
 
+		/// <summary>
+		/// Sets the deform mesh back to the original mesh.
+		/// </summary>
 		public void DiscardChanges ()
 		{
 			if (originalMesh != null)
-			{
 				deformMesh = Instantiate (originalMesh);
-			}
 		}
 	}
 }

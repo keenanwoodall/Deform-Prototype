@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Deform
 {
 	public static class VertexDataUtil
 	{
+		/// <summary>
+		/// Applies the givent vertex data to a mesh.
+		/// </summary>
 		public static void ApplyVertexData (VertexData[] vertexData, Mesh mesh)
 		{
-			var vertices = mesh.vertices;
-			var vertexCount = vertices.Length;
+			var vertices = new Vector3[vertexData.Length];
+			var vertexCount = vertexData.Length;
 
 			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
 				vertices[vertexIndex] = vertexData[vertexIndex].position;

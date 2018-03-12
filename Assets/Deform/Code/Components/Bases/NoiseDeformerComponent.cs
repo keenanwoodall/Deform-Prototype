@@ -2,6 +2,12 @@
 
 namespace Deform
 {
+	/// <summary>
+	/// This class inherits from DeformerComponent and it's sole purpose is to assist in the making of
+	/// noise deformers. Of course, you don't have to use this method to make noise deformers, but it does
+	/// take care of scaling/offsetting sample coordinates and transforming your noise vector into different
+	/// noise spaces.
+	/// </summary>
 	public abstract class NoiseDeformerComponent : DeformerComponent
 	{
 		public float globalMagnitude = 1f;
@@ -24,6 +30,10 @@ namespace Deform
 			speedOffset += speed * Manager.SyncedDeltaTime / GetFrequency ();
 		}
 
+		/// <summary>
+		/// Send a vertex to get a correctly offset sample coordinate to plugin into your noise function of choice.
+		/// </summary>
+		/// <returns>Returns a coordinate to plug into your noise.</returns>
 		protected Vector3 CalculateSampleCoordinate (VertexData vertex, TransformData transformData)
 		{
 			var sample = vertex.position + speedOffset + offset;
@@ -37,6 +47,10 @@ namespace Deform
 			return sample;
 		}
 
+		/// <summary>
+		/// Converts your noise sample into your desired space (Local, Normal, Tangent, Spherical)
+		/// based on the 'space' property included in this class.
+		/// </summary>
 		protected Vector3 TransformNoise (float noise, VertexData vertex)
 		{
 			switch (space)
@@ -52,6 +66,10 @@ namespace Deform
 			}
 		}
 
+		/// <summary>
+		/// Converts your noise vector into your desired space (Local, Normal, Tangent, Spherical)
+		/// based on the 'space' property included in this class.
+		/// </summary>
 		protected Vector3 TransformNoise (Vector3 noise, VertexData vertex)
 		{
 			switch (space)
@@ -67,6 +85,11 @@ namespace Deform
 			}
 		}
 
+		/// <summary>
+		/// Override this and simply return your frequency variable. 
+		/// This class needs access to it so that speedOffset can be scaled based on frequency. 
+		/// This prevent speedOffset being frequency dependant (appearing to move slower/faster based on frequency)
+		/// </summary>
 		protected abstract float GetFrequency ();
 	}
 }

@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Holds all important information about a transform.
+/// This is handy for caching transform info to be accessed
+/// on another thread.
+/// </summary>
 public struct TransformData
 {
 	public Vector3 position;

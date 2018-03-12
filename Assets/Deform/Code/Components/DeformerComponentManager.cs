@@ -65,6 +65,30 @@ namespace Deform
 			deformers.Clear ();
 		}
 
+		protected override void DeformVertexData ()
+		{
+			lock (vertexData)
+			{
+				lock (deformers)
+				{
+					RemoveNullDeformers ();
+
+					for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+					{
+						lock (deformers[deformerIndex])
+						{
+							if (deformers[deformerIndex].update)
+							{
+								vertexData = deformers[deformerIndex].Modify (vertexData, SyncedTransform, VertexDataUtil.GetBounds (vertexData));
+							}
+						}
+					}
+				}
+			}
+
+			NotifyPostModify ();
+		}
+
 		private void UpdateInstant ()
 		{
 			UpdateTransformData ();
@@ -104,30 +128,6 @@ namespace Deform
 			for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
 				if (deformers[deformerIndex].update)
 					deformers[deformerIndex].PostModify ();
-		}
-
-		protected override void DeformVertexData ()
-		{
-			lock (vertexData)
-			{
-				lock (deformers)
-				{
-					RemoveNullDeformers ();
-
-					for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
-					{
-						lock (deformers[deformerIndex])
-						{
-							if (deformers[deformerIndex].update)
-							{
-								vertexData = deformers[deformerIndex].Modify (vertexData, SyncedTransform, VertexDataUtil.GetBounds (vertexData));
-							}
-						}
-					}
-				}
-			}
-
-			NotifyPostModify ();
 		}
 
 		public void AddDeformer (DeformerComponent deformer)
