@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Deform.Deformers
 {
@@ -31,11 +29,21 @@ namespace Deform.Deformers
 
 		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
 		{
+			float maxWidth = 0f;
+			// Find the max width.
+			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			{
+				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var width = new Vector2 (position.x, position.y).magnitude;
+				if (width > maxWidth)
+					maxWidth = width;
+			}
+
 			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 
-				var xy = new Vector2 (position.x, position.y).normalized * radius;
+				var xy = new Vector2 (position.x, position.y).normalized * radius * maxWidth;
 				var goalPosition = new Vector3 (xy.x, xy.y, position.z);
 				position = Vector3.Lerp (position, goalPosition, strength);
 
