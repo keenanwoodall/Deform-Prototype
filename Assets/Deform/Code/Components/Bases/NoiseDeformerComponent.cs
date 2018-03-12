@@ -56,7 +56,7 @@ namespace Deform
 			switch (space)
 			{
 				case NoiseSpace.Local:
-					return vertex.position + (noise * magnitude) - _magnitude;
+					return vertex.position + (noise * _magnitude) - _magnitude;
 				case NoiseSpace.Normal:
 					return vertex.position + (Vector3.Scale (vertex.normal, _magnitude * noise));
 				case NoiseSpace.Tangent:

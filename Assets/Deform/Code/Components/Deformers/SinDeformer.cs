@@ -23,16 +23,19 @@ namespace Deform.Deformers
 		{
 			speedOffset += Manager.SyncedDeltaTime * speed;
 
+			if (sin.frequency == 0f)
+				sin.frequency = 0.0001f;
+
 			switch (along)
 			{
 				case Axis.X:
-					axisOffset = Vector3.right * offset;
+					axisOffset = Vector3.right * offset / sin.frequency;
 					break;
 				case Axis.Y:
-					axisOffset = Vector3.up * offset;
+					axisOffset = Vector3.up * offset / sin.frequency;
 					break;
 				case Axis.Z:
-					axisOffset = Vector3.forward * offset;
+					axisOffset = Vector3.forward * offset / sin.frequency;
 					break;
 			}
 		}
