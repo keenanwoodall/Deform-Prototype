@@ -19,12 +19,13 @@ If you don't want to make your own deformations, it comes with many standard def
 - Color Mask
 - Curve
 - Cylindrify
-- Perlin
+- Perlin Noise
 - Pivot To Bounds
 - Pivot To Center
 - Ripple
 - Scale Along Axis
 - Scale Along Normal
+- Simplex Noise
 - Sin
 - Skew
 - Spherify
