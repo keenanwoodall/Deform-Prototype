@@ -10,14 +10,15 @@ namespace Deform
 	/// </summary>
 	public abstract class NoiseDeformerComponent : DeformerComponent
 	{
+		public bool abs = true;
+		public bool usePosition;
+		public bool useRotation;
+		public bool useScale;
+
 		public float globalMagnitude = 1f;
 		public Vector3 magnitude = Vector3.one;
 		public Vector3 offset;
 		public Vector3 speed;
-
-		public bool usePosition;
-		public bool useRotation;
-		public bool useScale;
 
 		private Vector3 _magnitude;
 		private Vector3 speedOffset;
@@ -53,6 +54,8 @@ namespace Deform
 		/// </summary>
 		protected Vector3 TransformNoise (float noise, VertexData vertex)
 		{
+			if (abs)
+				noise = Mathf.Abs (noise);
 			switch (space)
 			{
 				case NoiseSpace.Local:
@@ -72,6 +75,12 @@ namespace Deform
 		/// </summary>
 		protected Vector3 TransformNoise (Vector3 noise, VertexData vertex)
 		{
+			if (abs)
+			{
+				noise.x = Mathf.Abs (noise.x);
+				noise.y = Mathf.Abs (noise.y);
+				noise.z = Mathf.Abs (noise.z);
+			}
 			switch (space)
 			{
 				case NoiseSpace.Local:
