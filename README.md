@@ -68,5 +68,10 @@ _I don't like component based deformation, how can I make my own system?_
 - Inherit from DeformerBase. To see how to use it you can use DeformerComponentManager as a reference.
 
 <br />
+
+_I don't like how the deformer base works, I really want to start from scratch. What do I do?_
+- You can still use VertexData and VertexDataUtil. VertexDataUtil lets you get an array of VertexData from a mesh as well as apply an array of VertexData back to a mesh. So just get the vertex data of a mesh, change it, and apply it back to the mesh.
+
+<br />
 <br />
 If you have any suggestions/feedback feel free to email me at keenanwoodall@gmail.com
