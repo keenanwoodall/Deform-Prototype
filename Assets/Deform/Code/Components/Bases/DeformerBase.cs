@@ -38,7 +38,7 @@ namespace Deform
 			DiscardChanges ();
 		}
 
-		public void SetTarget (MeshFilter meshFilter, bool recreateVertexData = true)
+		protected void SetTarget (MeshFilter meshFilter, bool recreateVertexData = true)
 		{
 			// Assign the target.
 			skinnedTarget = null;
@@ -68,7 +68,7 @@ namespace Deform
 				RecreateVertexData ();
 		}
 
-		public void SetTarget (SkinnedMeshRenderer skinnedMesh, bool recreateVertexData = true)
+		protected void SetTarget (SkinnedMeshRenderer skinnedMesh, bool recreateVertexData = true)
 		{
 			target = null;
 			// Assign the target.
