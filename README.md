@@ -1,5 +1,7 @@
 Deform is a framework for deforming meshes in the editor and at runtime that comes with a component based deformation system build on top.
-If you don't want to make your own deformations, it comes with many standard deformers/modifiers you'd find in 3D modeling packages.
+If you don't want to make your own deformers, it comes with many standard ones you'd find in 3D modeling packages.
+
+**IMPORTANT** - You need to go to Edit/Project Settings/Player/ and set the Scripting Runtime Version (under the Other Settings dropdown) to 4.6.
 
 **How it works**
 1. Find a game object (with a mesh filter or skinned mesh renderer) in your scene.
@@ -64,6 +66,11 @@ _Why am I getting the error,_ `xxx asynchronous functions cannot be used because
 
 _I don't like component based deformation, how can I make my own system?_
 - Inherit from DeformerBase. To see how to use it you can use DeformerComponentManager as a reference.
+
+<br />
+
+_I don't like how the deformer base works, I really want to start from scratch. What do I do?_
+- You can still use VertexData and VertexDataUtil. VertexDataUtil lets you get an array of VertexData from a mesh as well as apply an array of VertexData back to a mesh. So just get the vertex data of a mesh, change it, and apply it back to the mesh.
 
 <br />
 <br />
