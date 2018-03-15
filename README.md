@@ -1,5 +1,7 @@
 Deform is a framework for deforming meshes in the editor and at runtime that comes with a component based deformation system build on top.
-If you don't want to make your own deformations, it comes with many standard deformers/modifiers you'd find in 3D modeling packages.
+If you don't want to make your own deformers, it comes with many standard ones you'd find in 3D modeling packages.
+
+**IMPORTANT** - You need to go to Edit/Project Settings/Player/ and set the Scripting Runtime Version (under the Other Settings dropdown) to 4.6.
 
 **How it works**
 1. Find a game object (with a mesh filter or skinned mesh renderer) in your scene.
