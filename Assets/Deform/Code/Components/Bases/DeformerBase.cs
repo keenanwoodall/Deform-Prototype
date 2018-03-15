@@ -5,12 +5,12 @@ using UnityEngine.Events;
 
 namespace Deform
 {
-	public delegate void MeshDeformationCompleteCallback (Mesh mesh);
+	public delegate void DeformCompleteCallback ();
 
 	[ExecuteInEditMode]
 	public abstract class DeformerBase : MonoBehaviour
 	{
-		public MeshDeformationCompleteCallback onDeformFinish;
+		public DeformCompleteCallback onDeformComplete;
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
 		[SerializeField, HideInInspector]
@@ -95,6 +95,18 @@ namespace Deform
 		}
 
 		/// <summary>
+		/// Returns (and optionally copies) the deformMesh. Depending on when you call this method, the mesh may not actually be deformed.
+		/// If you want to ensure you get the deformed mesh, call this when the onDeformComplete delegate is invoked.
+		/// </summary>
+		/// <param name="copy">Instantiate a copy of the deformMesh?</param>
+		public Mesh GetCurrentMesh (bool copy)
+		{
+			if (copy)
+				return Instantiate (deformMesh);
+			return deformMesh;
+		}
+
+		/// <summary>
 		/// Deforms vertexData and applies to mesh instantly.
 		/// </summary>
 		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
@@ -107,8 +119,8 @@ namespace Deform
 			ApplyVertexDataToTarget (normalsCalculation, smoothingAngle);
 			ResetVertexData ();
 
-			if (onDeformFinish != null)
-				onDeformFinish.Invoke (deformMesh);
+			if (onDeformComplete != null)
+				onDeformComplete.Invoke ();
 		}
 
 		/// <summary>
@@ -142,8 +154,8 @@ namespace Deform
 			if (onComplete != null)
 				onComplete.Invoke ();
 
-			if (onDeformFinish != null)
-				onDeformFinish.Invoke (deformMesh);
+			if (onDeformComplete != null)
+				onDeformComplete.Invoke ();
 		}
 
 		/// <summary>
