@@ -47,13 +47,13 @@ namespace Deform
 
 			// If it's not null, the object was probably duplicated
 			if (originalMesh == null)
-				originalMesh = Instantiate (target.sharedMesh);
+				originalMesh = MeshUtil.Copy (target.sharedMesh);
 			else
-				originalMesh = Instantiate (originalMesh);
+				originalMesh = MeshUtil.Copy (originalMesh);
 
 
 			// Change the mesh to one we can modify.
-			deformMesh = target.sharedMesh = Instantiate (originalMesh);
+			deformMesh = target.sharedMesh = MeshUtil.Copy (originalMesh);
 
 			// Cache the original bounds.
 			Bounds = originalMesh.bounds;
@@ -78,12 +78,12 @@ namespace Deform
 			// If it's not null, the object was probably duplicated
 			if (originalMesh == null)
 				// Store the original mesh.
-				originalMesh = Instantiate (skinnedTarget.sharedMesh);
+				originalMesh = MeshUtil.Copy (skinnedTarget.sharedMesh);
 			else
-				originalMesh = Instantiate (originalMesh);
+				originalMesh = MeshUtil.Copy (originalMesh);
 
 			// Change the mesh to one we can modify.
-			deformMesh = skinnedTarget.sharedMesh = Instantiate (originalMesh);
+			deformMesh = skinnedTarget.sharedMesh = MeshUtil.Copy (originalMesh);
 
 			Bounds = originalMesh.bounds;
 			// Cache the original normals.
@@ -102,7 +102,7 @@ namespace Deform
 		public Mesh GetCurrentMesh (bool copy)
 		{
 			if (copy)
-				return Instantiate (deformMesh);
+				return MeshUtil.Copy (deformMesh);
 			return deformMesh;
 		}
 
