@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Deform
 {
+	public delegate void MeshDeformationCompleteCallback (Mesh mesh);
+
 	[ExecuteInEditMode]
 	public abstract class DeformerBase : MonoBehaviour
 	{
+		public MeshDeformationCompleteCallback onDeformFinish;
 		[SerializeField, HideInInspector]
 		protected MeshFilter target;
 		[SerializeField, HideInInspector]
@@ -102,6 +106,9 @@ namespace Deform
 			DeformVertexData ();
 			ApplyVertexDataToTarget (normalsCalculation, smoothingAngle);
 			ResetVertexData ();
+
+			if (onDeformFinish != null)
+				onDeformFinish.Invoke (deformMesh);
 		}
 
 		/// <summary>
@@ -134,6 +141,9 @@ namespace Deform
 
 			if (onComplete != null)
 				onComplete.Invoke ();
+
+			if (onDeformFinish != null)
+				onDeformFinish.Invoke (deformMesh);
 		}
 
 		/// <summary>
