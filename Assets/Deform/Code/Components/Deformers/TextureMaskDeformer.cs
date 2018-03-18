@@ -41,7 +41,10 @@ namespace Deform.Deformers
 				uv = vertexData[vertexIndex].uv;
 				pixel = new Vector2Int ((int)(uv.x * width), (int)(uv.y * height));
 				color = colors[pixel.x + width * pixel.y];
-				vertexData[vertexIndex].position = Vector3.Lerp (vertexData[vertexIndex].position, vertexData[vertexIndex].basePosition, color[channelIndex] * strength);
+				var a = vertexData[vertexIndex].position;
+				var b = vertexData[vertexIndex].basePosition;
+				var t = color[channelIndex] * strength;
+				vertexData[vertexIndex].position = a * (1f - t) + b * t;
 			}
 
 			return vertexData;

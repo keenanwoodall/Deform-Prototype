@@ -24,10 +24,8 @@ namespace Deform.Deformers
 
 			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
-				vertexData[vertexIndex].position = Vector3.Lerp (
-					start[vertexIndex], 
-					end[vertexIndex], 
-					GetChannel (channel, vertexData[vertexIndex].color));
+				var t = GetChannel (channel, vertexData[vertexIndex].color);
+				vertexData[vertexIndex].position = (start[vertexIndex] * (1f - t) + end[vertexIndex] * t);
 			}
 
 			return vertexData;

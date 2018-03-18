@@ -12,9 +12,9 @@ namespace Deform.Deformers
 		{
 			var bounds = Manager.Bounds;
 			offset = new Vector3 (
-				Mathf.Lerp (bounds.min.x, bounds.max.x, x),
-				Mathf.Lerp (bounds.min.y, bounds.max.y, y),
-				Mathf.Lerp (bounds.min.z, bounds.max.z, z)
+				bounds.min.x * (1f - x) * bounds.max.x * x,
+				bounds.min.y * (1f - y) * bounds.max.y * y,
+				bounds.min.z * (1f - z) * bounds.max.z * z
 				);
 		}
 		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)

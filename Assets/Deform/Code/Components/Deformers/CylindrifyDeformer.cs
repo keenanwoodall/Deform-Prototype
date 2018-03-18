@@ -45,7 +45,7 @@ namespace Deform.Deformers
 
 				var xy = new Vector2 (position.x, position.y).normalized * radius * maxWidth;
 				var goalPosition = new Vector3 (xy.x, xy.y, position.z);
-				position = Vector3.Lerp (position, goalPosition, strength);
+				position = position * (1f - strength) + goalPosition * strength;
 
 				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}

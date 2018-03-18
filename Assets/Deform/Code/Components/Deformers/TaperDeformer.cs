@@ -50,7 +50,7 @@ namespace Deform.Deformers
 				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 				var scale = curve.Evaluate (normalizedHeight);
-				scale *= Mathf.Lerp (top, bottom, normalizedHeight);
+				scale *= top * (1f - normalizedHeight) + bottom * normalizedHeight;
 				position.x *= scale;
 				position.y *= scale;
 				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
