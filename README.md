@@ -13,7 +13,7 @@ If you don't want to make your own deformers, it comes with many standard ones y
 - Multithreaded (optional)
 - Meshes can be saved
 - Deformers can be stacked and reordered
-- Works with skinned meshes (WIP)
+- Works with skinned meshes (kinda)
 - Easily Extendable
 
 **Built-in Deformers**
