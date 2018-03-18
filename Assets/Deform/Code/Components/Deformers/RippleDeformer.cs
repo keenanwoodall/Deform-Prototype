@@ -6,6 +6,8 @@ namespace Deform.Deformers
 	public class RippleDeformer : DeformerComponent
 	{
 		public float speed;
+		public float falloff = 1f;
+		public AnimationCurve falloffCurve = AnimationCurve.EaseInOut (0f, 1f, 1f, 0f);
 		public float offset;
 		public Vector2 positionOffset;
 		public Transform axis;
@@ -51,13 +53,12 @@ namespace Deform.Deformers
 					maxWidth = width;
 			}
 
-
 			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
 				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 				var xyMagnitude = (new Vector2 (position.x, position.y) + this.positionOffset).sqrMagnitude;
 				var sinOffset = finalOffset + xyMagnitude * maxWidth;
-				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset));
+				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset) * falloffCurve.Evaluate (xyMagnitude * falloff));
 				position += positionOffset;
 				position = inverseAxisSpace.MultiplyPoint3x4 (position);
 				vertexData[vertexIndex].position = position;
