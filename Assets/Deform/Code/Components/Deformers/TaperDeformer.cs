@@ -4,6 +4,8 @@ namespace Deform.Deformers
 {
 	public class TaperDeformer : DeformerComponent
 	{
+		public float top = 1f;
+		public float bottom = 1f;
 		public AnimationCurve curve = AnimationCurve.Linear (0f, 0f, 1f, 1f);
 		public Transform axis;
 
@@ -48,6 +50,7 @@ namespace Deform.Deformers
 				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
 				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 				var scale = curve.Evaluate (normalizedHeight);
+				scale *= Mathf.Lerp (top, bottom, normalizedHeight);
 				position.x *= scale;
 				position.y *= scale;
 				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
