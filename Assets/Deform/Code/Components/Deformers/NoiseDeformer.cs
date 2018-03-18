@@ -5,6 +5,9 @@ namespace Deform.Deformers
 	public class NoiseDeformer : NoiseDeformerComponent
 	{
 		public float frequency = 1f;
+		public int octaves = 2;
+		public float lacunarity = 2f;
+		public float gain = 0.5f;
 		public FastNoise.NoiseType noiseType;
 		public FastNoise.Interp interp;
 
@@ -15,6 +18,9 @@ namespace Deform.Deformers
 			base.PreModify ();
 			noise.SetNoiseType (noiseType);
 			noise.SetFrequency (frequency);
+			noise.SetFractalOctaves (octaves);
+			noise.SetFractalLacunarity (lacunarity);
+			noise.SetFractalGain (gain);
 			noise.SetInterp (interp);
 		}
 
@@ -23,7 +29,7 @@ namespace Deform.Deformers
 			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
 			{
 				var sampleCoordinate = CalculateSampleCoordinate (vertexData[vertexIndex], transformData);
-				var value = 0.5f + noise.GetNoise (sampleCoordinate.x, sampleCoordinate.y, sampleCoordinate.z);
+				var value = noise.GetNoise (sampleCoordinate.x, sampleCoordinate.y, sampleCoordinate.z);
 				vertexData[vertexIndex].position = TransformNoise (value, vertexData[vertexIndex]);
 			}
 

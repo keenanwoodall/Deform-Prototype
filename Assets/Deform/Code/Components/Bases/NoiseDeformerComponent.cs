@@ -29,7 +29,12 @@ namespace Deform
 		public override void PreModify ()
 		{
 			_magnitude = magnitude * globalMagnitude;
-			speedOffset += speed * Manager.SyncedDeltaTime / GetFrequency ();
+
+			var frequency = GetFrequency ();
+			if (frequency < 0.0001f && frequency > -0.0001f)
+				frequency = Mathf.Sign (frequency) * 0.0001f;
+
+			speedOffset += speed * Manager.SyncedDeltaTime / frequency;
 		}
 
 		/// <summary>
@@ -40,10 +45,10 @@ namespace Deform
 		protected Vector3 CalculateSampleCoordinate (VertexData vertex, TransformData transformData)
 		{
 			var sample = vertex.position + speedOffset + offset;
-			if (usePosition)
-				sample += transformData.position;
 			if (useRotation)
 				sample = transformData.rotation * sample;
+			if (usePosition)
+				sample += transformData.position;
 			if (useScale)
 				sample.Scale (transformData.localScale);
 
