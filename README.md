@@ -21,13 +21,12 @@ If you don't want to make your own deformers, it comes with many standard ones y
 - Color Mask
 - Curve
 - Cylindrify
-- Perlin Noise
+- Noise (Value, Perlin, Simplex, Cellular, Cubic)
 - Pivot To Bounds
 - Pivot To Center
 - Ripple
 - Scale Along Axis
 - Scale Along Normal
-- Simplex Noise
 - Sin
 - Skew
 - Spherify
