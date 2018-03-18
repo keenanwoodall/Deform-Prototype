@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace Deform
 {
@@ -10,7 +11,7 @@ namespace Deform
 	/// </summary>
 	public abstract class NoiseDeformerComponent : DeformerComponent
 	{
-		public bool abs = true;
+		public bool abs;
 		public bool usePosition;
 		public bool useRotation;
 		public bool useScale;
@@ -35,6 +36,7 @@ namespace Deform
 		/// Send a vertex to get a correctly offset sample coordinate to plugin into your noise function of choice.
 		/// </summary>
 		/// <returns>Returns a coordinate to plug into your noise.</returns>
+		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
 		protected Vector3 CalculateSampleCoordinate (VertexData vertex, TransformData transformData)
 		{
 			var sample = vertex.position + speedOffset + offset;
@@ -52,6 +54,7 @@ namespace Deform
 		/// Converts your noise sample into your desired space (Local, Normal, Tangent, Spherical)
 		/// based on the 'space' property included in this class.
 		/// </summary>
+		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
 		protected Vector3 TransformNoise (float noise, VertexData vertex)
 		{
 			if (abs)
@@ -73,6 +76,7 @@ namespace Deform
 		/// Converts your noise vector into your desired space (Local, Normal, Tangent, Spherical)
 		/// based on the 'space' property included in this class.
 		/// </summary>
+		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
 		protected Vector3 TransformNoise (Vector3 noise, VertexData vertex)
 		{
 			if (abs)
