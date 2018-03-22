@@ -8,19 +8,21 @@ namespace Deform
 	[System.Serializable]
 	public struct VertexData
 	{
-		// Can't just have basePosition { get; private set; } because it wouldn't be serialized. :(
-		[SerializeField, HideInInspector]
-		private Vector3 _basePosition;
-		public Vector3 basePosition { get { return _basePosition; } }
 		public Vector3 position;
-		public Vector3 normal;
-		public Vector4 tangent;
-		public Vector2 uv;
-		public Color color;
+		[SerializeField, HideInInspector]
+		public readonly Vector3 basePosition;
+		[SerializeField]
+		public readonly Vector3 normal;
+		[SerializeField]
+		public readonly Vector4 tangent;
+		[SerializeField]
+		public readonly Vector2 uv;
+		[SerializeField]
+		public readonly Color color;
 
 		public VertexData (Vector3 basePosition, Vector3 position, Vector3 normal, Vector4 tangent, Vector2 uv, Color color)
 		{
-			_basePosition = basePosition;
+			this.basePosition = basePosition;
 			this.position = position;
 			this.normal = normal;
 			this.tangent = tangent;
@@ -30,7 +32,7 @@ namespace Deform
 
 		public VertexData (Vector3 position, Vector3 normal, Vector4 tangent, Vector2 uv, Color color)
 		{
-			_basePosition = position;
+			this.basePosition = position;
 			this.position = position;
 			this.normal = normal;
 			this.tangent = tangent;
