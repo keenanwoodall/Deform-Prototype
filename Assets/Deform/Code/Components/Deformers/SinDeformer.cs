@@ -73,14 +73,15 @@ namespace Deform.Deformers
 					byValue = sample.z;
 					break;
 			}
+			var value = sin.Solve (byValue, animatedOffset);
 			switch (along)
 			{
 				case Axis.X:
-					return new Vector3 (sin.Solve (byValue, animatedOffset), 0f, 0f);
+					return new Vector3 (value, 0f, 0f);
 				case Axis.Y:
-					return new Vector3 (0f, sin.Solve (byValue, animatedOffset), 0f);
+					return new Vector3 (0f, value, 0f);
 				default:
-					return new Vector3 (0f, 0f, sin.Solve (byValue, animatedOffset));
+					return new Vector3 (0f, 0f, value);
 			}
 		}
 	}

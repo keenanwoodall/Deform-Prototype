@@ -10,15 +10,15 @@ namespace Deform
 	{
 		public Vector3 position;
 		[SerializeField, HideInInspector]
-		public readonly Vector3 basePosition;
+		public Vector3 basePosition;
 		[SerializeField]
-		public readonly Vector3 normal;
+		public Vector3 normal;
 		[SerializeField]
-		public readonly Vector4 tangent;
+		public Vector4 tangent;
 		[SerializeField]
-		public readonly Vector2 uv;
+		public Vector2 uv;
 		[SerializeField]
-		public readonly Color color;
+		public Color color;
 
 		public VertexData (Vector3 basePosition, Vector3 position, Vector3 normal, Vector4 tangent, Vector2 uv, Color color)
 		{

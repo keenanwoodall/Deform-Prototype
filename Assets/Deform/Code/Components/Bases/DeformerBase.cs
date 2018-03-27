@@ -21,6 +21,7 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected Mesh deformMesh;
 
+		[SerializeField, HideInInspector]
 		private List<Vector3> originalNormals = new List<Vector3> ();
 
 		protected bool asyncUpdateInProgress { get; private set; }
