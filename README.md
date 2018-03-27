@@ -38,6 +38,9 @@ If you don't want to make your own deformers, it comes with many standard ones y
 
 **FAQ**
 
+_I don't want all the fluff. What can I safely remove?_
+- You can delete everything except for the Code and Plugins folder.
+
 _How do I make my own deformer?_
 1. Make a script that uses the Deform namespace
 2. Inherit the 'DeformerComponent' class.
