@@ -4,12 +4,12 @@ namespace Deform.Deformers
 {
 	public class NoiseDeformer : NoiseDeformerComponent
 	{
+		public FastNoise.NoiseType noiseType;
+		public FastNoise.Interp interp;
 		public float frequency = 1f;
 		public int octaves = 2;
 		public float lacunarity = 2f;
 		public float gain = 0.5f;
-		public FastNoise.NoiseType noiseType;
-		public FastNoise.Interp interp;
 
 		private FastNoise noise = new FastNoise ();
 
