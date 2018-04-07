@@ -79,3 +79,10 @@ _I don't like how the deformer base works, I really want to start from scratch. 
 <br />
 <br />
 If you have any suggestions/feedback feel free to email me at keenanwoodall@gmail.com
+
+<br />
+<br />
+
+![1](https://i.redd.it/k4ttrf6p78l01.gif)
+![2](https://i.imgur.com/IszhtkM.gif)
+![3](https://i.redd.it/phjbwgdih7n01.gif)
