@@ -4,7 +4,4 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Deform/Examples/Scenes/Twist Deformer.unity
-    guid: 6e4ed34b9d0fb944d9aefde0853d7d43
+  m_Scenes: []
