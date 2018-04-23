@@ -29,7 +29,7 @@ If you don't want to make your own deformers, it comes with many standard ones y
 - Ripple
 - Scale Along Axis
 - Scale Along Normal
-- Sin
+- Sine
 - Skew
 - Spherify
 - Squash and Stretch
