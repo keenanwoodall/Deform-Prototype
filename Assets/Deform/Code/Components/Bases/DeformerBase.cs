@@ -15,6 +15,8 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected SkinnedMeshRenderer skinnedTarget;
 		[SerializeField, HideInInspector]
+		protected MeshCollider meshCollider;
+		[SerializeField, HideInInspector]
 		protected VertexData[] vertexData;
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
@@ -33,6 +35,7 @@ namespace Deform
 		public Bounds Bounds { get; private set; }
 		public SkinnedMeshRenderer SkinnedTarget { get { return skinnedTarget; } }
 		public MeshFilter Target { get { return target; } }
+		public MeshCollider MeshCollider { get { return meshCollider; } set { meshCollider = value; } }
 
 		private void OnDestroy ()
 		{
@@ -50,7 +53,6 @@ namespace Deform
 				originalMesh = MeshUtil.Copy (target.sharedMesh);
 			else
 				originalMesh = MeshUtil.Copy (originalMesh);
-
 
 			// Change the mesh to one we can modify.
 			deformMesh = target.sharedMesh = MeshUtil.Copy (originalMesh);
@@ -109,14 +111,14 @@ namespace Deform
 		/// <summary>
 		/// Deforms vertexData and applies to mesh instantly.
 		/// </summary>
-		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation, float smoothingAngle)
+		public void UpdateMeshInstant (NormalsCalculationMode normalsCalculation)
 		{
 			// Don't update if another update is in progress.
 			if (asyncUpdateInProgress)
 				return;
 
 			DeformVertexData ();
-			ApplyVertexDataToTarget (normalsCalculation, smoothingAngle);
+			ApplyVertexDataToTarget (normalsCalculation);
 			ResetVertexData ();
 
 			if (onDeformComplete != null)
@@ -126,7 +128,7 @@ namespace Deform
 		/// <summary>
 		/// Deforms the vertexData on another thread and then applies to the mesh.
 		/// </summary>
-		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, float smoothingAngle, Action onComplete = null)
+		public async void UpdateMeshAsync (NormalsCalculationMode normalsCalculation, Action onComplete = null)
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
@@ -148,7 +150,7 @@ namespace Deform
 			if (!Application.isPlaying)
 				return;
 
-			ApplyVertexDataToTarget (normalsCalculation, smoothingAngle);
+			ApplyVertexDataToTarget (normalsCalculation);
 			ResetVertexData ();
 
 			if (onComplete != null)
@@ -163,7 +165,7 @@ namespace Deform
 		/// </summary>
 		/// <param name="normalsCalculation"></param>
 		/// <param name="smoothingAngle"></param>
-		public void UpdateNormals (NormalsCalculationMode normalsCalculation, float smoothingAngle)
+		public void UpdateNormals (NormalsCalculationMode normalsCalculation)
 		{
 			switch (normalsCalculation)
 			{
@@ -171,7 +173,7 @@ namespace Deform
 					deformMesh.RecalculateNormals ();
 					break;
 				case NormalsCalculationMode.Smooth:
-					deformMesh.RecalculateNormals (smoothingAngle);
+					deformMesh.RecalculateNormals (60f);
 					break;
 				case NormalsCalculationMode.Maintain:
 					break;
@@ -209,10 +211,16 @@ namespace Deform
 		/// <summary>
 		/// Applies the vertexData to the deform mesh.
 		/// </summary>
-		protected void ApplyVertexDataToTarget (NormalsCalculationMode normalsCalculation, float smoothingAngle)
+		protected void ApplyVertexDataToTarget (NormalsCalculationMode normalsCalculation)
 		{
 			VertexDataUtil.ApplyVertexData (vertexData, deformMesh);
-			UpdateNormals (normalsCalculation, smoothingAngle);
+			if (meshCollider != null)
+			{
+				meshCollider.inflateMesh = true;
+				meshCollider.sharedMesh = deformMesh;
+			}
+
+			UpdateNormals (normalsCalculation);
 
 			deformMesh.RecalculateBounds ();
 		}

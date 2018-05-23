@@ -9,14 +9,6 @@ namespace Deform
 		public UpdateMode updateMode = UpdateMode.UpdateAsync;
 		public NormalsCalculationMode normalsCalculation = NormalsCalculationMode.Unity;
 
-		[HideInInspector, SerializeField]
-		private float smoothingAngle = 60f;
-		public float SmoothingAngle
-		{
-			get { return smoothingAngle; }
-			set { smoothingAngle = Mathf.Clamp (value, 0f, 180f); }
-		}
-
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
 
@@ -27,13 +19,12 @@ namespace Deform
 				SetTarget (mf);
 			else
 			{
-				var sf = GetComponent<SkinnedMeshRenderer> ();
-				if (sf != null)
-					SetTarget (sf);
+				var smr = GetComponent<SkinnedMeshRenderer> ();
+				if (smr != null)
+					SetTarget (smr);
 				else
 					return;
 			}
-
 
 			UpdateInstant ();
 		}
@@ -55,7 +46,7 @@ namespace Deform
 					return;
 				case UpdateMode.Stop:
 					ResetVertexData ();
-					ApplyVertexDataToTarget (NormalsCalculationMode.Original, smoothingAngle);
+					ApplyVertexDataToTarget (NormalsCalculationMode.Original);
 					return;
 			}
 		}
@@ -67,6 +58,7 @@ namespace Deform
 
 		protected override void DeformVertexData ()
 		{
+			// I'm not threading savvy, but I have a hunch that using all these locks isn't the ideal solution.
 			lock (vertexData)
 			{
 				lock (deformers)
@@ -94,7 +86,7 @@ namespace Deform
 			UpdateTransformData ();
 			UpdateSyncedTime ();
 			NotifyPreModify ();
-			UpdateMeshInstant (normalsCalculation, smoothingAngle);
+			UpdateMeshInstant (normalsCalculation);
 			NotifyPostModify ();
 		}
 
@@ -105,9 +97,9 @@ namespace Deform
 			NotifyPreModify ();
 #if UNITY_EDITOR
 			if (Application.isPlaying)
-				UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
+				UpdateMeshAsync (normalsCalculation, NotifyPostModify);
 			else
-				UpdateMeshInstant (normalsCalculation, SmoothingAngle);
+				UpdateMeshInstant (normalsCalculation);
 #else
 			UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
 #endif

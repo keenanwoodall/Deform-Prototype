@@ -18,7 +18,7 @@ namespace Deform
 
 			DrawUpdateModeGUI (manager);
 			DrawNormalsCalculationGUI (manager);
-			DrawSmoothAngleGUI (manager);
+			DrawMeshColliderGUI (manager);
 			DrawDebugGUI (manager);
 
 			Repaint ();
@@ -55,17 +55,16 @@ namespace Deform
 			}
 		}
 
-		private void DrawSmoothAngleGUI (DeformerComponentManager manager)
+		private void DrawMeshColliderGUI (DeformerComponentManager manager)
 		{
-			if (manager.normalsCalculation != NormalsCalculationMode.Smooth)
-				return;
 			EditorGUI.BeginChangeCheck ();
-			var smoothingAngle = manager.SmoothingAngle;
-			smoothingAngle = EditorGUILayout.FloatField ("Smoothing Angle", smoothingAngle);
+			var label = new GUIContent ("Mesh Collider", "Optional.");
+			var meshCollider = manager.MeshCollider;
+			meshCollider = (MeshCollider)EditorGUILayout.ObjectField (label, meshCollider, typeof (MeshCollider), true);
 			if (EditorGUI.EndChangeCheck ())
 			{
-				Undo.RecordObject (manager, "Smoothing Angle");
-				manager.SmoothingAngle = smoothingAngle;
+				Undo.RecordObject (manager, "Normals Calculation");
+				manager.MeshCollider = meshCollider;
 			}
 		}
 
