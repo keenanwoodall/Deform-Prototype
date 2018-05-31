@@ -10,6 +10,10 @@ If you don't want to make your own deformers, it comes with many standard ones y
 2. Add any deformer component.
 3. That's it. Your mesh is deformed.
 
+**Tutorials**
+- [Introduction](https://youtu.be/1cFPUsI57hM?list=PLrWlVANGG-iitlKSK5Pr8eUCi48gznygc)
+- [Playlist](https://www.youtube.com/watch?v=1cFPUsI57hM&list=PLrWlVANGG-iitlKSK5Pr8eUCi48gznygc)
+
 **Features**
 - Runs in edit and play mode
 - Multithreaded (optional)
