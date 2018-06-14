@@ -101,7 +101,7 @@ namespace Deform
 			else
 				UpdateMeshInstant (normalsCalculation);
 #else
-			UpdateMeshAsync (normalsCalculation, SmoothingAngle, NotifyPostModify);
+			UpdateMeshAsync (normalsCalculation, NotifyPostModify);
 #endif
 		}
 
