@@ -51,7 +51,7 @@ namespace Deform
 		/// <param name="vertexDataBounds">The bounds of the current vertex data.</param>
 		/// <returns>The vertexData you return will be sent to the next deformer component or applied to the mesh if this 
 		/// is the last deformer component.</returns>
-		public abstract VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds vertexDataBounds);
+		public abstract MeshData Modify (MeshData meshData, TransformData transformData, Bounds vertexDataBounds);
 		/// <summary>
 		/// Called right after Modify done being called on all deformer components.
 		/// This is a good place to cleanup or reset anything after deformation has occured.

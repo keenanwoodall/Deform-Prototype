@@ -24,16 +24,16 @@ namespace Deform.Deformers
 			noise.SetInterp (interp);
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var sampleCoordinate = CalculateSampleCoordinate (vertexData[vertexIndex], transformData);
+				var sampleCoordinate = CalculateSampleCoordinate (meshData.vertices[i], transformData);
 				var value = noise.GetNoise (sampleCoordinate.x, sampleCoordinate.y, sampleCoordinate.z);
-				vertexData[vertexIndex].position = TransformNoise (value, vertexData[vertexIndex]);
+				meshData.vertices[i] = TransformNoise (value, meshData.vertices[i], meshData.normals[i], meshData.tangents[i]);
 			}
 
-			return vertexData;
+			return meshData;
 		}
 
 		protected override float GetFrequency ()

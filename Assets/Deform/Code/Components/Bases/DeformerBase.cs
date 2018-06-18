@@ -17,7 +17,7 @@ namespace Deform
 		[SerializeField, HideInInspector]
 		protected MeshCollider meshCollider;
 		[SerializeField, HideInInspector]
-		protected VertexData[] vertexData;
+		protected MeshData meshData;
 		[SerializeField, HideInInspector]
 		protected Mesh originalMesh;
 		[SerializeField, HideInInspector]
@@ -205,7 +205,7 @@ namespace Deform
 		/// </summary>
 		public void RecreateVertexData ()
 		{
-			vertexData = VertexDataUtil.GetVertexData (originalMesh);
+			meshData = MeshDataUtil.GetMeshData (originalMesh);
 		}
 
 		/// <summary>
@@ -213,7 +213,8 @@ namespace Deform
 		/// </summary>
 		protected void ApplyVertexDataToTarget (NormalsCalculationMode normalsCalculation)
 		{
-			VertexDataUtil.ApplyVertexData (vertexData, deformMesh);
+			deformMesh.vertices = meshData.vertices;
+
 			if (meshCollider != null)
 			{
 				meshCollider.inflateMesh = true;
@@ -235,7 +236,7 @@ namespace Deform
 		/// </summary>
 		protected void ResetVertexData ()
 		{
-			VertexDataUtil.ResetVertexData (vertexData);
+			MeshDataUtil.ResetVertexData (meshData);
 		}
 
 		/// <summary>

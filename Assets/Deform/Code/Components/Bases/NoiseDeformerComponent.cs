@@ -42,9 +42,9 @@ namespace Deform
 		/// </summary>
 		/// <returns>Returns a coordinate to plug into your noise.</returns>
 		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
-		protected Vector3 CalculateSampleCoordinate (VertexData vertex, TransformData transformData)
+		protected Vector3 CalculateSampleCoordinate (Vector3 vertex, TransformData transformData)
 		{
-			var sample = vertex.position + speedOffset + offset;
+			var sample = vertex + speedOffset + offset;
 			if (useRotation)
 				sample = transformData.rotation * sample;
 			if (usePosition)
@@ -60,20 +60,20 @@ namespace Deform
 		/// based on the 'space' property included in this class.
 		/// </summary>
 		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
-		protected Vector3 TransformNoise (float noise, VertexData vertex)
+		protected Vector3 TransformNoise (float noise, Vector3 position, Vector3 normal, Vector3 tangent)
 		{
 			if (abs)
 				noise = Mathf.Abs (noise);
 			switch (space)
 			{
 				case NoiseSpace.Local:
-					return vertex.position + (noise * _magnitude) - _magnitude;
+					return position + (noise * _magnitude) - _magnitude;
 				case NoiseSpace.Normal:
-					return vertex.position + (Vector3.Scale (vertex.normal, _magnitude * noise));
+					return position + (Vector3.Scale (normal, _magnitude * noise));
 				case NoiseSpace.Tangent:
-					return vertex.position + (Vector3.Scale (vertex.tangent, _magnitude * noise));
+					return position + (Vector3.Scale (tangent, _magnitude * noise));
 				default:
-					return Vector3.Scale (vertex.position, Vector3.one + (noise * _magnitude));
+					return Vector3.Scale (position, Vector3.one + (noise * _magnitude));
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Deform
 		/// based on the 'space' property included in this class.
 		/// </summary>
 		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
-		protected Vector3 TransformNoise (Vector3 noise, VertexData vertex)
+		protected Vector3 TransformNoise (Vector3 noise, Vector3 position, Vector3 normal, Vector3 tangent)
 		{
 			if (abs)
 			{
@@ -93,13 +93,13 @@ namespace Deform
 			switch (space)
 			{
 				case NoiseSpace.Local:
-					return vertex.position + (Vector3.Scale (noise, _magnitude)) - _magnitude;
+					return position + (Vector3.Scale (noise, _magnitude)) - _magnitude;
 				case NoiseSpace.Normal:
-					return vertex.position + (Vector3.Scale (vertex.normal, Vector3.Scale (noise, _magnitude)));
+					return position + (Vector3.Scale (normal, Vector3.Scale (noise, _magnitude)));
 				case NoiseSpace.Tangent:
-					return vertex.position + (Vector3.Scale (vertex.tangent, Vector3.Scale (noise, _magnitude)));
+					return position + (Vector3.Scale (tangent, Vector3.Scale (noise, _magnitude)));
 				default:
-					return Vector3.Scale (vertex.position, Vector3.one + Vector3.Scale (noise, _magnitude));
+					return Vector3.Scale (position, Vector3.one + Vector3.Scale (noise, _magnitude));
 			}
 		}
 

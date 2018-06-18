@@ -17,12 +17,12 @@ namespace Deform.Deformers
 				bounds.min.z * (1f - z) + bounds.max.z * z
 			);
 		}
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
-				vertexData[vertexIndex].position -= offset;
+			for (int i = 0; i < meshData.Size; i++)
+				meshData.vertices[i] -= offset;
 
-			return vertexData;
+			return meshData;
 		}
 	}
 }

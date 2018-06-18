@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace Deform.Deformers
 {
@@ -9,28 +10,29 @@ namespace Deform.Deformers
 
 		private Vector3[] start, end;
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
 			if (!invert)
 			{
-				start = VertexDataUtil.GetBasePositions (vertexData);
-				end = VertexDataUtil.GetPositions (vertexData);
+				start = meshData.baseVertices;
+				end = meshData.vertices;
 			}
 			else
 			{
-				end = VertexDataUtil.GetBasePositions (vertexData);
-				start = VertexDataUtil.GetPositions (vertexData);
+				start = meshData.vertices;
+				end = meshData.baseVertices;
 			}
 
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var t = GetChannel (channel, vertexData[vertexIndex].color);
-				vertexData[vertexIndex].position = (start[vertexIndex] * (1f - t) + end[vertexIndex] * t);
+				var t = GetChannel (channel, meshData.colors[i]);
+				meshData.vertices[i] = (start[i] * (1f - t) + end[i] * t);
 			}
 
-			return vertexData;
+			return meshData;
 		}
 
+		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
 		private float GetChannel (ColorChannel channel, Color color)
 		{
 			switch (channel)

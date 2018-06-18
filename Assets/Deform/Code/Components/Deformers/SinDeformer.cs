@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
 using Deform.Math.Trig;
 
 namespace Deform.Deformers
@@ -40,23 +41,24 @@ namespace Deform.Deformers
 			}
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var samplePosition = vertexData[vertexIndex].position + axisOffset;
+				var samplePosition = meshData.vertices[i] + axisOffset;
 				if (usePosition)
 					samplePosition += transformData.position;
 				if (useRotation)
 					samplePosition = transformData.rotation * samplePosition;
 				if (useScale)
 					samplePosition.Scale (transformData.localScale);
-				vertexData[vertexIndex].position += Sin3D (samplePosition);
+				meshData.vertices[i] += Sin3D (samplePosition);
 			}
 
-			return vertexData;
+			return meshData;
 		}
 
+		[MethodImplAttribute (MethodImplOptions.AggressiveInlining)]
 		private Vector3 Sin3D (Vector3 sample)
 		{
 			var animatedOffset = offset + speedOffset;

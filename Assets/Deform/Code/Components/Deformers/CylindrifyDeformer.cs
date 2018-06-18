@@ -27,30 +27,30 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
 			float maxWidth = 0f;
 			// Find the max width.
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (meshData.vertices[i]);
 				var width = new Vector2 (position.x, position.y).magnitude;
 				if (width > maxWidth)
 					maxWidth = width;
 			}
 
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (meshData.vertices[i]);
 
 				var xy = new Vector2 (position.x, position.y).normalized * radius * maxWidth;
 				var goalPosition = new Vector3 (xy.x, xy.y, position.z);
 				position = position * (1f - strength) + goalPosition * strength;
 
-				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
+				meshData.vertices[i] = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
-			return vertexData;
+			return meshData;
 		}
 	}
 }

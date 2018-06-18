@@ -59,20 +59,17 @@ namespace Deform
 		protected override void DeformVertexData ()
 		{
 			// I'm not threading savvy, but I have a hunch that using all these locks isn't the ideal solution.
-			lock (vertexData)
+			lock (deformers)
 			{
-				lock (deformers)
-				{
-					RemoveNullDeformers ();
+				RemoveNullDeformers ();
 
-					for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+				for (var deformerIndex = 0; deformerIndex < deformers.Count; deformerIndex++)
+				{
+					lock (deformers[deformerIndex])
 					{
-						lock (deformers[deformerIndex])
+						if (deformers[deformerIndex].update)
 						{
-							if (deformers[deformerIndex].update)
-							{
-								vertexData = deformers[deformerIndex].Modify (vertexData, SyncedTransform, VertexDataUtil.GetBounds (vertexData));
-							}
+							meshData = deformers[deformerIndex].Modify (meshData, SyncedTransform, MeshDataUtil.GetBounds (meshData));
 						}
 					}
 				}

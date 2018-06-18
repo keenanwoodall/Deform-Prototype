@@ -28,15 +28,15 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
 			float minHeight = float.MaxValue;
 			float maxHeight = float.MinValue;
 
 			// Find the min/max height.
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (meshData.vertices[i]);
 				if (position.z > maxHeight)
 					maxHeight = position.z;
 				if (position.z < minHeight)
@@ -45,18 +45,18 @@ namespace Deform.Deformers
 
 			float oneOverHeight = 1f / (maxHeight - minHeight);
 
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = meshData.vertices[i];
 				var normalizedHeight = (position.z - minHeight) * oneOverHeight;
 				var scale = curve.Evaluate (normalizedHeight);
 				scale *= top * (1f - normalizedHeight) + bottom * normalizedHeight;
 				position.x *= scale;
 				position.y *= scale;
-				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
+				meshData.vertices[i] = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
-			return vertexData;
+			return meshData;
 		}
 	}
 }

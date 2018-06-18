@@ -40,14 +40,14 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
 			float maxWidth = float.MinValue;
 
 			// Find the width.
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (meshData.vertices[i]);
 				var width = new Vector2 (position.x, position.y).sqrMagnitude;
 				if (width > maxWidth)
 					maxWidth = width;
@@ -55,18 +55,18 @@ namespace Deform.Deformers
 
 			float oneOverMaxWidth = 1f / maxWidth;
 
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (meshData.vertices[i]);
 				var xyMagnitude = (new Vector2 (position.x, position.y) + this.positionOffset).sqrMagnitude;
 				var sinOffset = finalOffset + xyMagnitude * oneOverMaxWidth;
 				var positionOffset = new Vector3 (0f, 0f, sin.Solve (sinOffset) * falloffCurve.Evaluate (xyMagnitude * falloff));
 				position += positionOffset;
 				position = inverseAxisSpace.MultiplyPoint3x4 (position);
-				vertexData[vertexIndex].position = position;
+				meshData.vertices[i] = position;
 			}
 
-			return vertexData;
+			return meshData;
 		}
 	}
 }

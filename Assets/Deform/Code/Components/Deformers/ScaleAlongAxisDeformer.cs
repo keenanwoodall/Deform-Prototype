@@ -26,16 +26,16 @@ namespace Deform.Deformers
 			inverseAxisSpace = axisSpace.inverse;
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var position = axisSpace.MultiplyPoint3x4 (vertexData[vertexIndex].position);
+				var position = axisSpace.MultiplyPoint3x4 (meshData.vertices[i]);
 				position.Scale (scale);
-				vertexData[vertexIndex].position = inverseAxisSpace.MultiplyPoint3x4 (position);
+				meshData.vertices[i] = inverseAxisSpace.MultiplyPoint3x4 (position);
 			}
 
-			return vertexData;
+			return meshData;
 		}
 	}
 }

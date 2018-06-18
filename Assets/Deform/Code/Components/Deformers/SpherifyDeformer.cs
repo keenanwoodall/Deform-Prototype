@@ -18,17 +18,17 @@ namespace Deform.Deformers
 			oneMinusStrength = 1f - strength;
 		}
 
-		public override VertexData[] Modify (VertexData[] vertexData, TransformData transformData, Bounds meshBounds)
+		public override MeshData Modify (MeshData meshData, TransformData transformData, Bounds meshBounds)
 		{
 			var boundsSize = meshBounds.size.magnitude * 0.5f;
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
+			for (int i = 0; i < meshData.Size; i++)
 			{
-				var a = vertexData[vertexIndex].position;
-				var b = meshBounds.center + offset + ((vertexData[vertexIndex].position - meshBounds.center).normalized * (radius * boundsSize));
-				vertexData[vertexIndex].position = a * oneMinusStrength + b * strength;
+				var a = meshData.vertices[i];
+				var b = meshBounds.center + offset + ((a - meshBounds.center).normalized * (radius * boundsSize));
+				meshData.vertices[i] = a * oneMinusStrength + b * strength;
 			}
 
-			return vertexData;
+			return meshData;
 		}
 	}
 }

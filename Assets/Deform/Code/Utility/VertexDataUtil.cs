@@ -3,125 +3,38 @@ using UnityEngine;
 
 namespace Deform
 {
-	public static class VertexDataUtil
+	public static class MeshDataUtil
 	{
-		/// <summary>
-		/// Applies the givent vertex data to a mesh.
-		/// </summary>
-		public static void ApplyVertexData (VertexData[] vertexData, Mesh mesh)
+		public static MeshData GetMeshData (Mesh mesh)
 		{
-			var vertices = new Vector3[vertexData.Length];
-			var vertexCount = vertexData.Length;
+			var meshData = new MeshData ()
+			{
+				vertices = mesh.vertices,
+				baseVertices = mesh.vertices,
+				normals = mesh.normals,
+				tangents = mesh.tangents,
+				colors = mesh.colors
+			};
 
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				vertices[vertexIndex] = vertexData[vertexIndex].position;
-
-			mesh.vertices = vertices;
+			return meshData;
 		}
 
-		public static VertexData[] GetVertexData (Mesh mesh)
-		{
-			var vertexCount = mesh.vertexCount;
-			var vertexData = new VertexData[vertexCount];
-
-			var vertices = mesh.vertices;
-
-			var normals = mesh.normals;
-			if (normals == null || normals.Length == 0)
-				normals = new Vector3[vertexCount];
-
-			var tangents = mesh.tangents;
-			if (tangents == null | tangents.Length == 0)
-				tangents = new Vector4[vertexCount];
-
-			var uvs = mesh.uv;
-			if (uvs == null || uvs.Length == 0)
-				uvs = new Vector2[vertexCount];
-
-			var colors = mesh.colors;
-			if (colors == null || colors.Length == 0)
-				colors = new Color[vertexCount];
-
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				vertexData[vertexIndex] = new VertexData (
-					vertices[vertexIndex], 
-					normals[vertexIndex], 
-					tangents[vertexIndex], 
-					uvs[vertexIndex], 
-					colors[vertexIndex]);
-
-			return vertexData;
-		}
-
-		public static Bounds GetBounds (VertexData[] vertexData)
+		public static Bounds GetBounds (MeshData meshData)
 		{
 			var bounds = new Bounds ();
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
-				bounds.Encapsulate (vertexData[vertexIndex].position);
+			var vertexCount = meshData.vertices.Length;
+			for (int i = 0; i < vertexCount; i++)
+				bounds.Encapsulate (meshData.vertices[i]);
 			return bounds;
 		}
 
-		public static Vector3[] GetBasePositions (VertexData[] vertexData)
+		public static MeshData ResetVertexData (MeshData meshData)
 		{
-			var vertexCount = vertexData.Length;
-			var basePositions = new Vector3[vertexCount];
+			var vertexCount = meshData.vertices.Length;
+			for (int i = 0; i < vertexCount; i++)
+				meshData.vertices[i] = meshData.baseVertices[i];
 
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				basePositions[vertexIndex] = vertexData[vertexIndex].basePosition;
-
-			return basePositions;
-		}
-
-		public static Vector3[] GetPositions (VertexData[] vertexData)
-		{
-			var vertexCount = vertexData.Length;
-			var positions = new Vector3[vertexCount];
-
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				positions[vertexIndex] = vertexData[vertexIndex].position;
-
-			return positions;
-		}
-
-		public static Vector3[] GetNormals (VertexData[] vertexData)
-		{
-			var vertexCount = vertexData.Length;
-			var normals = new Vector3[vertexCount];
-
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				normals[vertexIndex] = vertexData[vertexIndex].normal;
-
-			return normals;
-		}
-
-		public static Vector3[] GetTangents (VertexData[] vertexData)
-		{
-			var vertexCount = vertexData.Length;
-			var tangents = new Vector3[vertexCount];
-
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				tangents[vertexIndex] = vertexData[vertexIndex].tangent;
-
-			return tangents;
-		}
-
-		public static Color[] GetColors (VertexData[] vertexData)
-		{
-			var vertexCount = vertexData.Length;
-			var colors = new Color[vertexCount];
-
-			for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-				colors[vertexIndex] = vertexData[vertexIndex].color;
-
-			return colors;
-		}
-
-		public static VertexData[] ResetVertexData (VertexData[] vertexData)
-		{
-			for (int vertexIndex = 0; vertexIndex < vertexData.Length; vertexIndex++)
-				vertexData[vertexIndex].ResetPosition ();
-
-			return vertexData;
+			return meshData;
 		}
 	}
 }
