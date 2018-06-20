@@ -8,6 +8,7 @@ namespace Deform
 	{
 		public UpdateMode updateMode = UpdateMode.UpdateAsync;
 		public NormalsCalculationMode normalsCalculation = NormalsCalculationMode.Unity;
+		public bool autoUpdateDeformerOrder = true;
 
 		[SerializeField, HideInInspector]
 		private List<DeformerComponent> deformers = new List<DeformerComponent> ();
@@ -33,6 +34,14 @@ namespace Deform
 		{
 			if (target == null && skinnedTarget == null)
 				return;
+
+#if UNITY_EDITOR
+			if (autoUpdateDeformerOrder || !Application.isPlaying)
+				RefreshDeformerOrder ();
+#else
+			if (autoUpdateDeformerOrder)
+				RefreshDeformerOrder ();
+#endif
 
 			switch (updateMode)
 			{

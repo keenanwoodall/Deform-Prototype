@@ -18,6 +18,7 @@ namespace Deform
 
 			DrawUpdateModeGUI (manager);
 			DrawNormalsCalculationGUI (manager);
+			DrawDeformerOrderUpdateGUI (manager);
 			DrawMeshColliderGUI (manager);
 			DrawDebugGUI (manager);
 
@@ -52,6 +53,19 @@ namespace Deform
 			{
 				Undo.RecordObject (manager, "Normals Calculation");
 				manager.normalsCalculation = normalsCalculation;
+			}
+		}
+
+		private void DrawDeformerOrderUpdateGUI (DeformerComponentManager manager)
+		{
+			EditorGUI.BeginChangeCheck ();
+			var label = new GUIContent ("Auto Update Deformer Order (Runtime)", "Always auto updates outside playmode.");
+			var autoUpdate = manager.autoUpdateDeformerOrder;
+			autoUpdate = EditorGUILayout.Toggle (label, autoUpdate);
+			if (EditorGUI.EndChangeCheck ())
+			{
+				Undo.RecordObject (manager, "Auto Update Deformer Order");
+				manager.autoUpdateDeformerOrder = autoUpdate;
 			}
 		}
 
