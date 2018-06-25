@@ -11,6 +11,7 @@ If you don't want to make your own deformers, it comes with many standard ones y
 1. Find a game object (with a mesh filter or skinned mesh renderer) in your scene.
 2. Add any deformer component.
 3. That's it. Your mesh is deformed.
+![Tutorial 1](https://media.giphy.com/media/3xIEzQcdH52oUzz8Zq/giphy.gif)
 
 **Tutorials**
 - [Introduction](https://youtu.be/1cFPUsI57hM?list=PLrWlVANGG-iitlKSK5Pr8eUCi48gznygc)
