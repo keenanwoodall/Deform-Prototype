@@ -51,9 +51,9 @@ _I don't want all the fluff. What can I safely remove?_
 
 _How do I make my own deformer?_
 1. Make a script that uses the Deform namespace
-2. Inherit the 'DeformerComponent' class.
+2. Inherit from the 'DeformerComponent' class.
 3. Override the 'Modify' method.
-4. Make changes to the vertex data and return it.
+4. Make changes to the mesh data and return it.
 5. Drag your script onto any object with a MeshFilter or SkinnedMeshRenderer.
 6. Mission complete.
 
