@@ -60,8 +60,8 @@ _How do I make my own deformer?_
 
 <br />
 
-_What is the VertexData struct?_
-- It holds the position and normal (as well as some other stuff) of a vertice.
+_What is the MeshData struct?_
+- It holds the positions and normals (as well as some other stuff) of a mesh.
 
 <br />
 
