@@ -45,6 +45,10 @@ If you don't want to make your own deformers, it comes with many standard ones y
 - Transform
 - Twist
 
+**Releases**
+
+- [v0.1](https://github.com/keenanwoodall/Deform/releases/tag/v0.1)
+
 **FAQ**
 
 _I don't want all the fluff. What can I safely remove?_
