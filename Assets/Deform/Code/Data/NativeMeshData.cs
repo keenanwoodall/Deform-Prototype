@@ -9,6 +9,7 @@ namespace Deform.Data
 		public NativeArray<Vector3> normals;
 		public NativeArray<Vector4> tangents;
 		public NativeArray<Vector2> uv;
+		public readonly int size;
 
 
 		public NativeMeshData (MeshData data, Allocator allocator = Allocator.Temp)
@@ -17,6 +18,8 @@ namespace Deform.Data
 			normals = new NativeArray<Vector3> (data.normals, allocator);
 			tangents = new NativeArray<Vector4> (data.tangents, allocator);
 			uv = new NativeArray<Vector2> (data.uv, allocator);
+
+			size = data.vertices.Length;
 		}
 
 		public void CopyTo (MeshData data)
@@ -29,10 +32,14 @@ namespace Deform.Data
 
 		public void Dispose ()
 		{
-			vertices.Dispose ();
-			normals.Dispose ();
-			tangents.Dispose ();
-			uv.Dispose ();
+			if (vertices.IsCreated)
+				vertices.Dispose ();
+			if (normals.IsCreated)
+				normals.Dispose ();
+			if (tangents.IsCreated)
+				tangents.Dispose ();
+			if (uv.IsCreated)
+				uv.Dispose ();
 		}
 	}
 }
