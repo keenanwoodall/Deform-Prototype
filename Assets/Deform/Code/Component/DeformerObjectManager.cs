@@ -10,6 +10,7 @@ namespace Deform
 		private static List<DeformerObject> deformerObjects = new List<DeformerObject> ();
 
 		public bool update = true;
+		private JobHandle lastHandle;
 
 		private void Awake ()
 		{
@@ -23,12 +24,20 @@ namespace Deform
 			if (!update)
 				return;
 
-			JobHandle previousHandle = new JobHandle ();
 			for (int i = 0; i < deformerObjects.Count; i++)
-				previousHandle = deformerObjects[i].DeformData (previousHandle);
-			previousHandle.Complete ();
+				lastHandle = deformerObjects[i].DeformData (lastHandle);
+		}
+		private void LateUpdate ()
+		{
+			lastHandle.Complete ();
+
 			for (int i = 0; i < deformerObjects.Count; i++)
 				deformerObjects[i].ApplyData ();
+		}
+
+		private void OnDestroy ()
+		{
+			lastHandle.Complete ();
 		}
 
 		public static void AddDeformerObject (DeformerObject deformerObject)

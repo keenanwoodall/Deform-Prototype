@@ -20,13 +20,5 @@ namespace Deform.Data
 
 			size = vertices.Length;
 		}
-
-		public void CopyTo (MeshData other)
-		{
-			vertices.CopyTo (other.vertices, 0);
-			normals.CopyTo (other.normals, 0);
-			tangents.CopyTo (other.tangents, 0);
-			uv.CopyTo (other.uv, 0);
-		}
 	}
 }

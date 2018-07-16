@@ -22,12 +22,16 @@ namespace Deform.Data
 			size = data.vertices.Length;
 		}
 
-		public void CopyTo (MeshData data)
+		public void CopyTo (MeshData data, bool copyVertices = true, bool copyNormals = false, bool copyTangents = false, bool copyUv = false)
 		{
-			vertices.CopyTo (data.vertices);
-			normals.CopyTo (data.normals);
-			tangents.CopyTo (data.tangents);
-			uv.CopyTo (data.uv);
+			if (copyVertices)
+				vertices.CopyTo (data.vertices);
+			if (copyNormals)
+				normals.CopyTo (data.normals);
+			if (copyTangents)
+				tangents.CopyTo (data.tangents);
+			if (copyTangents)
+				uv.CopyTo (data.uv);
 		}
 
 		public void Dispose ()

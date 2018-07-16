@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Unity.Jobs;
-using Unity.Burst;
 using Deform.Data;
 
 namespace Deform
@@ -28,6 +27,8 @@ namespace Deform
 			if (originalMesh == null)
 				originalMesh = meshFilter.sharedMesh;
 			meshFilter.sharedMesh = dynamicMesh = Instantiate (originalMesh);
+
+			dynamicMesh.MarkDynamic ();
 
 			originalData = new MeshData (dynamicMesh);
 			dynamicData = new MeshData (dynamicMesh);
