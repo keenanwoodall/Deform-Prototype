@@ -12,7 +12,7 @@ QualitySettings:
     shadows: 2
     shadowResolution: 3
     shadowProjection: 0
-    shadowCascades: 1
+    shadowCascades: 4
     shadowDistance: 20
     shadowNearPlaneOffset: 3
     shadowCascade2Split: 0.33333334
@@ -29,6 +29,12 @@ QualitySettings:
     vSyncCount: 0
     lodBias: 2
     maximumLODLevel: 0
+    streamingMipmapsActive: 0
+    streamingMipmapsAddAllCameras: 1
+    streamingMipmapsMemoryBudget: 512
+    streamingMipmapsRenderersPerFrame: 512
+    streamingMipmapsMaxLevelReduction: 2
+    streamingMipmapsMaxFileIORequests: 1024
     particleRaycastBudget: 4096
     asyncUploadTimeSlice: 2
     asyncUploadBufferSize: 4
