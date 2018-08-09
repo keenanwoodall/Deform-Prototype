@@ -32,6 +32,7 @@ namespace Deform
 
 			originalData = new MeshData (dynamicMesh);
 			dynamicData = new MeshData (dynamicMesh);
+			nativeData = new NativeMeshData (originalData, Unity.Collections.Allocator.Persistent);
 		}
 
 		private void OnEnable ()
@@ -71,8 +72,7 @@ namespace Deform
 				dynamicMesh.normals = dynamicData.normals;
 			}
 
-			nativeData.Dispose ();
-			nativeData = new NativeMeshData (originalData);
+			nativeData.CopyFrom (originalData);
 
 			if (updateNormals)
 				dynamicMesh.RecalculateNormals ();

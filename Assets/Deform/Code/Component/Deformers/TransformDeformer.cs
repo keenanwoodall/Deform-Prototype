@@ -21,7 +21,7 @@ namespace Deform.Deformers
 			return new DeformJob (transformMatrix, quaternionRotation, data).Schedule (data.size, BATCH_COUNT, dependency);
 		}
 
-		[BurstCompileAttribute]
+		[BurstCompile]
 		private struct DeformJob : IJobParallelFor
 		{
 			public readonly Matrix4x4 matrix;

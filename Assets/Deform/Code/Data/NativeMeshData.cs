@@ -12,8 +12,7 @@ namespace Deform.Data
 		public NativeArray<Vector2> uv;
 		public readonly int size;
 
-
-		public NativeMeshData (MeshData data, Allocator allocator = Allocator.Temp)
+		public NativeMeshData (MeshData data, Allocator allocator)
 		{
 			var length = data.size;
 			vertices = new NativeArray<Vector3> (length, allocator, NativeArrayOptions.UninitializedMemory);
@@ -29,13 +28,14 @@ namespace Deform.Data
 			GetNativeVector2Arrays (data.uv, uv);
 		}
 
-		public void CopyTo (MeshData data)
+		public void CopyFrom (MeshData data)
 		{
-			SetNativeVector3Array (data.vertices, vertices);
-			SetNativeVector3Array (data.normals, normals);
-			SetNativeVector4Array (data.tangents, tangents);
-			SetNativeVector2Array (data.uv, uv);
+			GetNativeVector3Arrays (data.vertices, vertices);
+			GetNativeVector3Arrays (data.normals, normals);
+			GetNativeVector4Arrays (data.tangents, tangents);
+			GetNativeVector2Arrays (data.uv, uv);
 		}
+
 		public void CopyTo (MeshData data, bool copyVertices = true, bool copyNormals = false, bool copyTangents = false, bool copyUv = false)
 		{
 			if (copyVertices)
