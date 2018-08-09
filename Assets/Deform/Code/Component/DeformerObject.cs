@@ -67,9 +67,11 @@ namespace Deform
 		{
 			if (nativeData.vertices.IsCreated)
 			{
-				nativeData.CopyTo (dynamicData, copyVertices: true, copyNormals: true);
+				nativeData.CopyTo (dynamicData);
 				dynamicMesh.vertices = dynamicData.vertices;
 				dynamicMesh.normals = dynamicData.normals;
+				dynamicMesh.tangents = dynamicData.tangents;
+				dynamicMesh.uv = dynamicData.uv;
 			}
 
 			nativeData.CopyFrom (originalData);

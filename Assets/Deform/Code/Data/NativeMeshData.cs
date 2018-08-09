@@ -10,6 +10,7 @@ namespace Deform.Data
 		public NativeArray<Vector3> normals;
 		public NativeArray<Vector4> tangents;
 		public NativeArray<Vector2> uv;
+
 		public readonly int size;
 
 		public NativeMeshData (MeshData data, Allocator allocator)
@@ -21,7 +22,7 @@ namespace Deform.Data
 			uv = new NativeArray<Vector2> (length, allocator, NativeArrayOptions.UninitializedMemory);
 
 			size = data.vertices.Length;
-
+			
 			GetNativeVector3Arrays (data.vertices, vertices);
 			GetNativeVector3Arrays (data.normals, normals);
 			GetNativeVector4Arrays (data.tangents, tangents);
@@ -36,16 +37,12 @@ namespace Deform.Data
 			GetNativeVector2Arrays (data.uv, uv);
 		}
 
-		public void CopyTo (MeshData data, bool copyVertices = true, bool copyNormals = false, bool copyTangents = false, bool copyUv = false)
+		public void CopyTo (MeshData data)
 		{
-			if (copyVertices)
-				SetNativeVector3Array (data.vertices, vertices);
-			if (copyNormals)
-				SetNativeVector3Array (data.normals, normals);
-			if (copyTangents)
-				SetNativeVector4Array (data.tangents, tangents);
-			if (copyTangents)
-				SetNativeVector2Array (data.uv, uv);
+			SetNativeVector3Array (data.vertices, vertices);
+			SetNativeVector3Array (data.normals, normals);
+			SetNativeVector4Array (data.tangents, tangents);
+			SetNativeVector2Array (data.uv, uv);
 		}
 
 		public void Dispose ()
@@ -67,7 +64,6 @@ namespace Deform.Data
 				UnsafeUtility.MemCpy (NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (output),
 					vertexBufferPointer, input.Length * (long)UnsafeUtility.SizeOf<Vector2> ());
 			}
-
 		}
 		unsafe void SetNativeVector2Array (Vector2[] vertexArray, NativeArray<Vector2> vertexBuffer)
 		{
