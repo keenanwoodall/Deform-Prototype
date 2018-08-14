@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Unity.Jobs;
 using UnityEngine.Jobs;
+using Unity.Burst;
+using static Unity.Mathematics.math;
 using Deform.Data;
 
 namespace Deform.Deformers
@@ -27,6 +29,7 @@ namespace Deform.Deformers
 			return job.Schedule (data.size, BATCH_COUNT, dependency);
 		}
 
+		[BurstCompile]
 		private struct DeformJob : IJobParallelFor
 		{
 			public readonly float amplitude;
@@ -47,10 +50,10 @@ namespace Deform.Deformers
 
 			public void Execute (int index)
 			{
-				var t = by.axisSpace.MultiplyPoint3x4 (data.vertices[index]).z;
-				var position = along.axisSpace.MultiplyPoint (data.vertices[index]);
+				var t = mul (by.axisSpace, float4 (data.vertices[index], 1f)).z;
+				var position = mul (along.axisSpace, float4 (data.vertices[index], 1f));
 				position.z += Mathf.Sin ((t + offset) * frequency) * amplitude;
-				data.vertices[index] = along.inverseAxisSpace.MultiplyPoint3x4 (position);
+				data.vertices[index] = mul (along.inverseAxisSpace, position).xyz;
 			}
 		}
 	}

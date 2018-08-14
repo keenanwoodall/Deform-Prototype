@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Unity.Jobs;
 using Unity.Burst;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 using Deform.Data;
 
 namespace Deform.Deformers
@@ -12,7 +14,7 @@ namespace Deform.Deformers
 		public Vector3 scale = Vector3.one;
 
 		private Quaternion quaternionRotation;
-		private Matrix4x4 transformMatrix;
+		private float4x4 transformMatrix;
 
 		public override JobHandle Deform (NativeMeshData data, JobHandle dependency)
 		{
@@ -24,11 +26,11 @@ namespace Deform.Deformers
 		[BurstCompile]
 		private struct DeformJob : IJobParallelFor
 		{
-			public readonly Matrix4x4 matrix;
+			public readonly float4x4 matrix;
 			public readonly Quaternion quaternionRotation;
 			public NativeMeshData data;
 
-			public DeformJob (Matrix4x4 matrix, Quaternion quaternionRotation, NativeMeshData data)
+			public DeformJob (float4x4 matrix, Quaternion quaternionRotation, NativeMeshData data)
 			{
 				this.matrix = matrix;
 				this.quaternionRotation = quaternionRotation;
@@ -38,7 +40,7 @@ namespace Deform.Deformers
 			public void Execute (int index)
 			{
 				var vertice = data.vertices[index];
-				vertice = matrix.MultiplyPoint3x4 (vertice);
+				vertice = mul (matrix, float4 (vertice, 1f)).xyz;
 				data.vertices[index] = vertice;
 
 				var normal = data.normals[index];

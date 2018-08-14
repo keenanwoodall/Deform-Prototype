@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.Jobs;
+using Unity.Mathematics;
 
 namespace Deform
 {
 	public struct Axis
 	{
-		public readonly Matrix4x4 axisSpace;
-		public readonly Matrix4x4 inverseAxisSpace;
+		public readonly float4x4 axisSpace;
+		public readonly float4x4 inverseAxisSpace;
 
 		public Axis (Transform deformObject, Transform axis)
 		{
-			axisSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * deformObject.rotation, Vector3.one);
-			inverseAxisSpace = axisSpace.inverse;
+			var matrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * deformObject.rotation, Vector3.one);
+			axisSpace = matrix;
+			inverseAxisSpace = matrix.inverse;
 		}
 
 		public Axis (TransformAccess deformObject, TransformAccess axis)
 		{
-			axisSpace = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * deformObject.rotation, Vector3.one);
-			inverseAxisSpace = axisSpace.inverse;
+			var matrix = Matrix4x4.TRS (Vector3.zero, Quaternion.Inverse (axis.rotation) * deformObject.rotation, Vector3.one);
+			axisSpace = matrix;
+			inverseAxisSpace = matrix.inverse;
 		}
 	}
 }
