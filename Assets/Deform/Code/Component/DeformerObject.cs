@@ -47,6 +47,7 @@ namespace Deform
 
 		private void OnDestroy ()
 		{
+			Destroy (dynamicMesh);
 			nativeData.Dispose ();
 		}
 
