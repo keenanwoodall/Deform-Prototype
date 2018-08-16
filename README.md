@@ -79,14 +79,12 @@ _Why am I getting the error,_ `xxx asynchronous functions cannot be used because
 - You need to go to Edit/Project Settings/Player/ and set the Scripting Runtime Version (under the Other Settings dropdown) to 4.6.
 
 <br />
-<br />
-Please send any suggestions/feedback to keenanwoodall@gmail.com
 
-**Donate**
+**Help Me**
 
-If this project is of any help and you're looking for a way to help continue development, feel free to donate!
-<br />
-[Donate via Paypal](https://www.paypal.me/keenanwoodall)
+- Please send any suggestions/feedback to keenanwoodall@gmail.com
+- If this project is of any help and you're looking for a way to help continue development, feel free to donate!
+ [Donate via Paypal](https://www.paypal.me/keenanwoodall)
 
 <br />
 <br />
