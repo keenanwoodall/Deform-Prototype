@@ -80,7 +80,10 @@ _Why am I getting the error,_ `xxx asynchronous functions cannot be used because
 
 <br />
 <br />
-If you have any suggestions/feedback feel free to email me at keenanwoodall@gmail.com
+Please send any suggestions/feedback to keenanwoodall@gmail.com
+<br />
+If this project is of any help and you're looking for a way to help continue development, feel free to donate!
+[![paypal](https://paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/keenanwoodall)
 
 <br />
 <br />
