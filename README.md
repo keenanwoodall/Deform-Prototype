@@ -81,10 +81,11 @@ _Why am I getting the error,_ `xxx asynchronous functions cannot be used because
 <br />
 <br />
 Please send any suggestions/feedback to keenanwoodall@gmail.com
-<br />
+
+**Donate**
 If this project is of any help and you're looking for a way to help continue development, feel free to donate!
 <br />
-- [Donate via Paypal](https://www.paypal.me/keenanwoodall)
+[Donate via Paypal](https://www.paypal.me/keenanwoodall)
 
 <br />
 <br />
