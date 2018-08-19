@@ -13,29 +13,24 @@ namespace Deform.Deformers
 		public Vector3 rotation = Vector3.zero;
 		public Vector3 scale = Vector3.one;
 
-		private Quaternion quaternionRotation;
 		private float4x4 transformMatrix;
 
 		public override JobHandle Deform (NativeMeshData data, JobHandle dependency)
 		{
-			quaternionRotation = Quaternion.Euler (rotation);
-			transformMatrix = Matrix4x4.TRS (position, quaternionRotation, scale);
-			return new DeformJob (transformMatrix, quaternionRotation, data).Schedule (data.size, BATCH_COUNT, dependency);
+			transformMatrix = Matrix4x4.TRS (position, Quaternion.Euler (rotation), scale);
+
+			return new DeformJob
+			{
+				matrix = Matrix4x4.TRS (position, Quaternion.Euler (rotation), scale),
+				data = data
+			}.Schedule (data.size, BATCH_COUNT, dependency);
 		}
 
 		[BurstCompile]
 		private struct DeformJob : IJobParallelFor
 		{
-			public readonly float4x4 matrix;
-			public readonly Quaternion quaternionRotation;
+			public float4x4 matrix;
 			public NativeMeshData data;
-
-			public DeformJob (float4x4 matrix, Quaternion quaternionRotation, NativeMeshData data)
-			{
-				this.matrix = matrix;
-				this.quaternionRotation = quaternionRotation;
-				this.data = data;
-			}
 
 			public void Execute (int index)
 			{
@@ -44,7 +39,7 @@ namespace Deform.Deformers
 				data.vertices[index] = vertice;
 
 				var normal = data.normals[index];
-				normal = quaternionRotation * normal;
+				normal = mul (matrix, float4 (normal, 1f)).xyz;
 				data.normals[index] = normal;
 			}
 		}

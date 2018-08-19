@@ -25,18 +25,25 @@ namespace Deform.Deformers
 
 		public override JobHandle Deform (NativeMeshData data, JobHandle dependency)
 		{
-			var job = new DeformJob (amplitude, frequency, speedOffset + offset, new Axis (transform, by), new Axis (transform, along), data);
-			return job.Schedule (data.size, BATCH_COUNT, dependency);
+			return new DeformJob
+			{
+				amplitude = amplitude,
+				frequency = frequency,
+				offset = speedOffset + offset,
+				by = new Axis (transform, by),
+				along = new Axis (transform, along),
+				data = data
+			}.Schedule (data.size, BATCH_COUNT, dependency);
 		}
 
 		[BurstCompile]
 		private struct DeformJob : IJobParallelFor
 		{
-			public readonly float amplitude;
-			public readonly float frequency;
-			public readonly float offset;
-			public readonly Axis by, along;
-			private NativeMeshData data;
+			public float amplitude;
+			public float frequency;
+			public float offset;
+			public Axis by, along;
+			public NativeMeshData data;
 
 			public DeformJob (float amplitude, float frequency, float offset, Axis by, Axis along, NativeMeshData data)
 			{
