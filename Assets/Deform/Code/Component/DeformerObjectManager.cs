@@ -42,8 +42,6 @@ namespace Deform
 
 		public static void AddDeformerObject (DeformerObject deformerObject)
 		{
-			if (instance == null)
-				print ("Deformer Object Manager missing from scene. Deformer objects will not update.");
 			deformerObjects.Add (deformerObject);
 		}
 		public static void RemoveDeformerObject (DeformerObject deformerObject)

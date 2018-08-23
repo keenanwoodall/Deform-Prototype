@@ -14,7 +14,7 @@ namespace Deform.Data
 
 		public readonly int size;
 
-		public NativeMeshData (MeshData data, Allocator allocator)
+		public NativeMeshData (ManagedMeshData data, Allocator allocator)
 		{
 			var length = data.size;
 			vertices = new NativeArray<float3> (length, allocator, NativeArrayOptions.UninitializedMemory);
@@ -30,7 +30,7 @@ namespace Deform.Data
 			CopyVector2ArrayIntoNativeFloat2Array (data.uv, uv);
 		}
 
-		public void CopyFrom (MeshData data)
+		public void CopyFrom (ManagedMeshData data)
 		{
 			CopyVector3ArrayIntoNativeFloat3Array (data.vertices, vertices);
 			CopyVector3ArrayIntoNativeFloat3Array (data.normals, normals);
@@ -38,7 +38,7 @@ namespace Deform.Data
 			CopyVector2ArrayIntoNativeFloat2Array (data.uv, uv);
 		}
 
-		public void CopyTo (MeshData data)
+		public void CopyTo (ManagedMeshData data)
 		{
 			CopyNativeFloat3ArrayIntoVector3Array (data.vertices, vertices);
 			CopyNativeFloat3ArrayIntoVector3Array (data.normals, normals);

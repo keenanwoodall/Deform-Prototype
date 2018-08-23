@@ -4,21 +4,50 @@ namespace Deform.Data
 {
 	public class MeshData
 	{
-		public Vector3[] vertices;
-		public Vector3[] normals;
-		public Vector4[] tangents;
-		public Vector2[] uv;
+		[SerializeField] [HideInInspector]
+		private Mesh originalMesh;
+		private Mesh dynamicMesh;
 
-		public readonly int size;
+		private ManagedMeshData originalData;
+		public ManagedMeshData dynamicData { get; private set; }
+		public NativeMeshData nativeData { get; private set; }
 
-		public MeshData (Mesh mesh)
+		public MeshData (MeshFilter meshFilter)
 		{
-			vertices = mesh.vertices;
-			normals = mesh.normals;
-			tangents = mesh.tangents;
-			uv = mesh.uv;
+			if (originalMesh == null)
+				originalMesh = meshFilter.sharedMesh;
+			meshFilter.sharedMesh = dynamicMesh = GameObject.Instantiate (originalMesh);
 
-			size = vertices.Length;
+			dynamicMesh.MarkDynamic ();
+
+			originalData = new ManagedMeshData (dynamicMesh);
+			dynamicData = new ManagedMeshData (dynamicMesh);
+			nativeData = new NativeMeshData (originalData, Unity.Collections.Allocator.Persistent);
+		}
+
+		public void ApplyData (bool updateNormals, bool updateBounds)
+		{
+			if (nativeData.vertices.IsCreated)
+			{
+				nativeData.CopyTo (dynamicData);
+				dynamicMesh.vertices = dynamicData.vertices;
+				dynamicMesh.normals = dynamicData.normals;
+				dynamicMesh.tangents = dynamicData.tangents;
+				dynamicMesh.uv = dynamicData.uv;
+			}
+
+			nativeData.CopyFrom (originalData);
+
+			if (updateNormals)
+				dynamicMesh.RecalculateNormals ();
+			if (updateBounds)
+				dynamicMesh.RecalculateBounds ();
+		}
+
+		public void Dispose ()
+		{
+			GameObject.Destroy (dynamicMesh);
+			nativeData.Dispose ();
 		}
 	}
 }
