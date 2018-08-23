@@ -16,52 +16,27 @@ namespace Deform.Deformers
 		public float frequency = 1f;
 		public float speed = 0f;
 		public float offset = 0f;
-		public enum NoiseSpace { None, Normal, Spherical}
-		public NoiseSpace space;
 
 		private float speedOffset;
 
 		private void Update ()
 		{
-			speedOffset += speed * Time.deltaTime;
+			speedOffset += speed * Time.deltaTime / ((frequency == 0f) ? 1f : frequency);
 		}
 
 		public override JobHandle Deform (NativeMeshData data, JobHandle dependency)
 		{
-			switch (space)
+			return new DeformJob ()
 			{
-				case NoiseSpace.None:
-					return new NoneDeformJob ()
-					{
-						magnitude = magnitude,
-						frequency = frequency,
-						offset = offset + speedOffset,
-						data = data
-					}.Schedule (data.size, BATCH_COUNT, dependency);
-				case NoiseSpace.Normal:
-					return new NormalDeformJob ()
-					{
-						magnitude = magnitude,
-						frequency = frequency,
-						offset = offset + speedOffset,
-						data = data
-					}.Schedule (data.size, BATCH_COUNT, dependency);
-				case NoiseSpace.Spherical:
-					return new SphericalDeformJob ()
-					{
-						magnitude = magnitude,
-						frequency = frequency,
-						offset = offset + speedOffset,
-						data = data
-					}.Schedule (data.size, BATCH_COUNT, dependency);
-				default:
-					Debug.LogError (space.ToString () + " is not supported.");
-					return new JobHandle ();
-			}
+				magnitude = magnitude,
+				frequency = frequency,
+				offset = offset + speedOffset,
+				data = data
+			}.Schedule (data.size, BATCH_COUNT, dependency);
 		}
 
 		[BurstCompile]
-		private struct NoneDeformJob : IJobParallelFor
+		private struct DeformJob : IJobParallelFor
 		{
 			public float magnitude;
 			public float frequency;
@@ -78,40 +53,6 @@ namespace Deform.Deformers
 					noise.cnoise (float3 (position.x, position.z, offset) * frequency),
 					noise.cnoise (float3 (position.x, position.y, offset) * frequency)
 				) * magnitude;
-
-				data.vertices[index] = position + noiseOffset;
-			}
-		}
-
-		[BurstCompile]
-		private struct NormalDeformJob : IJobParallelFor
-		{
-			public float magnitude;
-			public float frequency;
-			public float offset;
-			public NativeMeshData data;
-
-			public void Execute (int index)
-			{
-				var position = data.vertices[index];
-				var noiseOffset = data.normals[index] * noise.cnoise ((position + offset) * frequency) * magnitude;
-				
-				data.vertices[index] = position + noiseOffset;
-			}
-		}
-
-		[BurstCompile]
-		private struct SphericalDeformJob : IJobParallelFor
-		{
-			public float magnitude;
-			public float frequency;
-			public float offset;
-			public NativeMeshData data;
-
-			public void Execute (int index)
-			{
-				var position = data.vertices[index];
-				var noiseOffset = normalize (data.vertices[index]) * noise.cnoise ((position + offset) * frequency) * magnitude;
 
 				data.vertices[index] = position + noiseOffset;
 			}
