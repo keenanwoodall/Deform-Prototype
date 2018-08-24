@@ -8,8 +8,8 @@ namespace Deform.Data
 		public Vector3[] normals;
 		public Vector4[] tangents;
 		public Vector2[] uv;
-		public Color[] colors;
-
+		public int[] triangles;
+		
 		public readonly int size;
 
 		public ManagedMeshData (Mesh mesh)
@@ -18,9 +18,7 @@ namespace Deform.Data
 			normals = mesh.normals;
 			tangents = mesh.tangents;
 			uv = mesh.uv;
-			colors = mesh.colors;
-			if (colors == null)
-				colors = new Color[mesh.vertexCount];
+			triangles = mesh.triangles;
 
 			size = vertices.Length;
 		}

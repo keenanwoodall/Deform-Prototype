@@ -11,6 +11,7 @@ namespace Deform.Data
 		public NativeArray<float3> normals;
 		public NativeArray<float4> tangents;
 		public NativeArray<float2> uv;
+		public NativeArray<int> triangles;
 
 		public readonly int size;
 
@@ -21,6 +22,7 @@ namespace Deform.Data
 			normals = new NativeArray<float3> (length, allocator, NativeArrayOptions.UninitializedMemory);
 			tangents = new NativeArray<float4> (length, allocator, NativeArrayOptions.UninitializedMemory);
 			uv = new NativeArray<float2> (length, allocator, NativeArrayOptions.UninitializedMemory);
+			triangles = new NativeArray<int> (data.triangles.Length, allocator, NativeArrayOptions.UninitializedMemory);
 
 			size = data.vertices.Length;
 			
@@ -28,6 +30,7 @@ namespace Deform.Data
 			CopyVector3ArrayIntoNativeFloat3Array (data.normals, normals);
 			CopyVector4ArrayIntoNativeFloat4Array (data.tangents, tangents);
 			CopyVector2ArrayIntoNativeFloat2Array (data.uv, uv);
+			CopyIntArrayIntoNativeIntArray (data.triangles, triangles);
 		}
 
 		public void CopyFrom (ManagedMeshData data)
@@ -36,6 +39,7 @@ namespace Deform.Data
 			CopyVector3ArrayIntoNativeFloat3Array (data.normals, normals);
 			CopyVector4ArrayIntoNativeFloat4Array (data.tangents, tangents);
 			CopyVector2ArrayIntoNativeFloat2Array (data.uv, uv);
+			CopyIntArrayIntoNativeIntArray (data.triangles, triangles);
 		}
 
 		public void CopyTo (ManagedMeshData data)
@@ -44,6 +48,7 @@ namespace Deform.Data
 			CopyNativeFloat3ArrayIntoVector3Array (data.normals, normals);
 			CopyNativeFloat4ArrayIntoVector4Array (data.tangents, tangents);
 			CopyNativeFloat2ArrayIntoVector2Array (data.uv, uv);
+			CopyNativeIntArrayIntoIntArray (data.triangles, triangles);
 		}
 
 		public void Dispose ()
@@ -56,6 +61,8 @@ namespace Deform.Data
 				tangents.Dispose ();
 			if (uv.IsCreated)
 				uv.Dispose ();
+			if (triangles.IsCreated)
+				triangles.Dispose ();
 		}
 
 
@@ -101,6 +108,21 @@ namespace Deform.Data
 			fixed (void* managedBufferPointer = managed)
 			{
 				UnsafeUtility.MemCpy (managedBufferPointer, NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (unmanaged), managed.Length * (long)UnsafeUtility.SizeOf<Vector4> ());
+			}
+		}
+
+		private unsafe void CopyIntArrayIntoNativeIntArray (int[] managed, NativeArray<int> unmanaged)
+		{
+			fixed (void* managedBufferPointer = managed)
+			{
+				UnsafeUtility.MemCpy (NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (unmanaged), managedBufferPointer, managed.Length * (long)UnsafeUtility.SizeOf<int> ());
+			}
+		}
+		private unsafe void CopyNativeIntArrayIntoIntArray (int[] managed, NativeArray<int> unmanaged)
+		{
+			fixed (void* managedBufferPointer = managed)
+			{
+				UnsafeUtility.MemCpy (managedBufferPointer, NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (unmanaged), managed.Length * (long)UnsafeUtility.SizeOf<int> ());
 			}
 		}
 	}
