@@ -12,6 +12,7 @@ namespace Deform.Data
 		public NativeArray<float4> tangents;
 		public NativeArray<float2> uv;
 		public NativeArray<int> triangles;
+		public NativeArray<float4> colors;
 
 		public readonly int size;
 
@@ -23,14 +24,11 @@ namespace Deform.Data
 			tangents = new NativeArray<float4> (length, allocator, NativeArrayOptions.UninitializedMemory);
 			uv = new NativeArray<float2> (length, allocator, NativeArrayOptions.UninitializedMemory);
 			triangles = new NativeArray<int> (data.triangles.Length, allocator, NativeArrayOptions.UninitializedMemory);
+			colors = new NativeArray<float4> (data.size, allocator, NativeArrayOptions.UninitializedMemory);
 
 			size = data.vertices.Length;
-			
-			CopyVector3ArrayIntoNativeFloat3Array (data.vertices, vertices);
-			CopyVector3ArrayIntoNativeFloat3Array (data.normals, normals);
-			CopyVector4ArrayIntoNativeFloat4Array (data.tangents, tangents);
-			CopyVector2ArrayIntoNativeFloat2Array (data.uv, uv);
-			CopyIntArrayIntoNativeIntArray (data.triangles, triangles);
+
+			CopyFrom (data);
 		}
 
 		public void CopyFrom (ManagedMeshData data)
@@ -40,6 +38,7 @@ namespace Deform.Data
 			CopyVector4ArrayIntoNativeFloat4Array (data.tangents, tangents);
 			CopyVector2ArrayIntoNativeFloat2Array (data.uv, uv);
 			CopyIntArrayIntoNativeIntArray (data.triangles, triangles);
+			CopyColorArrayIntoNativeFloat4Array (data.colors, colors);
 		}
 
 		public void CopyTo (ManagedMeshData data)
@@ -49,6 +48,7 @@ namespace Deform.Data
 			CopyNativeFloat4ArrayIntoVector4Array (data.tangents, tangents);
 			CopyNativeFloat2ArrayIntoVector2Array (data.uv, uv);
 			CopyNativeIntArrayIntoIntArray (data.triangles, triangles);
+			CopyNativeFloat4ArrayIntoColorArray (data.colors, colors);
 		}
 
 		public void Dispose ()
@@ -63,6 +63,8 @@ namespace Deform.Data
 				uv.Dispose ();
 			if (triangles.IsCreated)
 				triangles.Dispose ();
+			if (colors.IsCreated)
+				colors.Dispose ();
 		}
 
 
@@ -123,6 +125,21 @@ namespace Deform.Data
 			fixed (void* managedBufferPointer = managed)
 			{
 				UnsafeUtility.MemCpy (managedBufferPointer, NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (unmanaged), managed.Length * (long)UnsafeUtility.SizeOf<int> ());
+			}
+		}
+
+		private unsafe void CopyColorArrayIntoNativeFloat4Array (Color[] managed, NativeArray<float4> unmanaged)
+		{
+			fixed (void* managedBufferPointer = managed)
+			{
+				UnsafeUtility.MemCpy (NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (unmanaged), managedBufferPointer, managed.Length * (long)UnsafeUtility.SizeOf<Color> ());
+			}
+		}
+		private unsafe void CopyNativeFloat4ArrayIntoColorArray (Color[] managed, NativeArray<float4> unmanaged)
+		{
+			fixed (void* managedBufferPointer = managed)
+			{
+				UnsafeUtility.MemCpy (managedBufferPointer, NativeArrayUnsafeUtility.GetUnsafeBufferPointerWithoutChecks (unmanaged), managed.Length * (long)UnsafeUtility.SizeOf<Color> ());
 			}
 		}
 	}
