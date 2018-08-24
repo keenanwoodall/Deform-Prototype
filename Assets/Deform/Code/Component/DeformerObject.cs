@@ -45,7 +45,9 @@ namespace Deform
 
 			for (int i = 0; i < deformers.Length; i++)
 			{
-				previousHandle = deformers[i].Deform (meshData.nativeData, previousHandle);
+				var deformer = deformers[i];
+				if (deformer != null && deformer.enabled && deformer.update)
+					previousHandle = deformers[i].Deform (meshData.nativeData, previousHandle);
 			}
 
 			return previousHandle;

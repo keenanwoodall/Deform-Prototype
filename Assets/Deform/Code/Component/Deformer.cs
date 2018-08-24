@@ -9,6 +9,8 @@ namespace Deform
 	{
 		protected const int BATCH_COUNT = 128;
 
+		public bool update = true;
+
 		public abstract JobHandle Deform (NativeMeshData data, JobHandle dependency);
 	}
 }
