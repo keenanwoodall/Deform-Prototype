@@ -6,7 +6,6 @@ namespace Deform
 {
 	public class DeformerObject : MonoBehaviour
 	{
-		public bool updateNormals = true;
 		public bool updateBounds = true;
 
 		[SerializeField] [HideInInspector]
@@ -38,24 +37,27 @@ namespace Deform
 			meshData.Dispose ();
 		}
 
-		public JobHandle DeformData (JobHandle dependency)
+		public JobHandle DeformData (JobHandle dependency = default (JobHandle))
 		{
-			var previousHandle = dependency;
 			deformers = GetComponents<Deformer> ();
 
 			for (int i = 0; i < deformers.Length; i++)
 			{
 				var deformer = deformers[i];
 				if (deformer != null && deformer.enabled && deformer.update)
-					previousHandle = deformers[i].Deform (meshData.nativeData, previousHandle);
+					dependency = deformer.Deform (meshData.nativeData, dependency);
 			}
 
-			return previousHandle;
+			return dependency;
 		}
 
+		public JobHandle RecalculateNormalsAsync (JobHandle dependency)
+		{
+			return meshData.RecalculateNormalsAsync (dependency);
+		}
 		public void ApplyData ()
 		{
-			meshData.ApplyData (updateNormals, updateBounds);
+			meshData.ApplyData (updateBounds);
 		}
 	}
 }

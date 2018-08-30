@@ -10,7 +10,7 @@ namespace Deform.Deformers
 	public class SinDeformer : Deformer
 	{
 		public float amplitude = 0.1f;
-		public float frequency = 0.5f;
+		public float frequency = 10f;
 		public float offset = 0f;
 		public float speed = 0f;
 		public Transform by;

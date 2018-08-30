@@ -11,6 +11,7 @@ namespace Deform
 
 		public bool update = true;
 		private JobHandle lastHandle;
+		private List<JobHandle> normalHandles = new List<JobHandle> ();
 
 		private void Awake ()
 		{
@@ -25,19 +26,33 @@ namespace Deform
 				return;
 
 			for (int i = 0; i < deformerObjects.Count; i++)
-				lastHandle = deformerObjects[i].DeformData (lastHandle);
+			{
+				var deformerObject = deformerObjects[i];
+				lastHandle = deformerObject.DeformData ();
+				normalHandles.Add (deformerObjects[i].RecalculateNormalsAsync (lastHandle));
+			}
 		}
 		private void LateUpdate ()
 		{
-			lastHandle.Complete ();
-
+			CompleteHandles ();
 			for (int i = 0; i < deformerObjects.Count; i++)
-				deformerObjects[i].ApplyData ();
+			{
+				var deformerObject = deformerObjects[i];
+				deformerObject.ApplyData ();
+			}
 		}
 
 		private void OnDestroy ()
 		{
+			CompleteHandles ();
+		}
+
+		private void CompleteHandles ()
+		{
 			lastHandle.Complete ();
+			foreach (var normalCalculationHandle in normalHandles)
+				normalCalculationHandle.Complete ();
+			normalHandles = new List<JobHandle> ();
 		}
 
 		public static void AddDeformerObject (DeformerObject deformerObject)
