@@ -12,9 +12,9 @@ namespace Deform.Deformers
 	public class NoiseDeformer : Deformer
 	{
 
-		public float magnitude = 0.5f;
+		public float magnitude = 0.1f;
 		public float frequency = 1f;
-		public float speed = 0f;
+		public float speed = .1f;
 		public float offset = 0f;
 
 		private float speedOffset;
