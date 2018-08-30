@@ -25,6 +25,8 @@ namespace Deform.Deformers
 
 		public override JobHandle Deform (NativeMeshData data, JobHandle dependency)
 		{
+			if (by == null || along == null)
+				return dependency;
 			return new DeformJob
 			{
 				amplitude = amplitude,
