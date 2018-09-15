@@ -45,6 +45,7 @@ namespace Deform
 		private void OnDestroy ()
 		{
 			CompleteHandles ();
+			Destroy (instance);
 		}
 
 		private void CompleteHandles ()
