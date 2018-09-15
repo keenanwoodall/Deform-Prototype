@@ -7,7 +7,8 @@ namespace Deform
 	public class DeformerObject : MonoBehaviour
 	{
 		public bool updateBounds = true;
-		public DeformerObjectManager manager;
+		[SerializeField]
+		private DeformerObjectManager manager; // changing this after OnEnable won't do anything
 
 		[SerializeField] [HideInInspector]
 		private MeshFilter meshFilter;
