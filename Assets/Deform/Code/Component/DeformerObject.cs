@@ -7,6 +7,7 @@ namespace Deform
 	public class DeformerObject : MonoBehaviour
 	{
 		public bool updateBounds = true;
+		public DeformerObjectManager manager;
 
 		[SerializeField] [HideInInspector]
 		private MeshFilter meshFilter;
@@ -20,16 +21,31 @@ namespace Deform
 				meshFilter = GetComponent<MeshFilter> ();
 
 			meshData = new MeshData (meshFilter);
+
+			if (manager == null)
+			{
+				Debug.Log ("Manager reference null. Attempting to find one...");
+				manager = FindObjectOfType<DeformerObjectManager> ();
+				if (manager == null)
+					Debug.LogError ("Manager not found in scene. Create one and assign it to the manager field for this deformer object to be processed.");
+				else
+				{
+
+				}
+				Debug.Log ("Manager found. For better performance, assign the reference manually.");
+			}
 		}
 
 		private void OnEnable ()
 		{
-			DeformerObjectManager.AddDeformerObject (this);
+			if (manager)
+				manager.AddDeformerObject (this);
 		}
 
 		private void OnDisable ()
 		{
-			DeformerObjectManager.RemoveDeformerObject (this);
+			if (manager)
+				manager.RemoveDeformerObject (this);
 		}
 
 		private void OnDestroy ()

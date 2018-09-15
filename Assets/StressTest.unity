@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &223924335
 MeshRenderer:
@@ -381,6 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &238032636
 MeshRenderer:
@@ -544,6 +546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &340101593
 MeshRenderer:
@@ -773,6 +776,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &492703691
 MeshRenderer:
@@ -908,6 +912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &583878540
 MeshRenderer:
@@ -1015,6 +1020,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &600827689
 MeshRenderer:
@@ -1122,6 +1128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &606934491
 MeshRenderer:
@@ -1229,6 +1236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &648789633
 MeshRenderer:
@@ -1336,6 +1344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &698851134
 MeshRenderer:
@@ -1394,6 +1403,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &743258939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 743258941}
+  - component: {fileID: 743258940}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &743258940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 743258939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65de6c5e671e8d4fbf2ed6d272dfd12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  update: 1
+--- !u!4 &743258941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 743258939}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &885974137
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,6 +1493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &885974140
 MeshRenderer:
@@ -1578,6 +1629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &1019819422
 MeshRenderer:
@@ -1713,6 +1765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &1033480164
 MeshRenderer:
@@ -1988,6 +2041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &1280004682
 MeshRenderer:
@@ -2235,6 +2289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &1475542333
 MeshRenderer:
@@ -2293,47 +2348,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1546507078
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1546507080}
-  - component: {fileID: 1546507079}
-  m_Layer: 0
-  m_Name: Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1546507079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1546507078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a65de6c5e671e8d4fbf2ed6d272dfd12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  update: 1
---- !u!4 &1546507080
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1546507078}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1564415573
 GameObject:
   m_ObjectHideFlags: 0
@@ -2383,6 +2397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &1564415576
 MeshRenderer:
@@ -2714,6 +2729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateBounds: 0
+  manager: {fileID: 743258940}
   meshFilter: {fileID: 0}
 --- !u!23 &1909329995
 MeshRenderer:

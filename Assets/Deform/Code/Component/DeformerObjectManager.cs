@@ -6,20 +6,12 @@ namespace Deform
 {
 	public class DeformerObjectManager : MonoBehaviour
 	{
-		private static DeformerObjectManager instance;
-		private static List<DeformerObject> deformerObjects = new List<DeformerObject> ();
+		private List<DeformerObject> deformerObjects = new List<DeformerObject> ();
 
 		public bool update = true;
 		private JobHandle lastHandle;
 		private List<JobHandle> normalHandles = new List<JobHandle> ();
 
-		private void Awake ()
-		{
-			if (instance == null)
-				instance = this;
-			else
-				Destroy (gameObject);
-		}
 		private void Update ()
 		{
 			if (!update)
@@ -44,8 +36,8 @@ namespace Deform
 
 		private void OnDestroy ()
 		{
-			CompleteHandles ();
-			Destroy (instance);
+			if (this.isActiveAndEnabled)
+				CompleteHandles ();
 		}
 
 		private void CompleteHandles ()
@@ -56,21 +48,13 @@ namespace Deform
 			normalHandles = new List<JobHandle> ();
 		}
 
-		public static void AddDeformerObject (DeformerObject deformerObject)
+		public void AddDeformerObject (DeformerObject deformerObject)
 		{
-			EnsureInstance ();
 			deformerObjects.Add (deformerObject);
 		}
-		public static void RemoveDeformerObject (DeformerObject deformerObject)
+		public void RemoveDeformerObject (DeformerObject deformerObject)
 		{
-			EnsureInstance ();
 			deformerObjects.Remove (deformerObject);
-		}
-
-		protected static void EnsureInstance ()
-		{
-			if (instance == null)
-				instance = new GameObject ("DeformerManager").AddComponent<DeformerObjectManager> ();
 		}
 	}
 }
