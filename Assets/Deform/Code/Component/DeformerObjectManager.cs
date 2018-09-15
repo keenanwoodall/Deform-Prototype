@@ -57,11 +57,19 @@ namespace Deform
 
 		public static void AddDeformerObject (DeformerObject deformerObject)
 		{
+			EnsureInstance ();
 			deformerObjects.Add (deformerObject);
 		}
 		public static void RemoveDeformerObject (DeformerObject deformerObject)
 		{
+			EnsureInstance ();
 			deformerObjects.Remove (deformerObject);
+		}
+
+		protected static void EnsureInstance ()
+		{
+			if (instance == null)
+				instance = new GameObject ("DeformerManager").AddComponent<DeformerObjectManager> ();
 		}
 	}
 }
