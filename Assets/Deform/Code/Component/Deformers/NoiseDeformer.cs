@@ -11,7 +11,6 @@ namespace Deform.Deformers
 {
 	public class NoiseDeformer : Deformer
 	{
-
 		public float magnitude = 0.1f;
 		public float frequency = 1f;
 		public float speed = .1f;
