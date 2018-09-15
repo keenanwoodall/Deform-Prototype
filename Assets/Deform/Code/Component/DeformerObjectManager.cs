@@ -6,7 +6,7 @@ namespace Deform
 {
 	public class DeformerObjectManager : MonoBehaviour
 	{
-		private static DeformerObjectManager Instance;
+		private static DeformerObjectManager instance;
 		private static List<DeformerObject> deformerObjects = new List<DeformerObject> ();
 
 		public bool update = true;
@@ -15,8 +15,8 @@ namespace Deform
 
 		private void Awake ()
 		{
-			if (Instance == null)
-				Instance = this;
+			if (instance == null)
+				instance = this;
 			else
 				Destroy (gameObject);
 		}
