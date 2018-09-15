@@ -6,11 +6,12 @@ namespace Deform
 {
 	public class DeformerObjectManager : MonoBehaviour
 	{
-		private List<DeformerObject> deformerObjects = new List<DeformerObject> ();
-
 		public bool update = true;
+
+		private bool handlesCompleted;
 		private JobHandle lastHandle;
 		private List<JobHandle> normalHandles = new List<JobHandle> ();
+		private List<DeformerObject> deformerObjects = new List<DeformerObject> ();
 
 		private void Update ()
 		{
@@ -26,7 +27,12 @@ namespace Deform
 		}
 		private void LateUpdate ()
 		{
+			if (!update && handlesCompleted)
+				return;
+
 			CompleteHandles ();
+			handlesCompleted = true;
+
 			for (int i = 0; i < deformerObjects.Count; i++)
 			{
 				var deformerObject = deformerObjects[i];

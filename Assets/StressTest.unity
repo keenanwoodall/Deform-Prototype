@@ -1430,7 +1430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65de6c5e671e8d4fbf2ed6d272dfd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  update: 1
+  update: 0
 --- !u!4 &743258941
 Transform:
   m_ObjectHideFlags: 0
