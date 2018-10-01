@@ -50,6 +50,11 @@ If you don't want to make your own deformers, it comes with many standard ones y
 
 - [v0.1](https://github.com/keenanwoodall/Deform/releases/tag/v0.1)
 
+I'm working on a new version written completely from scratch using the job system right now.
+Here's a prototype of the new twist deformer. Follow me on twitter [@keenanwoodall](https://twitter.com/keenanwoodall) for updates. 
+
+![Teaser](https://media.giphy.com/media/2ifaiLjklPTpskqO21/giphy.gif)
+
 **FAQ**
 
 _I don't want all the fluff. What can I safely remove?_
@@ -80,9 +85,10 @@ _Why am I getting the error,_ `xxx asynchronous functions cannot be used because
 
 <br />
 
-**Help Me**
+**Help**
 
 - Please send any suggestions/feedback to keenanwoodall@gmail.com
+- Pull requests are welcome!
 - If this project is of any help and you're looking for a way to help continue development, feel free to donate!
  [Donate via Paypal](https://www.paypal.me/keenanwoodall)
 
