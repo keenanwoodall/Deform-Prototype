@@ -1,3 +1,10 @@
+# Heads Up!
+
+I'm working on a new version written completely from scratch using the job system right now.
+Here's a little teaser. Follow me on twitter [@keenanwoodall](https://twitter.com/keenanwoodall) for updates. 
+
+![Teaser](https://media.giphy.com/media/2ifaiLjklPTpskqO21/giphy.gif)
+
 # Deform
 
 Deform is a framework for deforming meshes in the editor and at runtime that comes with a component based deformation system build on top.
@@ -49,11 +56,6 @@ If you don't want to make your own deformers, it comes with many standard ones y
 **Releases**
 
 - [v0.1](https://github.com/keenanwoodall/Deform/releases/tag/v0.1)
-
-I'm working on a new version written completely from scratch using the job system right now.
-Here's a prototype of the new twist deformer. Follow me on twitter [@keenanwoodall](https://twitter.com/keenanwoodall) for updates. 
-
-![Teaser](https://media.giphy.com/media/2ifaiLjklPTpskqO21/giphy.gif)
 
 **FAQ**
 
