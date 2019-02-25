@@ -91,8 +91,6 @@ _Why am I getting the error,_ `xxx asynchronous functions cannot be used because
 
 - Please send any suggestions/feedback to keenanwoodall@gmail.com
 - Pull requests are welcome!
-- If this project is of any help and you're looking for a way to help continue development, feel free to donate!
- [Donate via Paypal](https://www.paypal.me/keenanwoodall)
 
 <br />
 <br />
