@@ -1,7 +1,7 @@
 # Heads Up!
 
-I'm working on a new version written completely from scratch using the job system right now.
-Here's a little teaser. Follow me on twitter [@keenanwoodall](https://twitter.com/keenanwoodall) for updates. 
+I've written a [new version](https://github.com/keenanwoodall/Deform) from scratch! It's objectively better and you should totally check it out!
+Here's a little teaser.
 
 ![Teaser](https://media.giphy.com/media/2ifaiLjklPTpskqO21/giphy.gif)
 
